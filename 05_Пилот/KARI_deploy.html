@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KARI.Самозанятые — Инструкция по развёртыванию</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --kari: #a91d7a; --kari-dark: #7a1357; --navy: #242D4A;
+  --green: #10b981; --yellow: #f59e0b; --red: #ef4444; --blue: #3b82f6;
+  --bg: #f5f5f5; --white: #fff; --border: #e5e7eb; --text: #1a1a1a; --muted: #6b7280;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6}
+a{color:var(--kari)}
+
+/* ── Шапка ── */
+.header{background:var(--white);border-bottom:3px solid var(--kari);padding:0 32px;height:64px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.header-logo{display:flex;align-items:center;gap:10px}
+.header-sub{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--kari);opacity:.7}
+.header-title{flex:1;font-size:15px;font-weight:700;color:var(--navy)}
+.badge{background:var(--kari);color:#fff;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700}
+
+/* ── Контент ── */
+.wrap{max-width:960px;margin:0 auto;padding:32px 24px}
+
+/* ── Навигация ── */
+.toc{background:var(--white);border-radius:12px;padding:24px 28px;margin-bottom:32px;border:1px solid var(--border)}
+.toc h2{font-size:14px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:16px}
+.toc-list{display:grid;grid-template-columns:1fr 1fr;gap:6px 24px;list-style:none}
+.toc-list a{color:var(--text);text-decoration:none;font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
+.toc-list a:hover{color:var(--kari)}
+.toc-num{background:var(--kari);color:#fff;width:22px;height:22px;border-radius:50%;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* ── Блок секции ── */
+.section{background:var(--white);border-radius:12px;padding:28px 32px;margin-bottom:24px;border:1px solid var(--border)}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid var(--bg)}
+.section-num{background:var(--kari);color:#fff;width:36px;height:36px;border-radius:50%;font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.section h2{font-size:18px;font-weight:800;color:var(--navy)}
+.section h3{font-size:15px;font-weight:700;color:var(--navy);margin:20px 0 10px}
+
+/* ── Код ── */
+pre{background:#1e1e2e;color:#cdd6f4;border-radius:10px;padding:16px 20px;overflow-x:auto;font-size:13px;line-height:1.7;margin:12px 0}
+code{font-family:'JetBrains Mono','Fira Code','Courier New',monospace}
+.cmd{display:block;margin:4px 0}
+.comment{color:#6c7086}
+.highlight{color:#a6e3a1}
+.var{color:#f5c2e7}
+.key{color:#89b4fa}
+
+/* ── Шаги ── */
+.steps{counter-reset:step}
+.step{display:flex;gap:16px;margin-bottom:20px;align-items:flex-start}
+.step-num{background:var(--kari);color:#fff;width:30px;height:30px;border-radius:50%;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:3px}
+.step-body{flex:1}
+.step-title{font-weight:700;font-size:15px;color:var(--navy);margin-bottom:6px}
+.step-desc{font-size:14px;color:var(--muted);margin-bottom:8px}
+
+/* ── Инфо-блоки ── */
+.info{border-radius:8px;padding:12px 16px;margin:12px 0;font-size:14px;display:flex;gap:10px;align-items:flex-start}
+.info-warn{background:#fffbeb;border:1px solid #fde68a;color:#92400e}
+.info-ok{background:#d1fae5;border:1px solid #6ee7b7;color:#065f46}
+.info-note{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af}
+.info-danger{background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
+.info-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+
+/* ── Таблицы ── */
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+th{background:var(--navy);color:#fff;padding:10px 14px;text-align:left;font-weight:700}
+td{padding:9px 14px;border-bottom:1px solid var(--border)}
+tr:hover td{background:#f9fafb}
+.cell-req{color:var(--red);font-weight:700}
+.cell-opt{color:var(--muted)}
+
+/* ── Чеклист ── */
+.checklist{list-style:none}
+.checklist li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--bg);font-size:14px}
+.checklist li::before{content:"☐";font-size:18px;color:var(--border);flex-shrink:0;line-height:1.2}
+.checklist .done::before{content:"✅";color:var(--green)}
+.check-title{font-weight:700;margin-bottom:2px}
+.check-sub{color:var(--muted);font-size:13px}
+
+/* ── Статус сервисов ── */
+.services{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin:16px 0}
+.service-card{border:1px solid var(--border);border-radius:8px;padding:14px 16px;display:flex;align-items:center;gap:10px}
+.svc-icon{font-size:24px}
+.svc-name{font-weight:700;font-size:14px;color:var(--navy)}
+.svc-port{font-size:12px;color:var(--muted)}
+
+/* ── Футер ── */
+.footer{text-align:center;padding:32px 0;font-size:13px;color:var(--muted)}
+
+/* ═══════════════════════════════════════════════════════════
+   МОБИЛЬНАЯ АДАПТАЦИЯ — добавлено 11.03.2026
+   Адаптировано для экранов смартфонов (< 768px)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Таблицы — горизонтальный скролл на всех устройствах */
+table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+/* Изображения — масштабирование */
+img { max-width: 100% !important; height: auto !important; }
+@media (max-width: 768px) {
+  /* Боковое меню — скрываем, убираем отступ */
+  .sidebar { display: none !important; }
+  .main-content { margin-left: 0 !important; padding: 16px !important; }
+  .site-header { position: relative !important; }
+
+  /* Отступы шапки */
+  .header, .page-header { padding: 20px 16px !important; }
+  .header-top { flex-wrap: wrap !important; gap: 8px !important; }
+  .header-meta, .header-actions, .header-badges { flex-wrap: wrap !important; gap: 8px !important; }
+
+  /* Основной контент */
+  .main, .content, .container { padding: 16px !important; }
+
+  /* Типографика */
+  h1 { font-size: 22px !important; }
+  h2 { font-size: 18px !important; }
+  h3 { font-size: 15px !important; }
+
+  /* Горизонтальные ряды — перенос */
+  .header-pills, .filter-tabs, .nav-tabs, .tabs-row,
+  .section-tabs, .tab-bar { flex-wrap: wrap !important; }
+  .step { flex-direction: column !important; }
+
+  /* Кодовые блоки */
+  pre, code {
+    overflow-x: auto !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 13px !important; }
+  .badge, .tag, .pill, .status-badge { font-size: 11px !important; padding: 3px 8px !important; }
+  h1, .header h1, .logo-area h1 { font-size: 19px !important; }
+  .btn-print, .btn-export { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ШАПКА -->
+<header class="header">
+  <div class="header-logo">
+    <svg xmlns="http://www.w3.org/2000/svg" height="36" viewBox="0 0 728.5 221.5" style="display:block"><g transform="translate(-56.5 -186.5)"><path transform="matrix(1,0,0,-1,167.381,186.9256)" d="M0 0V0C-60.585 0-109.775-48.659-110.678-109.017-101.105-89.662-88.255-77.239-76.191-67.482-58.14-52.881-36.41-45.828-16.28-44.574 5.777-43.201 23.053-47.846 37.189-59.05 42.293-63.095 46.38-67.877 49.613-73.02 55.602-82.543 58.375-93.663 57.368-105.985 55.198-132.527 33.39-153.87 6.804-155.519-24.699-157.473-50.859-132.506-50.859-101.431-50.859-87.238-45.395-74.325-36.465-64.663-46.559-67.782-56.643-72.841-65.837-80.278-74.971-87.666-85.145-97.851-93.512-111.315-102.647-126.015-106.433-143.045-106.537-160.35V-221.399H0C61.15-221.399 110.721-171.838 110.721-110.7V-110.699C110.721-49.561 61.15 0 0 0" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,484.762,262.1775)" d="M0 0H-51.44L-106.801-52.162V41.158H-144.053V-144.054H-106.801V-91.887L-51.433-144.054H3.854L-76.443-72.024Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,0,595.276)" d="M744.002 189.045H781.255V314.95503H744.002Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,550.4052,371.5924)" d="M0 0C-20.818 0-37.694 16.739-37.694 37.388-37.694 58.037-20.818 74.776 0 74.776 20.818 74.776 37.694 58.037 37.694 37.388 37.694 16.739 20.818 0 0 0M37.738 101.384C26.659 107.826 13.769 111.534 0 111.534-41.285 111.534-74.753 78.338-74.753 37.388-74.753-3.562-41.285-36.758 0-36.758 13.769-36.758 26.659-33.05 37.738-26.609V-34.639H74.99V109.415H37.738Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,762.6282,267.7195)" d="M0 0C12.459 0 22.559 10.1 22.559 22.559 22.559 28.064 20.582 33.104 17.306 37.02 15.132 39.862 12.219 42.197 8.653 43.858-2.579 49.086-18.377 47.019-33.605 38.323-49.001 29.531-61.329 13.083-68.67-6.989V5.542H-105.923V-138.512H-68.67V-37.268C-65.411-6.761-50.524 20.852-30.241 32.433-25.463 35.163-20.667 37.153-16.051 38.402-20.072 34.327-22.559 28.736-22.559 22.559-22.559 10.1-12.459 0 0 0" fill="#a91d7a"/></g></svg>
+    <span class="header-sub">Самозанятые</span>
+  </div>
+  <div class="header-title">Инструкция по развёртыванию — IT поддержка</div>
+  <span class="badge">v3.0 — Март 2026</span>
+</header>
+
+<div class="wrap">
+
+<!-- НАВИГАЦИЯ -->
+<div class="toc">
+  <h2>Содержание</h2>
+  <ul class="toc-list">
+    <li><a href="#s1"><span class="toc-num">1</span> Требования к серверу</a></li>
+    <li><a href="#s2"><span class="toc-num">2</span> Установка зависимостей</a></li>
+    <li><a href="#s3"><span class="toc-num">3</span> Настройка PostgreSQL</a></li>
+    <li><a href="#s4"><span class="toc-num">4</span> Настройка Redis</a></li>
+    <li><a href="#s5"><span class="toc-num">5</span> Настройка MinIO</a></li>
+    <li><a href="#s6"><span class="toc-num">6</span> Конфигурация (.env)</a></li>
+    <li><a href="#s7"><span class="toc-num">7</span> Миграция базы данных</a></li>
+    <li><a href="#s8"><span class="toc-num">8</span> Запуск бэкенда</a></li>
+    <li><a href="#s9"><span class="toc-num">9</span> Запуск фронтенда</a></li>
+    <li><a href="#s10"><span class="toc-num">10</span> Celery — фоновые задачи</a></li>
+    <li><a href="#s11"><span class="toc-num">11</span> Первый запуск (создание администратора)</a></li>
+    <li><a href="#s12"><span class="toc-num">12</span> Проверка работоспособности</a></li>
+  </ul>
+</div>
+
+<!-- 1. ТРЕБОВАНИЯ -->
+<section class="section" id="s1">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <h2>Требования к серверу</h2>
+  </div>
+
+  <h3>Минимальная конфигурация (пилот — 100 магазинов)</h3>
+  <table>
+    <tr><th>Параметр</th><th>Минимум</th><th>Рекомендуется</th></tr>
+    <tr><td>CPU</td><td>4 ядра</td><td>8 ядер</td></tr>
+    <tr><td>RAM</td><td>8 ГБ</td><td>16 ГБ</td></tr>
+    <tr><td>SSD</td><td>100 ГБ</td><td>500 ГБ (фотоотчёты!)</td></tr>
+    <tr><td>ОС</td><td>Ubuntu 22.04 LTS</td><td>Ubuntu 22.04 LTS</td></tr>
+    <tr><td>Сеть</td><td>100 Мбит/с</td><td>1 Гбит/с</td></tr>
+  </table>
+
+  <h3>Необходимые порты</h3>
+  <div class="services">
+    <div class="service-card"><span class="svc-icon">🌐</span><div><div class="svc-name">Backend API</div><div class="svc-port">:8000</div></div></div>
+    <div class="service-card"><span class="svc-icon">⚛️</span><div><div class="svc-name">Frontend</div><div class="svc-port">:3000</div></div></div>
+    <div class="service-card"><span class="svc-icon">🐘</span><div><div class="svc-name">PostgreSQL</div><div class="svc-port">:5432 (только локально)</div></div></div>
+    <div class="service-card"><span class="svc-icon">🔴</span><div><div class="svc-name">Redis</div><div class="svc-port">:6379 (только локально)</div></div></div>
+    <div class="service-card"><span class="svc-icon">📦</span><div><div class="svc-name">MinIO</div><div class="svc-port">:9000 / :9001</div></div></div>
+  </div>
+
+  <div class="info info-warn">
+    <span class="info-icon">⚠️</span>
+    <div>PostgreSQL и Redis <strong>не должны быть доступны из интернета</strong>. Только локально или через VPN.</div>
+  </div>
+</section>
+
+<!-- 2. УСТАНОВКА ЗАВИСИМОСТЕЙ -->
+<section class="section" id="s2">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <h2>Установка зависимостей</h2>
+  </div>
+
+  <h3>Python 3.11+</h3>
+  <pre><code><span class="comment"># Проверить версию Python</span>
+<span class="cmd">python3 --version</span>
+<span class="comment"># Должно быть: Python 3.11.x или 3.12.x</span>
+
+<span class="comment"># Если нужно установить Python 3.11</span>
+<span class="cmd">sudo apt update</span>
+<span class="cmd">sudo apt install python3.11 python3.11-venv python3-pip -y</span></code></pre>
+
+  <h3>Node.js 18+ (для фронтенда)</h3>
+  <pre><code><span class="cmd">curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -</span>
+<span class="cmd">sudo apt install nodejs -y</span>
+<span class="cmd">node --version</span>  <span class="comment"># Должно быть v20.x</span></code></pre>
+
+  <h3>PostgreSQL 15+</h3>
+  <pre><code><span class="cmd">sudo apt install postgresql postgresql-contrib -y</span>
+<span class="cmd">sudo systemctl enable postgresql && sudo systemctl start postgresql</span></code></pre>
+
+  <h3>Redis 7+</h3>
+  <pre><code><span class="cmd">sudo apt install redis-server -y</span>
+<span class="cmd">sudo systemctl enable redis && sudo systemctl start redis</span></code></pre>
+
+  <h3>Виртуальное окружение Python</h3>
+  <pre><code><span class="comment"># Создаём виртуальное окружение в папке проекта</span>
+<span class="cmd">cd /opt/kari</span>
+<span class="cmd">python3.11 -m venv venv</span>
+<span class="cmd">source venv/bin/activate</span>
+
+<span class="comment"># Устанавливаем зависимости бэкенда</span>
+<span class="cmd">cd 04_Разработка/backend</span>
+<span class="cmd">pip install -r requirements.txt</span></code></pre>
+</section>
+
+<!-- 3. PostgreSQL -->
+<section class="section" id="s3">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <h2>Настройка PostgreSQL</h2>
+  </div>
+
+  <pre><code><span class="comment"># Входим в PostgreSQL от имени суперпользователя</span>
+<span class="cmd">sudo -u postgres psql</span>
+
+<span class="comment">-- Создаём пользователя и базу данных</span>
+<span class="highlight">CREATE USER kari WITH PASSWORD 'СЛОЖНЫЙ_ПАРОЛЬ_МИНИМУМ_16_СИМВОЛОВ';</span>
+<span class="highlight">CREATE DATABASE kari_samozanyatye OWNER kari ENCODING 'UTF8';</span>
+<span class="highlight">GRANT ALL PRIVILEGES ON DATABASE kari_samozanyatye TO kari;</span>
+<span class="highlight">\q</span>
+
+<span class="comment"># Проверяем подключение</span>
+<span class="cmd">psql -U kari -d kari_samozanyatye -h localhost -c "SELECT version();"</span></code></pre>
+
+  <div class="info info-warn">
+    <span class="info-icon">🔑</span>
+    <div>Пароль <code>СЛОЖНЫЙ_ПАРОЛЬ_МИНИМУМ_16_СИМВОЛОВ</code> запишите — он понадобится в файле .env</div>
+  </div>
+</section>
+
+<!-- 4. Redis -->
+<section class="section" id="s4">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <h2>Настройка Redis</h2>
+  </div>
+
+  <pre><code><span class="comment"># Проверить что Redis запущен</span>
+<span class="cmd">redis-cli ping</span>
+<span class="comment"># Должен ответить: PONG</span>
+
+<span class="comment"># Задать пароль (рекомендуется)</span>
+<span class="cmd">sudo nano /etc/redis/redis.conf</span>
+<span class="comment"># Найти строку # requirepass foobared</span>
+<span class="comment"># Раскомментировать и задать пароль:</span>
+<span class="highlight">requirepass ВАШ_REDIS_ПАРОЛЬ</span>
+
+<span class="cmd">sudo systemctl restart redis</span>
+<span class="cmd">redis-cli -a ВАШ_REDIS_ПАРОЛЬ ping</span>  <span class="comment"># PONG</span></code></pre>
+</section>
+
+<!-- 5. MinIO -->
+<section class="section" id="s5">
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <h2>Настройка MinIO (хранилище фотоотчётов)</h2>
+  </div>
+
+  <div class="info info-note">
+    <span class="info-icon">ℹ️</span>
+    <div>MinIO — это аналог Amazon S3, но на вашем сервере. Хранит фотоотчёты исполнителей. Требование ТЗ: хранить 3 года.</div>
+  </div>
+
+  <pre><code><span class="comment"># Скачиваем MinIO</span>
+<span class="cmd">wget https://dl.min.io/server/minio/release/linux-amd64/minio</span>
+<span class="cmd">chmod +x minio</span>
+<span class="cmd">sudo mv minio /usr/local/bin/</span>
+
+<span class="comment"># Создаём директорию для данных</span>
+<span class="cmd">sudo mkdir -p /data/minio</span>
+<span class="cmd">sudo useradd -r minio-user</span>
+<span class="cmd">sudo chown minio-user:minio-user /data/minio</span>
+
+<span class="comment"># Создаём systemd сервис</span>
+<span class="cmd">sudo nano /etc/systemd/system/minio.service</span></code></pre>
+
+  <pre><code><span class="comment"># Содержимое /etc/systemd/system/minio.service:</span>
+[Unit]
+Description=MinIO Object Storage
+After=network.target
+
+[Service]
+User=minio-user
+Group=minio-user
+<span class="var">Environment="MINIO_ROOT_USER=minioadmin"</span>
+<span class="var">Environment="MINIO_ROOT_PASSWORD=СЛОЖНЫЙ_MINIO_ПАРОЛЬ"</span>
+ExecStart=/usr/local/bin/minio server /data/minio --console-address ":9001"
+Restart=always
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+
+  <pre><code><span class="cmd">sudo systemctl daemon-reload</span>
+<span class="cmd">sudo systemctl enable minio && sudo systemctl start minio</span>
+<span class="comment"># Веб-консоль MinIO: http://сервер:9001</span>
+<span class="comment"># Логин: minioadmin / СЛОЖНЫЙ_MINIO_ПАРОЛЬ</span></code></pre>
+</section>
+
+<!-- 6. Конфигурация .env -->
+<section class="section" id="s6">
+  <div class="section-header">
+    <div class="section-num">6</div>
+    <h2>Конфигурация — файл .env</h2>
+  </div>
+
+  <div class="info info-danger">
+    <span class="info-icon">🚫</span>
+    <div>Файл <code>.env</code> содержит секретные ключи. <strong>Никогда не добавляйте его в git и не отправляйте никому.</strong></div>
+  </div>
+
+  <pre><code><span class="comment"># Копируем шаблон</span>
+<span class="cmd">cd 04_Разработка/backend</span>
+<span class="cmd">cp .env.example .env</span>
+<span class="cmd">nano .env</span></code></pre>
+
+  <h3>Обязательные параметры для заполнения</h3>
+  <table>
+    <tr><th>Параметр</th><th>Значение</th><th>Обязательно</th></tr>
+    <tr><td><code>DATABASE_URL</code></td><td>postgresql+asyncpg://kari:<strong>ПАРОЛЬ</strong>@localhost:5432/kari_samozanyatye</td><td class="cell-req">ДА</td></tr>
+    <tr><td><code>REDIS_URL</code></td><td>redis://:REDIS_ПАРОЛЬ@localhost:6379/0</td><td class="cell-req">ДА</td></tr>
+    <tr><td><code>SECRET_KEY</code></td><td>Сгенерировать: <code>openssl rand -hex 32</code></td><td class="cell-req">ДА</td></tr>
+    <tr><td><code>ENCRYPTION_KEY</code></td><td>Сгенерировать: <code>openssl rand -hex 32</code> — для AES-256 шифрования паспортных данных (v2)</td><td class="cell-req">ДА</td></tr>
+    <tr><td><code>INIT_SECRET</code></td><td>Придумать любой пароль — для создания первого директора</td><td class="cell-req">ДА</td></tr>
+    <tr><td><code>DEBUG</code></td><td><code>True</code> при тестировании, <code>False</code> на проде</td><td class="cell-req">ДА</td></tr>
+    <tr><td><code>MINIO_ACCESS_KEY</code></td><td>minioadmin</td><td class="cell-req">ДА</td></tr>
+    <tr><td><code>MINIO_SECRET_KEY</code></td><td>СЛОЖНЫЙ_MINIO_ПАРОЛЬ</td><td class="cell-req">ДА</td></tr>
+    <tr><td><code>SMS_API_KEY</code></td><td>Ключ от SMSC.ru</td><td class="cell-opt">Позже</td></tr>
+    <tr><td><code>SOVCOMBANK_API_KEY</code></td><td>Ключ от Совкомбанка</td><td class="cell-opt">Позже</td></tr>
+    <tr><td><code>FNS_SOURCE_DEVICE_ID</code></td><td>ID устройства от ФНС</td><td class="cell-opt">Позже</td></tr>
+  </table>
+
+  <pre><code><span class="comment"># Генерация SECRET_KEY и ENCRYPTION_KEY (выполнить в терминале):</span>
+<span class="cmd">openssl rand -hex 32</span>
+<span class="comment"># Скопируйте результат в .env → SECRET_KEY=...  (JWT-токены)</span>
+<span class="cmd">openssl rand -hex 32</span>
+<span class="comment"># Скопируйте результат в .env → ENCRYPTION_KEY=...  (AES-256 шифрование паспортных данных, v2)</span></code></pre>
+</section>
+
+<!-- 7. МИГРАЦИИ -->
+<section class="section" id="s7">
+  <div class="section-header">
+    <div class="section-num">7</div>
+    <h2>Миграция базы данных (Alembic)</h2>
+  </div>
+
+  <div class="info info-note">
+    <span class="info-icon">ℹ️</span>
+    <div>Alembic создаёт все таблицы в базе данных. Нужно запустить <strong>один раз</strong> при первом деплое.</div>
+  </div>
+
+  <pre><code><span class="comment"># Убедитесь что виртуальное окружение активировано</span>
+<span class="cmd">source /opt/kari/venv/bin/activate</span>
+
+<span class="comment"># Перейдите в папку бэкенда</span>
+<span class="cmd">cd /opt/kari/04_Разработка/backend</span>
+
+<span class="comment"># Проверить текущее состояние миграций</span>
+<span class="cmd">alembic current</span>
+<span class="comment"># Если выводит "None" — миграции ещё не применялись (это нормально)</span>
+
+<span class="comment"># Применить все миграции — создать все таблицы</span>
+<span class="cmd highlight">alembic upgrade head</span>
+
+<span class="comment"># Проверить что миграция применена</span>
+<span class="cmd">alembic current</span>
+<span class="comment"># Должен вывести: 0001 (head)</span>
+
+<span class="comment"># Проверить таблицы в БД</span>
+<span class="cmd">psql -U kari -d kari_samozanyatye -h localhost -c "\dt"</span>
+<span class="comment"># Должны появиться: users, sms_codes, tasks, task_photos, task_templates,</span>
+<span class="comment"># payments, payment_registries, payment_registry_items, fns_receipts</span></code></pre>
+
+  <div class="info info-ok">
+    <span class="info-icon">✅</span>
+    <div>Если видите все 9 таблиц — база данных готова к работе!</div>
+  </div>
+
+  <h3>Будущие обновления БД</h3>
+  <pre><code><span class="comment"># При обновлении системы — применяем новые миграции той же командой</span>
+<span class="cmd">git pull origin main</span>
+<span class="cmd">alembic upgrade head</span>
+<span class="comment"># Alembic сам поймёт какие миграции ещё не применены и выполнит только их</span></code></pre>
+</section>
+
+<!-- 8. ЗАПУСК БЭКЕНДА -->
+<section class="section" id="s8">
+  <div class="section-header">
+    <div class="section-num">8</div>
+    <h2>Запуск бэкенда (FastAPI)</h2>
+  </div>
+
+  <h3>Тестовый запуск (проверка)</h3>
+  <pre><code><span class="cmd">source /opt/kari/venv/bin/activate</span>
+<span class="cmd">cd /opt/kari/04_Разработка/backend</span>
+<span class="cmd">uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload</span>
+
+<span class="comment"># Если запустилось успешно, увидите:</span>
+<span class="comment"># INFO: Application startup complete.</span>
+<span class="comment"># Откройте в браузере: http://сервер:8000/docs</span></code></pre>
+
+  <h3>Systemd сервис (постоянный запуск)</h3>
+  <pre><code><span class="cmd">sudo nano /etc/systemd/system/kari-backend.service</span></code></pre>
+
+  <pre><code>[Unit]
+Description=KARI.Самозанятые Backend API
+After=network.target postgresql.service redis.service
+
+[Service]
+User=www-data
+WorkingDirectory=/opt/kari/04_Разработка/backend
+<span class="var">EnvironmentFile=/opt/kari/04_Разработка/backend/.env</span>
+ExecStart=/opt/kari/venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+
+  <pre><code><span class="cmd">sudo systemctl daemon-reload</span>
+<span class="cmd">sudo systemctl enable kari-backend</span>
+<span class="cmd">sudo systemctl start kari-backend</span>
+<span class="cmd">sudo systemctl status kari-backend</span>  <span class="comment"># Должно быть: active (running)</span>
+
+<span class="comment"># Просмотр логов</span>
+<span class="cmd">sudo journalctl -u kari-backend -f</span></code></pre>
+</section>
+
+<!-- 9. ЗАПУСК ФРОНТЕНДА -->
+<section class="section" id="s9">
+  <div class="section-header">
+    <div class="section-num">9</div>
+    <h2>Запуск фронтенда (React)</h2>
+  </div>
+
+  <pre><code><span class="cmd">cd /opt/kari/04_Разработка/frontend</span>
+<span class="cmd">cp .env.example .env</span>
+<span class="comment"># Отредактировать: VITE_API_URL=http://ВАШ_СЕРВЕР:8000/api/v1</span>
+
+<span class="comment"># Установить зависимости</span>
+<span class="cmd">npm install</span>
+
+<span class="comment"># Для разработки (с автообновлением)</span>
+<span class="cmd">npm run dev</span>
+<span class="comment"># Откроется на http://localhost:3000</span>
+
+<span class="comment"># Для продакшена — собираем статические файлы</span>
+<span class="cmd">npm run build</span>
+<span class="comment"># Результат в папке dist/ — отдаём через Nginx</span></code></pre>
+
+  <h3>Nginx для проксирования</h3>
+  <pre><code><span class="cmd">sudo apt install nginx -y</span>
+<span class="cmd">sudo nano /etc/nginx/sites-available/kari</span></code></pre>
+
+  <pre><code>server {
+    listen 80;
+    server_name ВАШ_ДОМЕН_ИЛИ_IP;
+
+    <span class="comment"># Фронтенд (React)</span>
+    location / {
+        root /opt/kari/04_Разработка/frontend/dist;
+        try_files $uri $uri/ /index.html;
+    }
+
+    <span class="comment"># API бэкенда</span>
+    location /api/ {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+
+    <span class="comment"># Swagger документация</span>
+    location /docs {
+        proxy_pass http://127.0.0.1:8000;
+    }
+}</code></pre>
+
+  <pre><code><span class="cmd">sudo ln -s /etc/nginx/sites-available/kari /etc/nginx/sites-enabled/</span>
+<span class="cmd">sudo nginx -t && sudo systemctl restart nginx</span></code></pre>
+</section>
+
+<!-- 10. CELERY -->
+<section class="section" id="s10">
+  <div class="section-header">
+    <div class="section-num">10</div>
+    <h2>Celery — фоновые задачи</h2>
+  </div>
+
+  <div class="info info-note">
+    <span class="info-icon">ℹ️</span>
+    <div>Celery запускает автоматические задачи по расписанию: проверку чеков ФНС (07:00), проверку статусов самозанятых (06:00).</div>
+  </div>
+
+  <h3>Celery Worker (обрабатывает задачи)</h3>
+  <pre><code><span class="cmd">sudo nano /etc/systemd/system/kari-celery-worker.service</span></code></pre>
+
+  <pre><code>[Unit]
+Description=KARI Celery Worker
+After=network.target redis.service
+
+[Service]
+User=www-data
+WorkingDirectory=/opt/kari/04_Разработка/backend
+<span class="var">EnvironmentFile=/opt/kari/04_Разработка/backend/.env</span>
+ExecStart=/opt/kari/venv/bin/celery -A app.tasks.fns_tasks worker --loglevel=info --concurrency=4
+Restart=always
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+
+  <h3>Celery Beat (планировщик расписания)</h3>
+  <pre><code><span class="cmd">sudo nano /etc/systemd/system/kari-celery-beat.service</span></code></pre>
+
+  <pre><code>[Unit]
+Description=KARI Celery Beat Scheduler
+After=network.target redis.service
+
+[Service]
+User=www-data
+WorkingDirectory=/opt/kari/04_Разработка/backend
+<span class="var">EnvironmentFile=/opt/kari/04_Разработка/backend/.env</span>
+ExecStart=/opt/kari/venv/bin/celery -A app.tasks.fns_tasks beat --loglevel=info
+Restart=always
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+
+  <pre><code><span class="cmd">sudo systemctl daemon-reload</span>
+<span class="cmd">sudo systemctl enable kari-celery-worker kari-celery-beat</span>
+<span class="cmd">sudo systemctl start kari-celery-worker kari-celery-beat</span>
+<span class="cmd">sudo systemctl status kari-celery-worker</span>  <span class="comment"># active (running)</span></code></pre>
+</section>
+
+<!-- 11. ПЕРВЫЙ ЗАПУСК -->
+<section class="section" id="s11">
+  <div class="section-header">
+    <div class="section-num">11</div>
+    <h2>Первый запуск — создание директора региона</h2>
+  </div>
+
+  <div class="info info-note">
+    <span class="info-icon">ℹ️</span>
+    <div>После запуска сервера нужно создать первого директора региона (Юрий). Это делается <strong>один раз</strong> через специальный API-эндпоинт.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <div class="step-title">Открыть Swagger UI</div>
+      <div class="step-desc">Перейти в браузере: <code>http://сервер:8000/docs</code></div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <div class="step-title">Найти endpoint POST /api/v1/users/init</div>
+      <div class="step-desc">В разделе "Пользователи" → нажать на POST /users/init → Try it out</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <div class="step-title">Заполнить и отправить</div>
+      <pre><code>{
+  <span class="key">"phone"</span>:     <span class="highlight">"+79001234567"</span>,
+  <span class="key">"full_name"</span>: <span class="highlight">"Юрий Иванов"</span>,
+  <span class="key">"secret"</span>:    <span class="highlight">"INIT_SECRET из файла .env"</span>
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <div class="step-title">Войти в систему</div>
+      <div class="step-desc">POST /api/v1/auth/send-code → ввести телефон → получить SMS → POST /api/v1/auth/verify-code → получить токен</div>
+    </div>
+  </div>
+
+  <div class="info info-ok">
+    <span class="info-icon">✅</span>
+    <div>После создания директора — эндпоинт /init <strong>автоматически отключится</strong>. Повторно создать второго регионального директора через него нельзя.</div>
+  </div>
+</section>
+
+<!-- 12. ПРОВЕРКА -->
+<section class="section" id="s12">
+  <div class="section-header">
+    <div class="section-num">12</div>
+    <h2>Финальная проверка работоспособности</h2>
+  </div>
+
+  <ul class="checklist">
+    <li>
+      <div><div class="check-title">PostgreSQL запущен и доступен</div>
+      <div class="check-sub"><code>sudo systemctl status postgresql</code> → active</div></div>
+    </li>
+    <li>
+      <div><div class="check-title">Redis запущен</div>
+      <div class="check-sub"><code>redis-cli ping</code> → PONG</div></div>
+    </li>
+    <li>
+      <div><div class="check-title">MinIO запущен и доступен</div>
+      <div class="check-sub">Открыть <code>http://сервер:9001</code> — должна открыться консоль MinIO</div></div>
+    </li>
+    <li>
+      <div><div class="check-title">Таблицы созданы</div>
+      <div class="check-sub"><code>alembic current</code> → <strong>20260310_0005 (head)</strong> — все 5 миграций применены</div></div>
+    </li>
+    <li>
+      <div><div class="check-title">Backend API отвечает</div>
+      <div class="check-sub"><code>curl http://сервер:8000/health</code> → {"status":"ok"}</div></div>
+    </li>
+    <li>
+      <div><div class="check-title">Swagger UI открывается</div>
+      <div class="check-sub">Открыть <code>http://сервер:8000/docs</code> — список всех API</div></div>
+    </li>
+    <li>
+      <div><div class="check-title">Фронтенд открывается</div>
+      <div class="check-sub">Открыть <code>http://сервер:3000</code> — страница входа с логотипом KARI</div></div>
+    </li>
+    <li>
+      <div><div class="check-title">Celery worker запущен</div>
+      <div class="check-sub"><code>sudo systemctl status kari-celery-worker</code> → active</div></div>
+    </li>
+    <li>
+      <div><div class="check-title">Первый директор создан</div>
+      <div class="check-sub">POST /api/v1/users/init выполнен успешно</div></div>
+    </li>
+    <li>
+      <div><div class="check-title">SMS-авторизация работает</div>
+      <div class="check-sub">В DEBUG=True код приходит в ответе API (поле debug_code)</div></div>
+    </li>
+  </ul>
+
+  <div class="info info-ok" style="margin-top:20px">
+    <span class="info-icon">🚀</span>
+    <div><strong>Все пункты выполнены?</strong> Система готова к пилотному тестированию!<br>
+    Сообщите Юрию — он может входить по телефону и начинать работу.</div>
+  </div>
+
+  <h3>При возникновении проблем</h3>
+  <table>
+    <tr><th>Проблема</th><th>Что проверить</th></tr>
+    <tr><td>Backend не запускается</td><td>Проверить .env — все обязательные поля заполнены?</td></tr>
+    <tr><td>alembic upgrade head — ошибка</td><td>Проверить DATABASE_URL в alembic.ini и .env</td></tr>
+    <tr><td>SMS не приходят</td><td>Установить DEBUG=True — код будет в ответе API</td></tr>
+    <tr><td>Фото не загружаются</td><td>Проверить что MinIO запущен, бакеты созданы</td></tr>
+    <tr><td>Celery не запускается</td><td>Проверить REDIS_URL в .env</td></tr>
+  </table>
+</section>
+
+</div>
+
+<div class="footer">
+  KARI.Самозанятые v3.0 — Март 2026 &nbsp;|&nbsp; Конфиденциально
+</div>
+
+</body>
+</html>

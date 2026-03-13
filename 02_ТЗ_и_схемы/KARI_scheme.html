@@ -1,0 +1,2100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KARI.Самозанятые — Блок-схемы платформы</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+  
+  /* ===== ОБЩИЕ СТИЛИ ===== */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #f5f5f5;
+    color: #242D4A;
+    line-height: 1.4;
+  }
+
+  /* ===== ШАПКА ===== */
+  .page-header {
+    background: #ffffff;
+    color: #333333;
+    padding: 36px 40px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    border-bottom: 4px solid #A01F72;
+  }
+
+  .logo-block { display: flex; align-items: center; gap: 18px; }
+
+  .logo-text {
+    font-size: 42px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    color: #333333;
+    border: 3px solid #A01F72;
+    padding: 6px 18px;
+    line-height: 1;
+  }
+
+  .logo-sub {
+    font-size: 18px;
+    color: #A01F72;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  .logo-desc {
+    font-size: 13px;
+    color: #777;
+    margin-top: 4px;
+    max-width: 420px;
+  }
+
+  .header-meta {
+    text-align: right;
+    color: #666;
+    font-size: 12px;
+  }
+
+  .header-meta strong { color: #A01F72; font-size: 14px; display: block; margin-bottom: 4px; }
+
+  /* ===== НАВИГАЦИЯ ===== */
+  .nav-bar {
+    background: #fff;
+    border-bottom: 2px solid #e8e8e8;
+    padding: 0 40px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+
+  .nav-item {
+    padding: 14px 24px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #666;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .nav-item:hover { color: #A01F72; border-bottom-color: #A01F72; }
+
+  .nav-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: #A01F72;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 11px;
+    margin-right: 8px;
+  }
+
+  /* ===== ЛЕГЕНДА ===== */
+  .legend-bar {
+    background: #fff;
+    padding: 12px 40px;
+    border-bottom: 1px solid #e8e8e8;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .legend-title { font-size: 12px; font-weight: 700; color: #888; margin-right: 8px; }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    color: #444;
+  }
+
+  .legend-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
+  .main-content { padding: 32px 40px; max-width: 1400px; margin: 0 auto; }
+
+  /* ===== СЕКЦИЯ СХЕМЫ ===== */
+  .scheme-section {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    margin-bottom: 40px;
+    overflow: hidden;
+  }
+
+  .scheme-header {
+    background: #242D4A;
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .scheme-num {
+    background: #A01F72;
+    color: #fff;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .scheme-title { color: #fff; font-size: 20px; font-weight: 700; }
+  .scheme-subtitle { color: #aaa; font-size: 13px; margin-top: 2px; }
+
+  .scheme-body { padding: 32px 28px; }
+
+  /* ===== УНИВЕРСАЛЬНЫЕ БЛОКИ ===== */
+  .box {
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    position: relative;
+    border: 2px solid transparent;
+  }
+
+  .box-kari    { background: #242D4A; color: #fff; border-color: #242D4A; }
+  .box-user    { background: #A01F72; color: #fff; border-color: #c62828; }
+  .box-ext     { background: #1565C0; color: #fff; border-color: #0d47a1; }
+  .box-success { background: #2E7D32; color: #fff; border-color: #1b5e20; }
+  .box-check   { background: #E65100; color: #fff; border-color: #bf360c; }
+  .box-light   { background: #f5f5f5; color: #242D4A; border-color: #ddd; }
+  .box-blue-light { background: #E3F2FD; color: #1565C0; border-color: #90CAF9; }
+  .box-red-light  { background: #FFEBEE; color: #b71c1c; border-color: #EF9A9A; }
+  .box-green-light{ background: #E8F5E9; color: #1b5e20; border-color: #A5D6A7; }
+
+  /* ===== СТРЕЛКИ ===== */
+  .arrow-down {
+    display: flex;
+    justify-content: center;
+    margin: 6px 0;
+    color: #bbb;
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  .arrow-right {
+    display: flex;
+    align-items: center;
+    color: #bbb;
+    font-size: 20px;
+    margin: 0 4px;
+    flex-shrink: 0;
+  }
+
+  .arrow-label {
+    font-size: 10px;
+    color: #888;
+    text-align: center;
+    margin-top: -4px;
+    margin-bottom: 4px;
+  }
+
+  /* ============================================================
+     СХЕМА 1 — СТРУКТУРА СИСТЕМЫ
+  ============================================================ */
+
+  .s1-root {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+
+  .s1-root .box {
+    font-size: 17px;
+    padding: 14px 40px;
+    letter-spacing: 0.5px;
+    min-width: 320px;
+  }
+
+  .s1-level2-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+
+  .s1-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    min-width: 240px;
+    max-width: 340px;
+  }
+
+  .s1-col .box { width: 100%; margin-bottom: 0; }
+
+  .s1-children {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 0;
+    margin-top: 0;
+  }
+
+  .s1-child-box {
+    width: 90%;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    border-left: 3px solid;
+    background: #fafafa;
+    color: #333;
+    border-color: #ddd;
+  }
+
+  .s1-child-kari   { border-color: #242D4A; background: #f0f0f0; }
+  .s1-child-user   { border-color: #A01F72; background: #fff5f5; }
+  .s1-child-ext    { border-color: #2196F3; background: #f0f7ff; }
+  .s1-child-success{ border-color: #4CAF50; background: #f0fff2; }
+  .s1-child-check  { border-color: #FF9800; background: #fff8f0; }
+
+  /* горизонтальный коннектор от корня до колонок */
+  .s1-connector {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    position: relative;
+    height: 32px;
+    margin-bottom: 0;
+  }
+
+  /* линия сверху уровня 2 */
+  .s1-level2-connector {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .s1-col-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    min-width: 240px;
+    max-width: 340px;
+  }
+
+  /* ============================================================
+     СХЕМА 2 — ПУТЬ ИСПОЛНИТЕЛЯ
+  ============================================================ */
+
+  .s2-flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .s2-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .s2-step-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 14px;
+    color: #fff;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .s2-step-body {
+    flex: 1;
+    border-radius: 8px;
+    padding: 12px 16px;
+    border: 2px solid transparent;
+  }
+
+  .s2-step-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .s2-step-desc {
+    font-size: 12px;
+    opacity: 0.85;
+    line-height: 1.5;
+  }
+
+  .s2-step-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+
+  .s2-tag {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 600;
+    background: rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: #fff;
+  }
+
+  .s2-tag-dark {
+    background: rgba(0,0,0,0.1);
+    border-color: rgba(0,0,0,0.2);
+    color: inherit;
+  }
+
+  /* развилка */
+  .s2-fork {
+    width: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .s2-fork-branches {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .s2-fork-branch {
+    flex: 1;
+    max-width: 260px;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    border: 2px solid;
+  }
+
+  .s2-fork-no  { background: #FFEBEE; color: #b71c1c; border-color: #EF9A9A; }
+  .s2-fork-yes { background: #E8F5E9; color: #1b5e20; border-color: #A5D6A7; }
+
+  .s2-fork-label {
+    font-size: 10px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* ============================================================
+     СХЕМА 3 — ДОРОЖНАЯ КАРТА
+  ============================================================ */
+
+  .s3-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+
+  .s3-timeline::before {
+    content: '';
+    position: absolute;
+    left: 120px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, #A01F72, #242D4A, #2196F3, #4CAF50);
+    border-radius: 3px;
+  }
+
+  .s3-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    position: relative;
+    padding: 0 0 24px 0;
+  }
+
+  .s3-date {
+    width: 120px;
+    min-width: 120px;
+    padding-right: 20px;
+    text-align: right;
+    font-size: 12px;
+    font-weight: 700;
+    color: #888;
+    padding-top: 14px;
+    line-height: 1.3;
+  }
+
+  .s3-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 3px #A01F72;
+    margin-top: 12px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .s3-dot-launch {
+    width: 22px;
+    height: 22px;
+    margin-top: 9px;
+    box-shadow: 0 0 0 4px #A01F72, 0 0 0 8px rgba(230,57,70,0.2);
+  }
+
+  .s3-card {
+    flex: 1;
+    margin-left: 16px;
+    border-radius: 8px;
+    padding: 14px 18px;
+    border-left: 4px solid;
+  }
+
+  .s3-card-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .s3-tasks {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .s3-task {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+  }
+
+  .s3-task-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    flex-shrink: 0;
+    font-weight: 700;
+  }
+
+  .s3-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-top: 8px;
+  }
+
+  /* ===== ПОДВАЛ ===== */
+  .page-footer {
+    background: #242D4A;
+    color: #666;
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    border-top: 3px solid #A01F72;
+  }
+
+  .page-footer strong { color: #A01F72; }
+
+  /* ===== АДАПТИВ ===== */
+  @media (max-width: 768px) {
+    .main-content { padding: 16px; }
+    .page-header { padding: 20px 16px; }
+    .nav-bar { padding: 0 16px; }
+    .legend-bar { padding: 10px 16px; }
+    .scheme-body { padding: 20px 16px; }
+    .s1-level2-row { flex-direction: column; align-items: center; }
+    .s3-timeline::before { left: 80px; }
+    .s3-date { width: 80px; min-width: 80px; font-size: 10px; }
+  }
+
+  /* ===== ПЕЧАТЬ ===== */
+  @media print {
+    body { background: #fff; }
+    .nav-bar { display: none; }
+    .scheme-section { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
+    .page-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .scheme-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .s2-step-body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .s3-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .s3-timeline::before { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  /* ===== ЛОГОТИП KARI ===== */
+  .kari-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+  .kari-logo-symbol {
+    width: 32px;
+    height: 32px;
+    background: #A01F72;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .kari-logo-symbol::after {
+    content: 'r';
+    color: white;
+    font-size: 16px;
+    font-weight: 900;
+    font-style: italic;
+    transform: rotate(45deg);
+    display: block;
+  }
+  .kari-logo-text {
+    font-size: 24px;
+    font-weight: 900;
+    color: #242D4A;
+    letter-spacing: 2px;
+    font-style: italic;
+  }
+  .kari-logo-white .kari-logo-text {
+    color: white;
+  }
+  /* ===== ЛОГОТИП KARI (маленький) ===== */
+  .kari-logo-small {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .kari-logo-small-symbol {
+    width: 18px;
+    height: 18px;
+    background: #A01F72;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .kari-logo-small-symbol::after {
+    content: 'r';
+    color: white;
+    font-size: 9px;
+    font-weight: 900;
+    font-style: italic;
+    transform: rotate(45deg);
+    display: block;
+  }
+  .kari-logo-small-text {
+    font-size: 14px;
+    font-weight: 900;
+    color: #242D4A;
+    font-style: italic;
+  }
+
+  /* ===== НОВЫЙ ЛОГОТИП SVG ===== */
+  .kari-logo-wrap { display: flex; align-items: center; gap: 10px; }
+  .kari-text { font-size: 26px; font-weight: 900; font-style: italic; color: #A01F72; letter-spacing: 1px; font-family: 'Nunito', sans-serif; }
+  .kari-subtext { font-size: 10px; color: #A01F72; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; display: block; margin-top: -4px; }
+
+  /* ===== БЕЛАЯ ШАПКА И МЕНЮ ===== */
+  .page-header, .site-header, .app-header {
+    background: #ffffff !important;
+    border-bottom: 3px solid #A01F72 !important;
+    color: #333333 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+  }
+  .page-header *, .site-header *, .app-header * {
+    color: #333333 !important;
+  }
+  /* Исключения: кнопки и бейджи сохраняют свой цвет */
+  .page-header .btn-print, .site-header .btn-print, .app-header .btn-print,
+  .badge-status, .nav-num, .tab-badge {
+    color: #ffffff !important;
+  }
+  .header-avatar { color: #ffffff !important; }
+
+
+/* ═══════════════════════════════════════════════════════════
+   МОБИЛЬНАЯ АДАПТАЦИЯ — добавлено 11.03.2026
+   Адаптировано для экранов смартфонов (< 768px)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Таблицы — горизонтальный скролл на всех устройствах */
+table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+/* Изображения — масштабирование */
+img { max-width: 100% !important; height: auto !important; }
+@media (max-width: 768px) {
+  /* Боковое меню — скрываем, убираем отступ */
+  .sidebar { display: none !important; }
+  .main-content { margin-left: 0 !important; padding: 16px !important; }
+  .site-header { position: relative !important; }
+
+  /* Отступы шапки */
+  .header, .page-header { padding: 20px 16px !important; }
+  .header-top { flex-wrap: wrap !important; gap: 8px !important; }
+  .header-meta, .header-actions, .header-badges { flex-wrap: wrap !important; gap: 8px !important; }
+
+  /* Основной контент */
+  .main, .content, .container { padding: 16px !important; }
+
+  /* Типографика */
+  h1 { font-size: 22px !important; }
+  h2 { font-size: 18px !important; }
+  h3 { font-size: 15px !important; }
+
+  /* Горизонтальные ряды — перенос */
+  .header-pills, .filter-tabs, .nav-tabs, .tabs-row,
+  .section-tabs, .tab-bar { flex-wrap: wrap !important; }
+  .step { flex-direction: column !important; }
+
+  /* Кодовые блоки */
+  pre, code {
+    overflow-x: auto !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 13px !important; }
+  .badge, .tag, .pill, .status-badge { font-size: 11px !important; padding: 3px 8px !important; }
+  h1, .header h1, .logo-area h1 { font-size: 19px !important; }
+  .btn-print, .btn-export { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== ШАПКА ===== -->
+<div class="page-header">
+  <div class="kari-logo-wrap">
+  <svg xmlns="http://www.w3.org/2000/svg" height="56" viewBox="0 0 728.5 221.5" style="display:block"><g transform="translate(-56.5 -186.5)"><path transform="matrix(1,0,0,-1,167.381,186.9256)" d="M0 0V0C-60.585 0-109.775-48.659-110.678-109.017-101.105-89.662-88.255-77.239-76.191-67.482-58.14-52.881-36.41-45.828-16.28-44.574 5.777-43.201 23.053-47.846 37.189-59.05 42.293-63.095 46.38-67.877 49.613-73.02 55.602-82.543 58.375-93.663 57.368-105.985 55.198-132.527 33.39-153.87 6.804-155.519-24.699-157.473-50.859-132.506-50.859-101.431-50.859-87.238-45.395-74.325-36.465-64.663-46.559-67.782-56.643-72.841-65.837-80.278-74.971-87.666-85.145-97.851-93.512-111.315-102.647-126.015-106.433-143.045-106.537-160.35V-221.399H0C61.15-221.399 110.721-171.838 110.721-110.7V-110.699C110.721-49.561 61.15 0 0 0" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,484.762,262.1775)" d="M0 0H-51.44L-106.801-52.162V41.158H-144.053V-144.054H-106.801V-91.887L-51.433-144.054H3.854L-76.443-72.024Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,0,595.276)" d="M744.002 189.045H781.255V314.95503H744.002Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,550.4052,371.5924)" d="M0 0C-20.818 0-37.694 16.739-37.694 37.388-37.694 58.037-20.818 74.776 0 74.776 20.818 74.776 37.694 58.037 37.694 37.388 37.694 16.739 20.818 0 0 0M37.738 101.384C26.659 107.826 13.769 111.534 0 111.534-41.285 111.534-74.753 78.338-74.753 37.388-74.753-3.562-41.285-36.758 0-36.758 13.769-36.758 26.659-33.05 37.738-26.609V-34.639H74.99V109.415H37.738Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,762.6282,267.7195)" d="M0 0C12.459 0 22.559 10.1 22.559 22.559 22.559 28.064 20.582 33.104 17.306 37.02 15.132 39.862 12.219 42.197 8.653 43.858-2.579 49.086-18.377 47.019-33.605 38.323-49.001 29.531-61.329 13.083-68.67-6.989V5.542H-105.923V-138.512H-68.67V-37.268C-65.411-6.761-50.524 20.852-30.241 32.433-25.463 35.163-20.667 37.153-16.051 38.402-20.072 34.327-22.559 28.736-22.559 22.559-22.559 10.1-12.459 0 0 0" fill="#a91d7a"/></g></svg>
+  <span class="kari-subtext">самозанятые</span>
+</div>
+  </div>
+  <div class="header-meta">
+    <strong>6 схем</strong>
+    Архитектура &middot; Путь исполнителя &middot; Дорожная карта<br>
+    <span style="color:#A01F72;font-size:11px;font-weight:700">+ v2.0: Делегирование &middot; Риск 80% &middot; Планировщик смен</span>
+</div>
+
+<!-- ===== НАВИГАЦИЯ ===== -->
+<div class="nav-bar">
+  <a href="#scheme1" class="nav-item"><span class="nav-num">1</span>Структура системы</a>
+  <a href="#scheme2" class="nav-item"><span class="nav-num">2</span>Путь исполнителя</a>
+  <a href="#scheme3" class="nav-item"><span class="nav-num">3</span>Дорожная карта</a>
+  <a href="#scheme4" class="nav-item" style="border-left:3px solid #A01F72"><span class="nav-num" style="background:#A01F72">4</span>Делегирование прав</a>
+  <a href="#scheme5" class="nav-item" style="border-left:3px solid #A01F72"><span class="nav-num" style="background:#A01F72">5</span>Контроль риска 80%</a>
+  <a href="#scheme6" class="nav-item" style="border-left:3px solid #A01F72"><span class="nav-num" style="background:#A01F72">6</span>Планировщик смен</a>
+</div>
+
+<!-- ===== ЛЕГЕНДА ===== -->
+<div class="legend-bar">
+  <span class="legend-title">ЦВЕТОВОЕ КОДИРОВАНИЕ:</span>
+  <div class="legend-item"><div class="legend-dot" style="background:#242D4A;"></div>Системные блоки KARI</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#A01F72;"></div>Действия исполнителя</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#2196F3;"></div>Внешние интеграции</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#4CAF50;"></div>Успешный результат</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#FF9800;"></div>Проверки и решения</div>
+</div>
+
+<!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
+<div class="main-content">
+
+  <!-- ============================================================
+       СХЕМА 1 — СТРУКТУРА СИСТЕМЫ
+  ============================================================ -->
+  <div class="scheme-section" id="scheme1">
+    <div class="scheme-header">
+      <div class="scheme-num">1</div>
+      <div>
+        <div class="scheme-title">Структура системы</div>
+        <div class="scheme-subtitle">Архитектура платформы KARI.Самозанятые — иерархия компонентов и интеграций</div>
+      </div>
+    </div>
+    <div class="scheme-body">
+
+      <!-- Корневой блок -->
+      <div class="s1-root">
+        <div class="box box-kari" style="font-size:18px; padding:16px 48px; letter-spacing:1px; min-width:360px; border-color:#A01F72; border-width:3px;">
+          &#9679; ПЛАТФОРМА KARI.САМОЗАНЯТЫЕ
+        </div>
+      </div>
+
+      <div class="arrow-down">&#9660;</div>
+
+      <!-- Уровень 2: три колонки -->
+      <div class="s1-level2-row">
+
+        <!-- Колонка 1: Мобильное приложение -->
+        <div class="s1-col">
+          <div class="box box-user" style="width:100%; font-size:14px; padding:12px 10px;">
+            &#128241; Мобильное приложение<br>
+            <span style="font-size:11px; font-weight:400; opacity:0.85;">iOS &amp; Android</span>
+          </div>
+          <div class="arrow-down">&#9660;</div>
+          <div style="width:92%; background:#fff5f5; border:2px solid #A01F72; border-radius:8px; padding:10px 12px;">
+            <div style="font-size:11px; font-weight:700; color:#A01F72; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">Кабинет исполнителя</div>
+            <div class="arrow-down" style="font-size:13px; color:#A01F72; margin:2px 0;">&#9654;</div>
+            <div class="s1-children" style="gap:5px;">
+              <div class="s1-child-box s1-child-user">&#128196; Регистрация и верификация</div>
+              <div class="arrow-down" style="font-size:13px; color:#ccc; margin:1px;">&#9660;</div>
+              <div class="s1-child-box s1-child-user">&#128293; Биржа заданий</div>
+              <div class="arrow-down" style="font-size:13px; color:#ccc; margin:1px;">&#9660;</div>
+              <div class="s1-child-box s1-child-success">&#128179; Мой кошелёк</div>
+              <div class="arrow-down" style="font-size:13px; color:#ccc; margin:1px;">&#9660;</div>
+              <div class="s1-child-box s1-child-kari">&#128451; Документы и договоры</div>
+              <div class="arrow-down" style="font-size:13px; color:#ccc; margin:1px;">&#9660;</div>
+              <div class="s1-child-box s1-child-kari">&#128172; Чат с менеджером</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Колонка 2: Веб-кабинеты -->
+        <div class="s1-col">
+          <div class="box box-kari" style="width:100%; font-size:14px; padding:12px 10px;">
+            &#128187; Веб-кабинеты<br>
+            <span style="font-size:11px; font-weight:400; opacity:0.7;">Браузер, адаптив</span>
+          </div>
+          <div class="arrow-down">&#9660;</div>
+          <div style="width:92%; background:#f5f5f5; border:2px solid #242D4A; border-radius:8px; padding:10px 12px; display:flex; flex-direction:column; gap:8px;">
+
+            <!-- HRD -->
+            <div style="background:#fff; border:2px solid #242D4A; border-radius:6px; padding:8px 10px;">
+              <div style="font-size:11px; font-weight:700; color:#242D4A; margin-bottom:6px;">&#128202; Кабинет HRD / ГО</div>
+              <div style="display:flex; flex-direction:column; gap:3px;">
+                <div class="s1-child-box s1-child-kari" style="width:100%;">Аналитика и KPI</div>
+                <div class="s1-child-box s1-child-kari" style="width:100%;">Все регионы / все магазины</div>
+                <div class="s1-child-box s1-child-kari" style="width:100%;">Настройки платформы</div>
+              </div>
+            </div>
+
+            <!-- Директор магазина -->
+            <div style="background:#fff; border:2px solid #FF9800; border-radius:6px; padding:8px 10px;">
+              <div style="font-size:11px; font-weight:700; color:#E65100; margin-bottom:6px;">&#127981; Кабинет директора магазина</div>
+              <div style="display:flex; flex-direction:column; gap:3px;">
+                <div class="s1-child-box s1-child-check" style="width:100%;">Создание заданий</div>
+                <div class="s1-child-box s1-child-check" style="width:100%;">Управление исполнителями</div>
+                <div class="s1-child-box s1-child-check" style="width:100%;">Приёмка работ</div>
+              </div>
+            </div>
+
+            <!-- Бухгалтерия -->
+            <div style="background:#fff; border:2px solid #4CAF50; border-radius:6px; padding:8px 10px;">
+              <div style="font-size:11px; font-weight:700; color:#2E7D32; margin-bottom:6px;">&#128176; Кабинет бухгалтерии</div>
+              <div style="display:flex; flex-direction:column; gap:3px;">
+                <div class="s1-child-box s1-child-success" style="width:100%;">Управление выплатами</div>
+                <div class="s1-child-box s1-child-success" style="width:100%;">Реестры и отчёты</div>
+                <div class="s1-child-box s1-child-success" style="width:100%;">Интеграция с 1С</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Колонка 3: API-шлюз -->
+        <div class="s1-col">
+          <div class="box box-ext" style="width:100%; font-size:14px; padding:12px 10px;">
+            &#128279; API-шлюз<br>
+            <span style="font-size:11px; font-weight:400; opacity:0.85;">Внешние интеграции</span>
+          </div>
+          <div class="arrow-down">&#9660;</div>
+          <div style="width:92%; background:#f0f7ff; border:2px solid #2196F3; border-radius:8px; padding:10px 12px; display:flex; flex-direction:column; gap:8px;">
+
+            <!-- ФНС -->
+            <div style="background:#fff; border:2px solid #2196F3; border-radius:6px; padding:8px 10px;">
+              <div style="font-size:11px; font-weight:700; color:#1565C0; margin-bottom:6px;">&#127981; ФНС API</div>
+              <div style="display:flex; flex-direction:column; gap:3px;">
+                <div class="s1-child-box s1-child-ext" style="width:100%;">Проверка статуса самозанятого</div>
+                <div class="s1-child-box s1-child-ext" style="width:100%;">Формирование чеков</div>
+                <div class="s1-child-box s1-child-ext" style="width:100%;">Реестр операторов</div>
+              </div>
+            </div>
+
+            <!-- Совкомбанк -->
+            <div style="background:#fff; border:2px solid #4CAF50; border-radius:6px; padding:8px 10px;">
+              <div style="font-size:11px; font-weight:700; color:#2E7D32; margin-bottom:6px;">&#127981; Совкомбанк API</div>
+              <div style="display:flex; flex-direction:column; gap:3px;">
+                <div class="s1-child-box s1-child-success" style="width:100%;">Выплаты исполнителям</div>
+                <div class="s1-child-box s1-child-success" style="width:100%;">Верификация карты</div>
+                <div class="s1-child-box s1-child-success" style="width:100%;">Статусы транзакций</div>
+              </div>
+            </div>
+
+            <!-- 1С -->
+            <div style="background:#fff; border:2px solid #FF9800; border-radius:6px; padding:8px 10px;">
+              <div style="font-size:11px; font-weight:700; color:#E65100; margin-bottom:6px;">&#127981; 1С Бухгалтерия</div>
+              <div style="display:flex; flex-direction:column; gap:3px;">
+                <div class="s1-child-box s1-child-check" style="width:100%;">Синхронизация операций</div>
+                <div class="s1-child-box s1-child-check" style="width:100%;">Выгрузка реестров</div>
+                <div class="s1-child-box s1-child-check" style="width:100%;">Налоговая отчётность</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Итог схемы 1 -->
+      <div style="margin-top:24px; padding:14px 20px; background:#f9f9f9; border-radius:8px; border-left:4px solid #A01F72; display:flex; gap:24px; flex-wrap:wrap;">
+        <div style="font-size:12px; color:#555;">
+          <strong style="color:#242D4A;">Технологический стек:</strong><br>
+          Frontend: React Native (моб.) + React.js (веб) &middot; Backend: Node.js + PostgreSQL &middot; Облако: Яндекс.Облако &middot; Безопасность: TLS 1.3, шифрование данных
+        </div>
+        <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+          <div style="text-align:center; font-size:11px; color:#888;">
+            <div style="font-size:22px; font-weight:900; color:#A01F72;">3</div>уровня<br>архитектуры
+          </div>
+          <div style="text-align:center; font-size:11px; color:#888;">
+            <div style="font-size:22px; font-weight:900; color:#242D4A;">5</div>кабинетов<br>пользователей
+          </div>
+          <div style="text-align:center; font-size:11px; color:#888;">
+            <div style="font-size:22px; font-weight:900; color:#2196F3;">3</div>внешних<br>интеграции
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       СХЕМА 2 — ПУТЬ ИСПОЛНИТЕЛЯ
+  ============================================================ -->
+  <div class="scheme-section" id="scheme2">
+    <div class="scheme-header">
+      <div class="scheme-num">2</div>
+      <div>
+        <div class="scheme-title">Путь исполнителя</div>
+        <div class="scheme-subtitle">Customer Journey Map — от скачивания приложения до получения денег на карту</div>
+      </div>
+    </div>
+    <div class="scheme-body">
+
+      <div style="display:flex; gap:28px; flex-wrap:wrap; align-items:flex-start;">
+
+        <!-- Основной флоу -->
+        <div class="s2-flow" style="flex:1; min-width:320px;">
+
+          <!-- ШАГ 1 -->
+          <div class="s2-step">
+            <div class="s2-step-num" style="background:#A01F72;">1</div>
+            <div class="s2-step-body" style="background:#FFEBEE; border-color:#EF9A9A;">
+              <div class="s2-step-title" style="color:#b71c1c;">&#128241; Скачивание приложения KARI</div>
+              <div class="s2-step-desc" style="color:#c62828;">Исполнитель находит приложение в App Store или Google Play по запросу «KARI Работа»</div>
+              <div class="s2-step-tags">
+                <span class="s2-tag s2-tag-dark" style="background:#ffcdd2; color:#b71c1c; border-color:#ef9a9a;">App Store</span>
+                <span class="s2-tag s2-tag-dark" style="background:#ffcdd2; color:#b71c1c; border-color:#ef9a9a;">Google Play</span>
+                <span class="s2-tag s2-tag-dark" style="background:#ffcdd2; color:#b71c1c; border-color:#ef9a9a;">Действие исполнителя</span>
+              </div>
+            </div>
+          </div>
+          <div class="arrow-down" style="margin:4px 0 4px 52px;">&#9660;</div>
+
+          <!-- ШАГ 2 -->
+          <div class="s2-step">
+            <div class="s2-step-num" style="background:#A01F72;">2</div>
+            <div class="s2-step-body" style="background:#FFEBEE; border-color:#EF9A9A;">
+              <div class="s2-step-title" style="color:#b71c1c;">&#128196; Регистрация в системе</div>
+              <div class="s2-step-desc" style="color:#c62828;">Исполнитель вводит данные для создания аккаунта</div>
+              <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;">
+                <div style="background:#fff; border:1px solid #ef9a9a; border-radius:6px; padding:5px 10px; font-size:11px; color:#b71c1c; font-weight:600;">&#128196; Паспорт РФ</div>
+                <div style="background:#fff; border:1px solid #ef9a9a; border-radius:6px; padding:5px 10px; font-size:11px; color:#b71c1c; font-weight:600;">&#128196; ИНН</div>
+                <div style="background:#fff; border:1px solid #ef9a9a; border-radius:6px; padding:5px 10px; font-size:11px; color:#b71c1c; font-weight:600;">&#128247; Селфи</div>
+                <div style="background:#fff; border:1px solid #ef9a9a; border-radius:6px; padding:5px 10px; font-size:11px; color:#b71c1c; font-weight:600;">&#128241; SMS-код</div>
+              </div>
+            </div>
+          </div>
+          <div class="arrow-down" style="margin:4px 0 4px 52px;">&#9660;</div>
+
+          <!-- ШАГ 3 — РАЗВИЛКА ФНС -->
+          <div class="s2-step">
+            <div class="s2-step-num" style="background:#FF9800;">3</div>
+            <div class="s2-step-body" style="background:#FFF8E1; border-color:#FFD54F; width:100%;">
+              <div class="s2-step-title" style="color:#E65100;">&#128279; Проверка статуса самозанятого</div>
+              <div class="s2-step-desc" style="color:#F57F17;">Платформа автоматически запрашивает ФНС через API — проверяет, зарегистрирован ли человек как самозанятый</div>
+              <div style="margin-top:6px; padding:4px 10px; background:rgba(33,150,243,0.1); border-radius:4px; font-size:11px; color:#1565C0; font-weight:600;">&#128279; Запрос в ФНС API — автоматически, без участия исполнителя</div>
+            </div>
+          </div>
+
+          <!-- Развилка -->
+          <div style="margin:0 0 0 52px; width:calc(100% - 52px);">
+            <div style="display:flex; gap:12px; justify-content:center; padding:8px 0;">
+              <div style="flex:1; max-width:220px; text-align:center;">
+                <div style="font-size:10px; font-weight:700; color:#b71c1c; text-transform:uppercase; margin-bottom:4px;">&#10060; Нет статуса</div>
+                <div style="background:#FFEBEE; border:2px solid #EF9A9A; border-radius:8px; padding:10px 12px; font-size:12px; color:#b71c1c; font-weight:600;">
+                  Направить в приложение «Мой налог» для регистрации в качестве самозанятого
+                </div>
+                <div class="arrow-down" style="color:#A01F72; margin:3px 0;">&#8617;</div>
+                <div style="font-size:10px; color:#888;">Возврат после регистрации</div>
+              </div>
+              <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; font-size:20px; color:#ccc;">&#9632;</div>
+              <div style="flex:1; max-width:220px; text-align:center;">
+                <div style="font-size:10px; font-weight:700; color:#2e7d32; text-transform:uppercase; margin-bottom:4px;">&#10004; Статус подтверждён</div>
+                <div style="background:#E8F5E9; border:2px solid #A5D6A7; border-radius:8px; padding:10px 12px; font-size:12px; color:#1b5e20; font-weight:600;">
+                  Статус самозанятого активен — продолжить регистрацию
+                </div>
+                <div class="arrow-down" style="color:#4CAF50; margin:3px 0;">&#9660;</div>
+                <div style="font-size:10px; color:#888;">Переход к шагу 4</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ШАГ 4 -->
+          <div class="s2-step">
+            <div class="s2-step-num" style="background:#242D4A;">4</div>
+            <div class="s2-step-body" style="background:#f5f5f5; border-color:#bbb;">
+              <div class="s2-step-title" style="color:#242D4A;">&#128221; Подписание договора ГПХ</div>
+              <div class="s2-step-desc" style="color:#333;">Исполнитель читает и подписывает договор гражданско-правового характера с помощью ПЭП (Простая Электронная Подпись). Подтверждение — SMS-код на телефон.</div>
+              <div style="margin-top:6px; display:flex; gap:6px; flex-wrap:wrap;">
+                <span style="background:#242D4A; color:#fff; font-size:10px; padding:2px 8px; border-radius:3px; font-weight:600;">ПЭП</span>
+                <span style="background:#242D4A; color:#fff; font-size:10px; padding:2px 8px; border-radius:3px; font-weight:600;">SMS-подпись</span>
+                <span style="background:#242D4A; color:#fff; font-size:10px; padding:2px 8px; border-radius:3px; font-weight:600;">Юридически значимо</span>
+              </div>
+            </div>
+          </div>
+          <div class="arrow-down" style="margin:4px 0 4px 52px;">&#9660;</div>
+
+          <!-- ШАГ 5 -->
+          <div class="s2-step">
+            <div class="s2-step-num" style="background:#A01F72;">5</div>
+            <div class="s2-step-body" style="background:#FFEBEE; border-color:#EF9A9A;">
+              <div class="s2-step-title" style="color:#b71c1c;">&#128293; Биржа заданий — выбор работы</div>
+              <div class="s2-step-desc" style="color:#c62828;">Исполнитель видит список доступных заданий в своём городе / регионе. Выбирает задание и нажимает «Взять в работу».</div>
+              <div style="margin-top:8px; background:#fff; border-radius:6px; padding:8px 10px; border:1px solid #ef9a9a;">
+                <div style="font-size:11px; color:#888; margin-bottom:4px;">Пример задания:</div>
+                <div style="font-size:12px; color:#242D4A; font-weight:600;">Расстановка товара в магазине KARI ТЦ «Мега»</div>
+                <div style="display:flex; gap:12px; margin-top:4px; font-size:11px; color:#555;">
+                  <span>&#128197; Сб-Вс</span>
+                  <span>&#8987; 4 часа</span>
+                  <span>&#128176; 2 500 &#8381;</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="arrow-down" style="margin:4px 0 4px 52px;">&#9660;</div>
+
+          <!-- ШАГ 6 -->
+          <div class="s2-step">
+            <div class="s2-step-num" style="background:#A01F72;">6</div>
+            <div class="s2-step-body" style="background:#FFEBEE; border-color:#EF9A9A;">
+              <div class="s2-step-title" style="color:#b71c1c;">&#128247; Выполнение задания</div>
+              <div class="s2-step-desc" style="color:#c62828;">Исполнитель выполняет работу и фиксирует результат через приложение</div>
+              <div style="display:flex; gap:6px; margin-top:8px; flex-wrap:wrap;">
+                <div style="background:#fff; border:1px solid #ef9a9a; border-radius:6px; padding:5px 10px; font-size:11px; color:#b71c1c; font-weight:600;">&#128247; Фото «до» и «после»</div>
+                <div style="background:#fff; border:1px solid #ef9a9a; border-radius:6px; padding:5px 10px; font-size:11px; color:#b71c1c; font-weight:600;">&#128205; Геометка (GPS)</div>
+                <div style="background:#fff; border:1px solid #ef9a9a; border-radius:6px; padding:5px 10px; font-size:11px; color:#b71c1c; font-weight:600;">&#9200; Время выполнения</div>
+              </div>
+              <div style="margin-top:6px; font-size:11px; color:#888;">После заполнения — нажимает «Отправить на проверку»</div>
+            </div>
+          </div>
+          <div class="arrow-down" style="margin:4px 0 4px 52px;">&#9660;</div>
+
+          <!-- ШАГ 7 — РАЗВИЛКА МЕНЕДЖЕРА -->
+          <div class="s2-step">
+            <div class="s2-step-num" style="background:#FF9800;">7</div>
+            <div class="s2-step-body" style="background:#FFF8E1; border-color:#FFD54F; width:100%;">
+              <div class="s2-step-title" style="color:#E65100;">&#127981; Приёмка работы менеджером магазина</div>
+              <div class="s2-step-desc" style="color:#F57F17;">Менеджер магазина получает уведомление, проверяет фото и результат работы. Принимает решение.</div>
+            </div>
+          </div>
+
+          <!-- Развилка 7 -->
+          <div style="margin:0 0 0 52px; width:calc(100% - 52px);">
+            <div style="display:flex; gap:12px; justify-content:center; padding:8px 0;">
+              <div style="flex:1; max-width:200px; text-align:center;">
+                <div style="font-size:10px; font-weight:700; color:#b71c1c; text-transform:uppercase; margin-bottom:4px;">&#10060; Отклонено</div>
+                <div style="background:#FFEBEE; border:2px solid #EF9A9A; border-radius:8px; padding:10px 12px; font-size:12px; color:#b71c1c; font-weight:600;">
+                  Отправить на доработку с комментарием
+                </div>
+                <div class="arrow-down" style="color:#A01F72; margin:3px 0;">&#8617;</div>
+                <div style="font-size:10px; color:#888;">Возврат к шагу 6</div>
+              </div>
+              <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; font-size:20px; color:#ccc;">&#9632;</div>
+              <div style="flex:1; max-width:200px; text-align:center;">
+                <div style="font-size:10px; font-weight:700; color:#2e7d32; text-transform:uppercase; margin-bottom:4px;">&#10004; Принято</div>
+                <div style="background:#E8F5E9; border:2px solid #A5D6A7; border-radius:8px; padding:10px 12px; font-size:12px; color:#1b5e20; font-weight:600;">
+                  Работа принята — переход к подписанию акта
+                </div>
+                <div class="arrow-down" style="color:#4CAF50; margin:3px 0;">&#9660;</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ШАГ 8 -->
+          <div class="s2-step">
+            <div class="s2-step-num" style="background:#242D4A;">8</div>
+            <div class="s2-step-body" style="background:#f5f5f5; border-color:#bbb;">
+              <div class="s2-step-title" style="color:#242D4A;">&#128221; Акт выполненных работ</div>
+              <div class="s2-step-desc" style="color:#333;">Платформа автоматически формирует акт. Исполнитель подписывает его ПЭП через приложение (SMS-код). Документ имеет юридическую силу.</div>
+              <div style="margin-top:6px; display:flex; gap:6px; flex-wrap:wrap;">
+                <span style="background:#242D4A; color:#fff; font-size:10px; padding:2px 8px; border-radius:3px; font-weight:600;">Автоформирование</span>
+                <span style="background:#242D4A; color:#fff; font-size:10px; padding:2px 8px; border-radius:3px; font-weight:600;">ПЭП исполнителя</span>
+                <span style="background:#242D4A; color:#fff; font-size:10px; padding:2px 8px; border-radius:3px; font-weight:600;">Хранение в облаке</span>
+              </div>
+            </div>
+          </div>
+          <div class="arrow-down" style="margin:4px 0 4px 52px;">&#9660;</div>
+
+          <!-- ШАГ 9 -->
+          <div class="s2-step">
+            <div class="s2-step-num" style="background:#2196F3;">9</div>
+            <div class="s2-step-body" style="background:#E3F2FD; border-color:#90CAF9;">
+              <div class="s2-step-title" style="color:#1565C0;">&#128176; Выплата через Совкомбанк</div>
+              <div class="s2-step-desc" style="color:#1565C0;">Система автоматически инициирует выплату. Одновременно формируется и отправляется чек в ФНС.</div>
+              <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
+                <div style="background:#fff; border:1px solid #90CAF9; border-radius:6px; padding:5px 10px; font-size:11px; color:#1565C0; font-weight:600;">&#128279; Совкомбанк API</div>
+                <div style="background:#fff; border:1px solid #90CAF9; border-radius:6px; padding:5px 10px; font-size:11px; color:#1565C0; font-weight:600;">&#128279; Чек в ФНС автоматически</div>
+                <div style="background:#fff; border:1px solid #90CAF9; border-radius:6px; padding:5px 10px; font-size:11px; color:#1565C0; font-weight:600;">&#9200; До 1 рабочего дня</div>
+              </div>
+            </div>
+          </div>
+          <div class="arrow-down" style="margin:4px 0 4px 52px;">&#9660;</div>
+
+          <!-- ШАГ 10 -->
+          <div class="s2-step">
+            <div class="s2-step-num" style="background:#2E7D32;">10</div>
+            <div class="s2-step-body" style="background:#E8F5E9; border-color:#A5D6A7;">
+              <div class="s2-step-title" style="color:#1b5e20;">&#127881; Деньги на карте исполнителя!</div>
+              <div class="s2-step-desc" style="color:#2e7d32;">Исполнитель получает уведомление в приложении и SMS от банка о зачислении средств. Налог автоматически уплачен через ФНС.</div>
+              <div style="margin-top:8px; background:#fff; border-radius:6px; padding:8px 12px; border:1px solid #A5D6A7; display:flex; gap:16px; flex-wrap:wrap;">
+                <div style="font-size:11px; color:#2e7d32;">&#10004; Деньги зачислены</div>
+                <div style="font-size:11px; color:#2e7d32;">&#10004; Чек в ФНС отправлен</div>
+                <div style="font-size:11px; color:#2e7d32;">&#10004; Документы сохранены</div>
+                <div style="font-size:11px; color:#2e7d32;">&#10004; Налог уплачен</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Боковая панель — ключевые метрики -->
+        <div style="width:220px; flex-shrink:0; display:flex; flex-direction:column; gap:12px; position:sticky; top:16px; align-self:flex-start;">
+          <div style="background:#242D4A; color:#fff; border-radius:8px; padding:14px 16px; text-align:center;">
+            <div style="font-size:11px; color:#aaa; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">Ключевые метрики</div>
+            <div style="font-size:28px; font-weight:900; color:#A01F72;">10</div>
+            <div style="font-size:12px; color:#ccc;">шагов от скачивания<br>до получения денег</div>
+          </div>
+          <div style="background:#E8F5E9; border:2px solid #A5D6A7; border-radius:8px; padding:12px 14px;">
+            <div style="font-size:11px; color:#888; margin-bottom:6px;">Время регистрации</div>
+            <div style="font-size:22px; font-weight:900; color:#2E7D32;">15 мин</div>
+            <div style="font-size:11px; color:#555;">с нуля до первого задания</div>
+          </div>
+          <div style="background:#E3F2FD; border:2px solid #90CAF9; border-radius:8px; padding:12px 14px;">
+            <div style="font-size:11px; color:#888; margin-bottom:6px;">Скорость выплаты</div>
+            <div style="font-size:22px; font-weight:900; color:#1565C0;">1 день</div>
+            <div style="font-size:11px; color:#555;">после подписания акта</div>
+          </div>
+          <div style="background:#FFF8E1; border:2px solid #FFD54F; border-radius:8px; padding:12px 14px;">
+            <div style="font-size:11px; color:#888; margin-bottom:6px;">Документы</div>
+            <div style="font-size:22px; font-weight:900; color:#E65100;">100%</div>
+            <div style="font-size:11px; color:#555;">электронные, без бумаги</div>
+          </div>
+          <div style="background:#FFEBEE; border:2px solid #EF9A9A; border-radius:8px; padding:12px 14px;">
+            <div style="font-size:11px; color:#888; margin-bottom:6px;">Налоговый учёт</div>
+            <div style="font-size:22px; font-weight:900; color:#A01F72;">Авто</div>
+            <div style="font-size:11px; color:#555;">чеки в ФНС без участия исполнителя</div>
+          </div>
+
+          <div style="margin-top:4px; font-size:11px; color:#888; background:#f9f9f9; border-radius:6px; padding:10px 12px; border-left:3px solid #A01F72;">
+            <strong style="color:#242D4A; display:block; margin-bottom:4px;">Безопасность:</strong>
+            Все данные передаются по зашифрованному каналу TLS 1.3. Хранение — на серверах в РФ (152-ФЗ).
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       СХЕМА 3 — ДОРОЖНАЯ КАРТА
+  ============================================================ -->
+  <div class="scheme-section" id="scheme3">
+    <div class="scheme-header">
+      <div class="scheme-num">3</div>
+      <div>
+        <div class="scheme-title">Процесс регистрации в ФНС и дорожная карта запуска</div>
+        <div class="scheme-subtitle">Временная шкала от юридического оформления до масштабирования на все регионы</div>
+      </div>
+    </div>
+    <div class="scheme-body">
+
+      <!-- Сводная строка -->
+      <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:28px;">
+        <div style="flex:1; min-width:160px; background:#FFEBEE; border:2px solid #EF9A9A; border-radius:8px; padding:12px 16px; text-align:center;">
+          <div style="font-size:22px; font-weight:900; color:#A01F72;">Месяц 1</div>
+          <div style="font-size:11px; color:#b71c1c; margin-top:2px;">Юридика и подготовка</div>
+        </div>
+        <div style="display:flex; align-items:center; font-size:20px; color:#ccc;">&#9658;</div>
+        <div style="flex:1; min-width:160px; background:#f5f5f5; border:2px solid #242D4A; border-radius:8px; padding:12px 16px; text-align:center;">
+          <div style="font-size:22px; font-weight:900; color:#242D4A;">Месяц 1–2</div>
+          <div style="font-size:11px; color:#555; margin-top:2px;">MVP и интеграции</div>
+        </div>
+        <div style="display:flex; align-items:center; font-size:20px; color:#ccc;">&#9658;</div>
+        <div style="flex:1; min-width:160px; background:#f5f5f5; border:2px solid #242D4A; border-radius:8px; padding:12px 16px; text-align:center;">
+          <div style="font-size:22px; font-weight:900; color:#242D4A;">Месяц 2–3</div>
+          <div style="font-size:11px; color:#555; margin-top:2px;">Мобильное приложение</div>
+        </div>
+        <div style="display:flex; align-items:center; font-size:20px; color:#ccc;">&#9658;</div>
+        <div style="flex:1; min-width:160px; background:#A01F72; border:2px solid #c62828; border-radius:8px; padding:12px 16px; text-align:center;">
+          <div style="font-size:22px; font-weight:900; color:#fff;">Апрель 2026</div>
+          <div style="font-size:11px; color:#ffcdd2; margin-top:2px;">ЗАПУСК ПИЛОТА</div>
+        </div>
+        <div style="display:flex; align-items:center; font-size:20px; color:#ccc;">&#9658;</div>
+        <div style="flex:1; min-width:160px; background:#E8F5E9; border:2px solid #A5D6A7; border-radius:8px; padding:12px 16px; text-align:center;">
+          <div style="font-size:22px; font-weight:900; color:#2E7D32;">Год 1–2</div>
+          <div style="font-size:11px; color:#1b5e20; margin-top:2px;">Масштабирование</div>
+        </div>
+      </div>
+
+      <!-- Таймлайн -->
+      <div class="s3-timeline">
+
+        <!-- Месяц 1: Юридика -->
+        <div class="s3-item">
+          <div class="s3-date">Месяц 1<br><span style="color:#A01F72; font-size:10px;">ЮРИДИКА</span></div>
+          <div class="s3-dot" style="box-shadow:0 0 0 3px #A01F72;"></div>
+          <div class="s3-card" style="background:#FFEBEE; border-left-color:#A01F72;">
+            <div class="s3-card-title" style="color:#b71c1c;">&#9878; Юридическое оформление и регистрация</div>
+            <div class="s3-tasks">
+              <div class="s3-task">
+                <div class="s3-task-icon" style="background:#A01F72; color:#fff;">&#9745;</div>
+                <div style="color:#555;">
+                  <strong style="color:#242D4A;">Подача заявки в реестр операторов ФНС</strong><br>
+                  <span style="font-size:11px;">Регистрация платформы как оператора для работы с самозанятыми. Получение доступа к API ФНС «Мой налог».</span>
+                </div>
+              </div>
+              <div class="s3-task">
+                <div class="s3-task-icon" style="background:#A01F72; color:#fff;">&#9745;</div>
+                <div style="color:#555;">
+                  <strong style="color:#242D4A;">Регистрация в Роскомнадзоре</strong><br>
+                  <span style="font-size:11px;">Уведомление об обработке персональных данных (152-ФЗ). Назначение ответственного за ПДн.</span>
+                </div>
+              </div>
+              <div class="s3-task">
+                <div class="s3-task-icon" style="background:#A01F72; color:#fff;">&#9745;</div>
+                <div style="color:#555;">
+                  <strong style="color:#242D4A;">Договор с Совкомбанком на API выплат</strong><br>
+                  <span style="font-size:11px;">Подключение к системе массовых выплат физическим лицам. Согласование тарифов и лимитов.</span>
+                </div>
+              </div>
+              <div class="s3-task">
+                <div class="s3-task-icon" style="background:#A01F72; color:#fff;">&#9745;</div>
+                <div style="color:#555;">
+                  <strong style="color:#242D4A;">Разработка шаблонов документов</strong><br>
+                  <span style="font-size:11px;">Договор ГПХ, акт выполненных работ, политика конфиденциальности — согласование с юристами.</span>
+                </div>
+              </div>
+            </div>
+            <div class="s3-badge" style="background:#A01F72; color:#fff; margin-top:10px;">
+              &#128198; Срок: 4 недели &nbsp;|&nbsp; &#128101; Ответственный: Юридический отдел + IT-директор
+            </div>
+          </div>
+        </div>
+
+        <!-- Месяц 1-2: Разработка MVP -->
+        <div class="s3-item">
+          <div class="s3-date">Месяц 1–2<br><span style="color:#242D4A; font-size:10px;">БЭКЕНД</span></div>
+          <div class="s3-dot" style="box-shadow:0 0 0 3px #242D4A;"></div>
+          <div class="s3-card" style="background:#f5f5f5; border-left-color:#242D4A;">
+            <div class="s3-card-title" style="color:#242D4A;">&#128736; Разработка MVP — архитектура и интеграции</div>
+            <div class="s3-tasks">
+              <div class="s3-task">
+                <div class="s3-task-icon" style="background:#242D4A; color:#fff;">&#9881;</div>
+                <div style="color:#555;">
+                  <strong style="color:#242D4A;">Проектирование архитектуры и базы данных</strong><br>
+                  <span style="font-size:11px;">Выбор стека (Node.js + PostgreSQL), проектирование схемы БД, настройка Яндекс.Облако, CI/CD pipeline.</span>
+                </div>
+              </div>
+              <div class="s3-task">
+                <div class="s3-task-icon" style="background:#2196F3; color:#fff;">&#128279;</div>
+                <div style="color:#555;">
+                  <strong style="color:#242D4A;">API-интеграция с ФНС</strong><br>
+                  <span style="font-size:11px;">Подключение к API «Мой налог»: проверка статуса самозанятого, формирование чеков, получение данных об ИНН.</span>
+                </div>
+              </div>
+              <div class="s3-task">
+                <div class="s3-task-icon" style="background:#2196F3; color:#fff;">&#128279;</div>
+                <div style="color:#555;">
+                  <strong style="color:#242D4A;">API-интеграция с Совкомбанком</strong><br>
+                  <span style="font-size:11px;">Подключение к системе выплат: отправка платежа, верификация карты, получение статусов транзакций.</span>
+                </div>
+              </div>
+              <div class="s3-task">
+                <div class="s3-task-icon" style="background:#242D4A; color:#fff;">&#128221;</div>
+                <div style="color:#555;">
+                  <strong style="color:#242D4A;">Модуль ПЭП (Простая Электронная Подпись)</strong><br>
+                  <span style="font-size:11px;">Реализация подписания документов по SMS-коду, хранение подписанных документов, аудит-лог.</span>
+                </div>
+              </div>
+              <div class="s3-task">
+                <div class="s3-task-icon" style="background:#4CAF50; color:#fff;">&#128202;</div>
+                <div style="color:#555;">
+                  <strong style="color:#242D4A;">Биржа заданий — серверная часть</strong><br>
+                  <span style="font-size:11px;">Логика создания, назначения, выполнения и приёмки заданий. Уведомления (Push + SMS).</span>
+                </div>
+              </div>
+            </div>
+            <div class="s3-badge" style="background:#242D4A; color:#fff; margin-top:10px;">
+              &#128198; Срок: 6 недель &nbsp;|&nbsp; &#128101; Ответственный: Backend-команда (5 разработчиков)
+            </div>
+          </div>
+        </div>
+
+        <!-- Месяц 2: Кабинеты -->
+        <div class="s3-item">
+          <div class="s3-date">Месяц 2<br><span style="color:#FF9800; font-size:10px;">ВЕБ</span></div>
+          <div class="s3-dot" style="box-shadow:0 0 0 3px #FF9800;"></div>
+          <div class="s3-card" style="background:#FFF8E1; border-left-color:#FF9800;">
+            <div class="s3-card-title" style="color:#E65100;">&#128187; Разработка веб-кабинетов</div>
+            <div class="s3-tasks">
+              <div class="s3-task">
+                <div class="s3-task-icon" style="background:#A01F72; color:#fff;">&#128100;</div>
+                <div style="color:#555;">
+                  <strong style="color:#242D4A;">Кабинет исполнителя (веб-версия)</strong><br>
+                  <span style="font-size:11px;">Личный кабинет для использования в браузере: история заданий, документы, баланс.</span>
+                </div>
+              </div>
+              <div class="s3-task">
+                <div class="s3-task-icon" style="background:#FF9800; color:#fff;">&#127981;</div>
+                <div style="color:#555;">
+                  <strong style="color:#242D4A;">Кабинет директора магазина</strong><br>
+                  <span style="font-size:11px;">Создание заданий, просмотр исполнителей, приёмка работ с фото, подпись актов.</span>
+                </div>
+              </div>
+              <div class="s3-task">
+                <div class="s3-task-icon" style="background:#242D4A; color:#fff;">&#128202;</div>
+                <div style="color:#555;">
+                  <strong style="color:#242D4A;">Кабинет HRD / Головного офиса</strong><br>
+                  <span style="font-size:11px;">Аналитика по всем регионам, управление настройками, отчёты, KPI исполнителей.</span>
+                </div>
+              </div>
+              <div class="s3-task">
+                <div class="s3-task-icon" style="background:#4CAF50; color:#fff;">&#128176;</div>
+                <div style="color:#555;">
+                  <strong style="color:#242D4A;">Кабинет бухгалтерии</strong><br>
+                  <span style="font-size:11px;">Реестры выплат, управление платежами, выгрузка в 1С, налоговые отчёты.</span>
+                </div>
+              </div>
+            </div>
+            <div class="s3-badge" style="background:#FF9800; color:#fff; margin-top:10px;">
+              &#128198; Срок: 4 недели &nbsp;|&nbsp; &#128101; Ответственный: Frontend-команда (4 разработчика + 2 дизайнера)
+            </div>
+          </div>
+        </div>
+
+        <!-- Месяц 2-3: Мобильное приложение -->
+        <div class="s3-item">
+          <div class="s3-date">Месяц 2–3<br><span style="color:#2196F3; font-size:10px;">МОБАЙЛ</span></div>
+          <div class="s3-dot" style="box-shadow:0 0 0 3px #2196F3;"></div>
+          <div class="s3-card" style="background:#E3F2FD; border-left-color:#2196F3;">
+            <div class="s3-card-title" style="color:#1565C0;">&#128241; Разработка мобильного приложения iOS + Android</div>
+            <div class="s3-tasks">
+              <div class="s3-task">
+                <div class="s3-task-icon" style="background:#2196F3; color:#fff;">&#128241;</div>
+                <div style="color:#555;">
+                  <strong style="color:#242D4A;">React Native — единая кодовая база</strong><br>
+                  <span style="font-size:11px;">Одна разработка для iOS и Android. Нативный UX, push-уведомления, работа в фоне.</span>
+                </div>
+              </div>
+              <div class="s3-task">
+                <div class="s3-task-icon" style="background:#2196F3; color:#fff;">&#128247;</div>
+                <div style="color:#555;">
+                  <strong style="color:#242D4A;">Модуль загрузки фото и геометки</strong><br>
+                  <span style="font-size:11px;">Съёмка и загрузка фото результата работы с автоматической геотегом и временной меткой.</span>
+                </div>
+              </div>
+              <div class="s3-task">
+                <div class="s3-task-icon" style="background:#2196F3; color:#fff;">&#128172;</div>
+                <div style="color:#555;">
+                  <strong style="color:#242D4A;">Встроенный чат</strong><br>
+                  <span style="font-size:11px;">Чат с менеджером магазина, поддержкой, уведомления о статусах заданий.</span>
+                </div>
+              </div>
+              <div class="s3-task">
+                <div class="s3-task-icon" style="background:#2196F3; color:#fff;">&#128203;</div>
+                <div style="color:#555;">
+                  <strong style="color:#242D4A;">Тестирование и публикация</strong><br>
+                  <span style="font-size:11px;">QA-тестирование, подача на модерацию в App Store и Google Play. Исправление замечаний.</span>
+                </div>
+              </div>
+            </div>
+            <div class="s3-badge" style="background:#2196F3; color:#fff; margin-top:10px;">
+              &#128198; Срок: 6 недель &nbsp;|&nbsp; &#128101; Ответственный: Mobile-команда (3 разработчика + QA)
+            </div>
+          </div>
+        </div>
+
+        <!-- ЗАПУСК — ключевое событие -->
+        <div class="s3-item">
+          <div class="s3-date" style="color:#A01F72; font-weight:900; font-size:13px;">АПРЕЛЬ<br>2026<br><span style="color:#A01F72; font-size:10px;">&#9733; ЗАПУСК</span></div>
+          <div class="s3-dot s3-dot-launch" style="background:#A01F72; box-shadow:0 0 0 4px #A01F72, 0 0 0 8px rgba(230,57,70,0.2);"></div>
+          <div class="s3-card" style="background:#242D4A; border-left-color:#A01F72;">
+            <div class="s3-card-title" style="color:#fff; font-size:18px;">&#128640; ЗАПУСК MVP — Пилотный проект</div>
+            <div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:12px;">
+              <div style="flex:1; min-width:180px; background:rgba(230,57,70,0.15); border:1px solid #A01F72; border-radius:8px; padding:12px 14px;">
+                <div style="color:#A01F72; font-size:12px; font-weight:700; margin-bottom:8px;">&#128205; ПИЛОТ — Регион 1</div>
+                <div style="color:#fff; font-size:13px; font-weight:700; margin-bottom:4px;">Иркутский регион</div>
+                <div style="color:#aaa; font-size:11px; line-height:1.6;">
+                  &#128116; 50 магазинов KARI<br>
+                  &#128100; До 500 самозанятых<br>
+                  &#128197; Запуск: 1 апреля 2026
+                </div>
+              </div>
+              <div style="flex:1; min-width:180px; background:rgba(230,57,70,0.15); border:1px solid #A01F72; border-radius:8px; padding:12px 14px;">
+                <div style="color:#A01F72; font-size:12px; font-weight:700; margin-bottom:8px;">&#128205; ПИЛОТ — Регион 2</div>
+                <div style="color:#fff; font-size:13px; font-weight:700; margin-bottom:4px;">Южный регион</div>
+                <div style="color:#aaa; font-size:11px; line-height:1.6;">
+                  &#128116; 50 магазинов KARI<br>
+                  &#128100; До 500 самозанятых<br>
+                  &#128197; Запуск: 1 апреля 2026
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:12px; background:rgba(255,255,255,0.05); border-radius:6px; padding:10px 14px; display:flex; gap:20px; flex-wrap:wrap;">
+              <div style="text-align:center; color:#A01F72;">
+                <div style="font-size:22px; font-weight:900;">100</div>
+                <div style="font-size:10px; color:#888;">магазинов</div>
+              </div>
+              <div style="text-align:center; color:#A01F72;">
+                <div style="font-size:22px; font-weight:900;">1 000</div>
+                <div style="font-size:10px; color:#888;">исполнителей</div>
+              </div>
+              <div style="text-align:center; color:#A01F72;">
+                <div style="font-size:22px; font-weight:900;">2</div>
+                <div style="font-size:10px; color:#888;">региона</div>
+              </div>
+              <div style="flex:1; min-width:200px;">
+                <div style="color:#aaa; font-size:11px; line-height:1.6;">
+                  &#10003; Сбор обратной связи<br>
+                  &#10003; Мониторинг стабильности<br>
+                  &#10003; Замер KPI и метрик<br>
+                  &#10003; Оперативное исправление ошибок
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Масштабирование -->
+        <div class="s3-item">
+          <div class="s3-date">Месяц +1<br><span style="color:#4CAF50; font-size:10px;">МАСШТАБ</span></div>
+          <div class="s3-dot" style="box-shadow:0 0 0 3px #4CAF50;"></div>
+          <div class="s3-card" style="background:#E8F5E9; border-left-color:#4CAF50;">
+            <div class="s3-card-title" style="color:#1b5e20;">&#127758; Масштабирование на все регионы</div>
+            <div class="s3-tasks">
+              <div class="s3-task">
+                <div class="s3-task-icon" style="background:#4CAF50; color:#fff;">&#127758;</div>
+                <div style="color:#555;">
+                  <strong style="color:#242D4A;">Подключение всех регионов присутствия KARI</strong><br>
+                  <span style="font-size:11px;">Поэтапное подключение: Санкт-Петербург, Урал, Сибирь, Дальний Восток. Все магазины сети.</span>
+                </div>
+              </div>
+              <div class="s3-task">
+                <div class="s3-task-icon" style="background:#4CAF50; color:#fff;">&#128100;</div>
+                <div style="color:#555;">
+                  <strong style="color:#242D4A;">1 000+ активных самозанятых</strong><br>
+                  <span style="font-size:11px;">Массовый онбординг исполнителей, маркетинговые кампании, реферальная программа.</span>
+                </div>
+              </div>
+              <div class="s3-task">
+                <div class="s3-task-icon" style="background:#4CAF50; color:#fff;">&#128202;</div>
+                <div style="color:#555;">
+                  <strong style="color:#242D4A;">Расширенная аналитика</strong><br>
+                  <span style="font-size:11px;">Дашборды по регионам, предиктивная аналитика потребности в персонале, автоматические рекомендации.</span>
+                </div>
+              </div>
+            </div>
+            <div class="s3-badge" style="background:#4CAF50; color:#fff; margin-top:10px;">
+              &#128202; Цель: 500+ магазинов &nbsp;|&nbsp; &#128100; 5 000+ самозанятых &nbsp;|&nbsp; &#128176; Экономия 40% затрат на персонал
+            </div>
+          </div>
+        </div>
+
+        <!-- Год 2: B2B -->
+        <div class="s3-item" style="padding-bottom:0;">
+          <div class="s3-date">Год 2<br><span style="color:#9C27B0; font-size:10px;">B2B</span></div>
+          <div class="s3-dot" style="box-shadow:0 0 0 3px #9C27B0;"></div>
+          <div class="s3-card" style="background:linear-gradient(135deg, #F3E5F5, #EDE7F6); border-left-color:#9C27B0;">
+            <div class="s3-card-title" style="color:#4A148C;">&#128640; B2B Монетизация — продажа платформы</div>
+            <div class="s3-tasks">
+              <div class="s3-task">
+                <div class="s3-task-icon" style="background:#9C27B0; color:#fff;">&#128176;</div>
+                <div style="color:#555;">
+                  <strong style="color:#242D4A;">SaaS-модель для других розничных сетей</strong><br>
+                  <span style="font-size:11px;">Предложение платформы другим ритейлерам как готового решения по подписке. Целевые клиенты: розничные сети от 50 магазинов.</span>
+                </div>
+              </div>
+              <div class="s3-task">
+                <div class="s3-task-icon" style="background:#9C27B0; color:#fff;">&#128101;</div>
+                <div style="color:#555;">
+                  <strong style="color:#242D4A;">White-label версия</strong><br>
+                  <span style="font-size:11px;">Платформа под брендом клиента. Быстрое развёртывание за 2 недели. Техническая поддержка включена.</span>
+                </div>
+              </div>
+              <div class="s3-task">
+                <div class="s3-task-icon" style="background:#9C27B0; color:#fff;">&#128202;</div>
+                <div style="color:#555;">
+                  <strong style="color:#242D4A;">Прогноз дохода от B2B</strong><br>
+                  <span style="font-size:11px;">10 корпоративных клиентов × 150 000 ₽/мес = 1 500 000 ₽/мес дополнительной выручки.</span>
+                </div>
+              </div>
+            </div>
+            <div class="s3-badge" style="background:#9C27B0; color:#fff; margin-top:10px;">
+              &#128640; Потенциал рынка: 50 000+ розничных точек в РФ &nbsp;|&nbsp; &#128176; Целевой ARR: 18 000 000 ₽
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Итоговые метрики дорожной карты -->
+      <div style="margin-top:28px; background:#242D4A; border-radius:10px; padding:20px 24px; display:flex; gap:20px; flex-wrap:wrap; align-items:center;">
+        <div style="color:#fff; font-size:14px; font-weight:700; flex:1; min-width:200px;">
+          &#127919; Ключевые цели платформы<br>
+          <span style="font-size:11px; color:#888; font-weight:400;">К концу первого года работы</span>
+        </div>
+        <div style="text-align:center; padding:0 16px; border-left:1px solid #333;">
+          <div style="font-size:26px; font-weight:900; color:#A01F72;">-40%</div>
+          <div style="font-size:11px; color:#888;">затрат на<br>оформление</div>
+        </div>
+        <div style="text-align:center; padding:0 16px; border-left:1px solid #333;">
+          <div style="font-size:26px; font-weight:900; color:#A01F72;">5 000+</div>
+          <div style="font-size:11px; color:#888;">самозанятых<br>в системе</div>
+        </div>
+        <div style="text-align:center; padding:0 16px; border-left:1px solid #333;">
+          <div style="font-size:26px; font-weight:900; color:#A01F72;">100%</div>
+          <div style="font-size:11px; color:#888;">юридическая<br>чистота</div>
+        </div>
+        <div style="text-align:center; padding:0 16px; border-left:1px solid #333;">
+          <div style="font-size:26px; font-weight:900; color:#A01F72;">0</div>
+          <div style="font-size:11px; color:#888;">бумажных<br>документов</div>
+        </div>
+        <div style="text-align:center; padding:0 16px; border-left:1px solid #333;">
+          <div style="font-size:26px; font-weight:900; color:#4CAF50;">1 день</div>
+          <div style="font-size:11px; color:#888;">скорость<br>выплаты</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ============================================================
+     СХЕМА 4 — ДЕЛЕГИРОВАНИЕ ПРАВ ДИРЕКТОРА РЕГИОНА
+============================================================ -->
+<div class="scheme-section" id="scheme4">
+  <div class="scheme-header">
+    <div class="scheme-num">4</div>
+    <div>
+      <div class="scheme-title">Делегирование прав директора региона</div>
+      <div class="scheme-subtitle">Передача полномочий доверенному сотруднику с подтверждением ЭП + журнал действий</div>
+    </div>
+  </div>
+  <div class="scheme-body">
+
+    <!-- Плашка v2.0 -->
+    <div style="background:rgba(160,31,114,0.07);border-left:4px solid #A01F72;border-radius:0 10px 10px 0;padding:12px 18px;margin-bottom:24px;font-size:13px;">
+      <strong style="color:#A01F72">Новое в v2.0</strong> — Директор региона может передать свои права сотруднику на заданный срок.
+      Каждое действие делегата фиксируется и уведомляет директора в реальном времени.
+    </div>
+
+    <!-- Главный флоу делегирования -->
+    <div style="display:grid;grid-template-columns:1fr 80px 1fr 80px 1fr;gap:0;align-items:center;margin-bottom:32px;">
+
+      <!-- Блок 1: Директор региона -->
+      <div style="background:#242D4A;border-radius:12px;padding:20px;color:white;text-align:center;">
+        <div style="font-size:28px;margin-bottom:8px;">👔</div>
+        <div style="font-size:14px;font-weight:800;margin-bottom:6px;">Директор региона</div>
+        <div style="font-size:11px;opacity:0.7;margin-bottom:12px;">Инициирует делегирование</div>
+        <div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:8px;font-size:11px;text-align:left;">
+          <div style="margin-bottom:4px;">① Выбирает сотрудника</div>
+          <div style="margin-bottom:4px;">② Задаёт права (чекбоксы)</div>
+          <div style="margin-bottom:4px;">③ Устанавливает срок</div>
+          <div>④ Подтверждает SMS-кодом ЭП</div>
+        </div>
+      </div>
+
+      <!-- Стрелка -->
+      <div style="text-align:center;font-size:28px;color:#A01F72;font-weight:900;">→</div>
+
+      <!-- Блок 2: Система / ЭП -->
+      <div style="border:3px solid #A01F72;border-radius:12px;padding:20px;text-align:center;background:white;">
+        <div style="font-size:24px;margin-bottom:6px;">🔐</div>
+        <div style="font-size:13px;font-weight:800;color:#A01F72;margin-bottom:8px;">Платформа KARI</div>
+        <div style="background:#fff5fb;border-radius:8px;padding:8px;font-size:11px;text-align:left;color:#333;">
+          <div style="margin-bottom:4px;color:#A01F72;font-weight:700">Обработка делегирования:</div>
+          <div style="margin-bottom:3px;">✅ Проверка полномочий</div>
+          <div style="margin-bottom:3px;">✅ Создание роли «Делегат»</div>
+          <div style="margin-bottom:3px;">✅ Установка срока доступа</div>
+          <div style="margin-bottom:3px;">✅ Сохранение в журнал</div>
+          <div>✅ Отправка уведомлений</div>
+        </div>
+      </div>
+
+      <!-- Стрелка -->
+      <div style="text-align:center;font-size:28px;color:#A01F72;font-weight:900;">→</div>
+
+      <!-- Блок 3: Делегат -->
+      <div style="background:#4CAF50;border-radius:12px;padding:20px;color:white;text-align:center;">
+        <div style="font-size:28px;margin-bottom:8px;">🧑‍💼</div>
+        <div style="font-size:14px;font-weight:800;margin-bottom:6px;">Делегат</div>
+        <div style="font-size:11px;opacity:0.85;margin-bottom:12px;">Получает временный доступ</div>
+        <div style="background:rgba(255,255,255,0.15);border-radius:8px;padding:8px;font-size:11px;text-align:left;">
+          <div style="margin-bottom:4px;">📲 Push + Email уведомление</div>
+          <div style="margin-bottom:4px;">⚡ Доступ к переданным правам</div>
+          <div style="margin-bottom:4px;">📋 Метка «Делегат» в журнале</div>
+          <div>⏰ Автоотзыв по истечении срока</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Матрица прав делегирования -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px;">
+
+      <!-- Что можно делегировать -->
+      <div style="background:white;border-radius:12px;padding:20px;border:1px solid #e0e0e0;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+        <div style="font-size:13px;font-weight:800;color:#242D4A;margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+          <span style="background:#4CAF50;color:white;padding:3px 10px;border-radius:20px;font-size:11px;">✓ Можно делегировать</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#e8f5e9;border-radius:8px;font-size:12px;">
+            <span style="width:18px;height:18px;background:#4CAF50;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:10px;flex-shrink:0;">✓</span>
+            Установка и изменение лимитов магазинов
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#e8f5e9;border-radius:8px;font-size:12px;">
+            <span style="width:18px;height:18px;background:#4CAF50;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:10px;flex-shrink:0;">✓</span>
+            Утверждение запросов на увеличение лимита
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#e8f5e9;border-radius:8px;font-size:12px;">
+            <span style="width:18px;height:18px;background:#4CAF50;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:10px;flex-shrink:0;">✓</span>
+            Просмотр аналитики по региону
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#e8f5e9;border-radius:8px;font-size:12px;">
+            <span style="width:18px;height:18px;background:#4CAF50;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:10px;flex-shrink:0;">✓</span>
+            Просмотр реестра исполнителей с риском 80%
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#e8f5e9;border-radius:8px;font-size:12px;">
+            <span style="width:18px;height:18px;background:#4CAF50;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:10px;flex-shrink:0;">✓</span>
+            Выгрузка отчётов в Excel
+          </div>
+        </div>
+      </div>
+
+      <!-- Что нельзя делегировать -->
+      <div style="background:white;border-radius:12px;padding:20px;border:1px solid #e0e0e0;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+        <div style="font-size:13px;font-weight:800;color:#242D4A;margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+          <span style="background:#e53935;color:white;padding:3px 10px;border-radius:20px;font-size:11px;">✗ Нельзя делегировать</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#ffebee;border-radius:8px;font-size:12px;">
+            <span style="width:18px;height:18px;background:#e53935;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:10px;flex-shrink:0;">✗</span>
+            Создание нового делегирования (каскад запрещён)
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#ffebee;border-radius:8px;font-size:12px;">
+            <span style="width:18px;height:18px;background:#e53935;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:10px;flex-shrink:0;">✗</span>
+            Управление пользователями (создание/удаление)
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#ffebee;border-radius:8px;font-size:12px;">
+            <span style="width:18px;height:18px;background:#e53935;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:10px;flex-shrink:0;">✗</span>
+            Запуск массовых выплат (только бухгалтерия)
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#ffebee;border-radius:8px;font-size:12px;">
+            <span style="width:18px;height:18px;background:#e53935;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:10px;flex-shrink:0;">✗</span>
+            Изменение федеральных лимитов (только HRD)
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#ffebee;border-radius:8px;font-size:12px;">
+            <span style="width:18px;height:18px;background:#e53935;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:10px;flex-shrink:0;">✗</span>
+            Доступ к персональным данным (паспорт, ИНН)
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Журнал + уведомления -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+      <!-- Журнал действий делегата -->
+      <div style="background:white;border-radius:12px;padding:20px;border:1px solid #e0e0e0;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+        <div style="font-size:13px;font-weight:800;color:#242D4A;margin-bottom:14px;">📋 Журнал действий делегата</div>
+        <div style="font-size:11px;color:#555;line-height:1.6;background:#f9f9f9;border-radius:8px;padding:12px;font-family:monospace;">
+          <div style="margin-bottom:6px;"><span style="color:#A01F72;font-weight:700">15.02.2026 09:42</span> · Иванова А.С. [делегат]<br>&nbsp;&nbsp;KARI Арбат: лимит 40 000 → 50 000 ₽</div>
+          <div style="margin-bottom:6px;"><span style="color:#A01F72;font-weight:700">15.02.2026 14:15</span> · Иванова А.С. [делегат]<br>&nbsp;&nbsp;Утверждён запрос KARI Тверская: +15 000 ₽</div>
+          <div style="margin-bottom:6px;"><span style="color:#999">13.02.2026 11:30</span> · Петров А.В. [директор]<br>&nbsp;&nbsp;Делегирование Ивановой А.С. создано</div>
+        </div>
+        <div style="margin-top:10px;font-size:11px;color:#A01F72;font-weight:700;">
+          ↓ Хранение 3 года · Выгрузка в Excel
+        </div>
+      </div>
+
+      <!-- Схема уведомлений -->
+      <div style="background:white;border-radius:12px;padding:20px;border:1px solid #e0e0e0;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+        <div style="font-size:13px;font-weight:800;color:#242D4A;margin-bottom:14px;">🔔 Автоуведомления директору региона</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:10px;font-size:12px;">
+            <span style="background:#e53935;color:white;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700;flex-shrink:0;">КРИТИЧНО</span>
+            Делегат изменил лимит магазина
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:12px;">
+            <span style="background:#e53935;color:white;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700;flex-shrink:0;">КРИТИЧНО</span>
+            Магазин превысил 80% бюджетного лимита
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:12px;">
+            <span style="background:#FF9800;color:white;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700;flex-shrink:0;">ВЫСОКИЙ</span>
+            Делегат утвердил запрос &gt;100 000 ₽
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:12px;">
+            <span style="background:#FF9800;color:white;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700;flex-shrink:0;">ВЫСОКИЙ</span>
+            Срок делегирования истекает через 3 дня
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:12px;">
+            <span style="background:#1976D2;color:white;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700;flex-shrink:0;">ЕЖЕНЕД</span>
+            Сводный отчёт по действиям делегата
+          </div>
+        </div>
+        <div style="margin-top:12px;background:#f5f5f5;border-radius:8px;padding:10px;font-size:11px;color:#555;">
+          Каналы: <strong>Push</strong> (мгновенно) + <strong>Email</strong> (для важных) + <strong>SMS</strong> (критичные)
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ============================================================
+     СХЕМА 5 — КОНТРОЛЬ РИСКА 80% ДОХОДА ОТ KARI
+============================================================ -->
+<div class="scheme-section" id="scheme5">
+  <div class="scheme-header">
+    <div class="scheme-num">5</div>
+    <div>
+      <div class="scheme-title">Контроль риска 80% дохода от KARI</div>
+      <div class="scheme-subtitle">Мониторинг через ФНС · Уведомления исполнителям · Реестр риска в кабинете директора</div>
+    </div>
+  </div>
+  <div class="scheme-body">
+
+    <!-- Суть риска -->
+    <div style="background:#ffebee;border-left:4px solid #e53935;border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:24px;font-size:13px;">
+      <strong style="color:#b71c1c">⚠️ Юридический риск:</strong> Если самозанятый получает ≥80% дохода от одного заказчика —
+      ФНС может признать отношения трудовыми. Штрафы + НДФЛ + страховые взносы за весь период работы.
+      <strong>Платформа автоматически отслеживает этот показатель.</strong>
+    </div>
+
+    <!-- Главный флоу мониторинга -->
+    <div style="margin-bottom:32px;">
+      <div style="font-size:12px;font-weight:700;color:#999;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;">Ежедневный цикл мониторинга (06:00)</div>
+
+      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:0;">
+
+        <!-- Шаг 1 -->
+        <div style="background:#1976D2;border-radius:10px;padding:14px 16px;color:white;min-width:140px;text-align:center;">
+          <div style="font-size:20px;margin-bottom:4px;">🏛️</div>
+          <div style="font-size:12px;font-weight:800;">API ФНС</div>
+          <div style="font-size:10px;opacity:0.8;margin-top:3px;">Запрос доходов<br>по всем ИНН</div>
+        </div>
+        <div style="font-size:22px;color:#A01F72;padding:0 8px;font-weight:900;">→</div>
+
+        <!-- Шаг 2 -->
+        <div style="background:#242D4A;border-radius:10px;padding:14px 16px;color:white;min-width:140px;text-align:center;">
+          <div style="font-size:20px;margin-bottom:4px;">⚙️</div>
+          <div style="font-size:12px;font-weight:800;">Платформа KARI</div>
+          <div style="font-size:10px;opacity:0.8;margin-top:3px;">Расчёт доли дохода<br>от KARI</div>
+        </div>
+        <div style="font-size:22px;color:#A01F72;padding:0 8px;font-weight:900;">→</div>
+
+        <!-- Шаг 3: Пороги -->
+        <div style="border:2px solid #A01F72;border-radius:10px;padding:12px;flex:1;min-width:200px;background:white;">
+          <div style="font-size:11px;font-weight:700;color:#A01F72;margin-bottom:8px;">📊 ПОРОГОВЫЕ ЗНАЧЕНИЯ</div>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <div style="display:flex;align-items:center;gap:8px;font-size:11px;">
+              <span style="width:12px;height:12px;background:#4CAF50;border-radius:50%;flex-shrink:0;"></span>
+              <span>&lt;70% — норма, без действий</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:11px;">
+              <span style="width:12px;height:12px;background:#FF9800;border-radius:50%;flex-shrink:0;"></span>
+              <span>70–79% — уведомление исполнителю</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:11px;">
+              <span style="width:12px;height:12px;background:#e53935;border-radius:50%;flex-shrink:0;"></span>
+              <span>≥80% — уведомление + директор региона</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:11px;">
+              <span style="width:12px;height:12px;background:#7a0000;border-radius:50%;flex-shrink:0;"></span>
+              <span>≥90% — принудительная пауза рекомендована</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Двойной флоу: что видит исполнитель и директор -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px;">
+
+      <!-- Исполнитель -->
+      <div style="border:2px solid #A01F72;border-radius:12px;overflow:hidden;">
+        <div style="background:#A01F72;padding:12px 16px;color:white;font-size:13px;font-weight:800;">
+          📱 В приложении исполнителя
+        </div>
+        <div style="padding:16px;background:white;">
+          <div style="background:#f9f9f9;border-radius:8px;padding:12px;margin-bottom:10px;">
+            <div style="font-size:11px;font-weight:700;color:#555;margin-bottom:8px;">Индикатор на главном экране:</div>
+            <!-- Прогресс-бар симуляция -->
+            <div style="background:#e0e0e0;border-radius:10px;height:12px;position:relative;overflow:hidden;">
+              <div style="background:linear-gradient(90deg,#4CAF50 0%,#FF9800 70%,#e53935 80%);width:83%;height:100%;border-radius:10px;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:#999;margin-top:4px;">
+              <span>0%</span><span style="color:#e53935;font-weight:700">83% — риск!</span><span>100%</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;">
+            <div style="background:#fff8e1;border-radius:6px;padding:8px 10px;border-left:3px solid #FF9800;">
+              <strong>70%:</strong> «Большая часть дохода — от KARI. Рекомендуем взять заказы от других компаний»
+            </div>
+            <div style="background:#ffebee;border-radius:6px;padding:8px 10px;border-left:3px solid #e53935;">
+              <strong>80%:</strong> «Важно: твой доход от KARI — X%. Добавь чеки от других заказчиков»
+            </div>
+            <div style="background:#e8f5e9;border-radius:6px;padding:8px 10px;border-left:3px solid #4CAF50;">
+              <strong>Кнопка:</strong> «Загрузить чек от другого заказчика»
+            </div>
+            <div style="background:#e3f2fd;border-radius:6px;padding:8px 10px;border-left:3px solid #1976D2;">
+              <strong>Вкладка:</strong> «Другие заказчики» — биржа внешних заданий
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Директор региона -->
+      <div style="border:2px solid #242D4A;border-radius:12px;overflow:hidden;">
+        <div style="background:#242D4A;padding:12px 16px;color:white;font-size:13px;font-weight:800;">
+          💻 В кабинете директора региона
+        </div>
+        <div style="padding:16px;background:white;">
+          <div style="font-size:11px;font-weight:700;color:#555;margin-bottom:10px;">Реестр «Исполнители с риском 80%»:</div>
+          <table style="width:100%;border-collapse:collapse;font-size:11px;">
+            <thead>
+              <tr style="background:#242D4A;color:white;">
+                <th style="padding:6px 8px;text-align:left;">ФИО</th>
+                <th style="padding:6px 8px;text-align:center;">% KARI</th>
+                <th style="padding:6px 8px;text-align:left;">Статус</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="background:#ffebee;">
+                <td style="padding:6px 8px;">Смирнов И.В.</td>
+                <td style="padding:6px 8px;text-align:center;font-weight:700;color:#e53935;">91%</td>
+                <td style="padding:6px 8px;"><span style="background:#e53935;color:white;padding:2px 6px;border-radius:10px;font-size:10px;">Нет чеков</span></td>
+              </tr>
+              <tr style="background:#fff8e1;">
+                <td style="padding:6px 8px;">Козлова М.А.</td>
+                <td style="padding:6px 8px;text-align:center;font-weight:700;color:#e65100;">83%</td>
+                <td style="padding:6px 8px;"><span style="background:#FF9800;color:white;padding:2px 6px;border-radius:10px;font-size:10px;">Предупреждён</span></td>
+              </tr>
+              <tr>
+                <td style="padding:6px 8px;">Петров А.С.</td>
+                <td style="padding:6px 8px;text-align:center;font-weight:700;color:#FF9800;">78%</td>
+                <td style="padding:6px 8px;"><span style="background:#4CAF50;color:white;padding:2px 6px;border-radius:10px;font-size:10px;">Загрузил чеки</span></td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+            <span style="background:#f5e6f0;color:#A01F72;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;">📊 Excel</span>
+            <span style="background:#f5e6f0;color:#A01F72;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;">📤 Отправить напоминание</span>
+            <span style="background:#f5e6f0;color:#A01F72;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;">🔍 Фильтр по магазину</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Загрузка внешних чеков -->
+    <div style="background:white;border-radius:12px;padding:20px;border:2px dashed #4CAF50;margin-bottom:20px;">
+      <div style="font-size:13px;font-weight:800;color:#1b5e20;margin-bottom:12px;">📎 Функция загрузки внешних чеков (в ЛК исполнителя)</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;font-size:12px;text-align:center;">
+        <div style="background:#e8f5e9;border-radius:8px;padding:10px;">
+          <div style="font-size:20px;margin-bottom:4px;">📱</div>
+          <div style="font-weight:700;">1. Получил заказ</div>
+          <div style="color:#555;font-size:11px;margin-top:3px;">в другой компании</div>
+        </div>
+        <div style="background:#e8f5e9;border-radius:8px;padding:10px;">
+          <div style="font-size:20px;margin-bottom:4px;">🧾</div>
+          <div style="font-weight:700;">2. Выбил чек</div>
+          <div style="color:#555;font-size:11px;margin-top:3px;">через «Мой налог»</div>
+        </div>
+        <div style="background:#e8f5e9;border-radius:8px;padding:10px;">
+          <div style="font-size:20px;margin-bottom:4px;">📤</div>
+          <div style="font-weight:700;">3. Загружает скрин</div>
+          <div style="color:#555;font-size:11px;margin-top:3px;">в приложение KARI</div>
+        </div>
+        <div style="background:#e8f5e9;border-radius:8px;padding:10px;">
+          <div style="font-size:20px;margin-bottom:4px;">📉</div>
+          <div style="font-weight:700;">4. Доля KARI падает</div>
+          <div style="color:#555;font-size:11px;margin-top:3px;">риск снижается</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ============================================================
+     СХЕМА 6 — ИНТЕГРАЦИЯ С ПЛАНИРОВЩИКОМ СМЕН
+============================================================ -->
+<div class="scheme-section" id="scheme6">
+  <div class="scheme-header">
+    <div class="scheme-num">6</div>
+    <div>
+      <div class="scheme-title">Интеграция с планировщиком смен KARI</div>
+      <div class="scheme-subtitle">Дефицитные часы → Биржа заданий для самозанятых · Автоматические подсказки директорам магазинов</div>
+    </div>
+  </div>
+  <div class="scheme-body">
+
+    <!-- Концепт -->
+    <div style="background:#e3f2fd;border-left:4px solid #1976D2;border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:24px;font-size:13px;">
+      <strong style="color:#0d47a1">💡 Концепция:</strong> Планировщик смен KARI знает, когда в магазине не хватает персонала.
+      Эти «дефицитные часы» автоматически превращаются в <strong>подсказки для создания заданий</strong> самозанятым —
+      директор магазина видит рекомендацию и одним кликом публикует задание в бирже.
+    </div>
+
+    <!-- Главная схема -->
+    <div style="margin-bottom:32px;">
+
+      <!-- Строка 1: Планировщик смен -->
+      <div style="background:white;border-radius:12px;border:2px solid #e0e0e0;padding:18px;margin-bottom:16px;">
+        <div style="font-size:12px;font-weight:700;color:#999;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;">📅 Планировщик смен KARI (отдельная система)</div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;">
+          <div style="background:#E3F2FD;border-radius:8px;padding:10px 14px;text-align:center;min-width:120px;">
+            <div style="font-size:11px;font-weight:700;color:#1565C0;">Трафик посетителей</div>
+            <div style="font-size:18px;font-weight:900;color:#1976D2;margin-top:2px;">+</div>
+          </div>
+          <div style="font-size:20px;color:#bbb;">+</div>
+          <div style="background:#E3F2FD;border-radius:8px;padding:10px 14px;text-align:center;min-width:120px;">
+            <div style="font-size:11px;font-weight:700;color:#1565C0;">План продаж</div>
+            <div style="font-size:18px;font-weight:900;color:#1976D2;margin-top:2px;">+</div>
+          </div>
+          <div style="font-size:20px;color:#bbb;">+</div>
+          <div style="background:#E3F2FD;border-radius:8px;padding:10px 14px;text-align:center;min-width:120px;">
+            <div style="font-size:11px;font-weight:700;color:#1565C0;">Процессы магазина</div>
+            <div style="font-size:18px;font-weight:900;color:#1976D2;margin-top:2px;">−</div>
+          </div>
+          <div style="font-size:20px;color:#bbb;">−</div>
+          <div style="background:#fff3e0;border-radius:8px;padding:10px 14px;text-align:center;min-width:120px;">
+            <div style="font-size:11px;font-weight:700;color:#e65100;">Штатный персонал</div>
+            <div style="font-size:18px;font-weight:900;color:#FF9800;margin-top:2px;">=</div>
+          </div>
+          <div style="font-size:20px;color:#bbb;">=</div>
+          <div style="background:#ffebee;border-radius:8px;padding:10px 16px;text-align:center;min-width:130px;border:2px solid #e53935;">
+            <div style="font-size:11px;font-weight:700;color:#b71c1c;">🔴 ДЕФИЦИТ ЧАСОВ</div>
+            <div style="font-size:11px;color:#555;margin-top:4px;">дата · время · тип задачи</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Стрелка API -->
+      <div style="text-align:center;margin-bottom:16px;">
+        <div style="display:inline-flex;flex-direction:column;align-items:center;gap:4px;">
+          <div style="font-size:11px;font-weight:700;color:#1976D2;background:#e3f2fd;padding:4px 14px;border-radius:12px;">
+            POST /api/v1/shift-planner/deficit-hint
+          </div>
+          <div style="font-size:24px;color:#A01F72;font-weight:900;">↓</div>
+        </div>
+      </div>
+
+      <!-- Строка 2: Платформа KARI -->
+      <div style="background:white;border-radius:12px;border:2px solid #A01F72;padding:18px;margin-bottom:16px;">
+        <div style="font-size:12px;font-weight:700;color:#A01F72;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;">⚙️ Платформа KARI.Самозанятые</div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start;">
+          <div style="background:#fff5fb;border-radius:8px;padding:10px 14px;flex:1;min-width:160px;">
+            <div style="font-size:11px;font-weight:700;color:#A01F72;margin-bottom:6px;">Принимает запрос</div>
+            <div style="font-size:10px;color:#555;line-height:1.5;font-family:monospace;background:#f9f9f9;padding:6px;border-radius:4px;">
+              store: "MSK-042"<br>
+              date: "2026-03-15"<br>
+              time: 10:00–18:00<br>
+              task: "merchandising"<br>
+              people: 2
+            </div>
+          </div>
+          <div style="font-size:20px;color:#A01F72;padding-top:20px;">→</div>
+          <div style="background:#fff5fb;border-radius:8px;padding:10px 14px;flex:1;min-width:180px;">
+            <div style="font-size:11px;font-weight:700;color:#A01F72;margin-bottom:6px;">Формирует подсказку</div>
+            <div style="font-size:11px;color:#555;line-height:1.6;">
+              ✅ Проверяет лимит магазина<br>
+              ✅ Подбирает тип задания<br>
+              ✅ Рассчитывает стоимость<br>
+              ✅ Готовит предзаполненную форму
+            </div>
+          </div>
+          <div style="font-size:20px;color:#A01F72;padding-top:20px;">→</div>
+          <div style="background:#fff5fb;border-radius:8px;padding:10px 14px;flex:1;min-width:160px;">
+            <div style="font-size:11px;font-weight:700;color:#A01F72;margin-bottom:6px;">Уведомляет директора</div>
+            <div style="background:#A01F72;color:white;border-radius:8px;padding:8px;font-size:11px;margin-top:6px;">
+              🔔 Планировщик рекомендует:<br>
+              <strong>15 марта, мерч, 8 часов × 2 чел.</strong><br>
+              <span style="font-size:10px;opacity:0.8;">KARI Арбат · бюджет 4 800 ₽</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Стрелки 2 путя -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+        <!-- Путь 1: Директор принимает -->
+        <div style="border:2px solid #4CAF50;border-radius:12px;overflow:hidden;">
+          <div style="background:#4CAF50;padding:10px 16px;color:white;font-size:12px;font-weight:800;">✅ Директор принял подсказку</div>
+          <div style="padding:14px;background:white;font-size:12px;">
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="background:#4CAF50;color:white;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;font-weight:700;">1</span>
+                Нажал «Создать задание» в кабинете
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="background:#4CAF50;color:white;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;font-weight:700;">2</span>
+                Предзаполненная форма уже готова
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="background:#4CAF50;color:white;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;font-weight:700;">3</span>
+                Задание опубликовано в бирже
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="background:#4CAF50;color:white;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;font-weight:700;">4</span>
+                Push подходящим исполнителям
+              </div>
+            </div>
+            <div style="margin-top:10px;background:#e8f5e9;border-radius:6px;padding:8px;font-size:11px;color:#1b5e20;font-weight:700;">
+              ⏱ 1 клик — от подсказки до публикации задания
+            </div>
+          </div>
+        </div>
+
+        <!-- Путь 2: Директор отклонил -->
+        <div style="border:2px solid #bbb;border-radius:12px;overflow:hidden;">
+          <div style="background:#9e9e9e;padding:10px 16px;color:white;font-size:12px;font-weight:800;">↩ Директор отклонил подсказку</div>
+          <div style="padding:14px;background:white;font-size:12px;">
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="background:#9e9e9e;color:white;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;font-weight:700;">1</span>
+                Нажал «Отклонить» — подсказка скрыта
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="background:#9e9e9e;color:white;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;font-weight:700;">2</span>
+                Данные попадают в статистику планировщика
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="background:#9e9e9e;color:white;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;font-weight:700;">3</span>
+                Можно создать задание вручную позже
+              </div>
+            </div>
+            <div style="margin-top:10px;background:#f5f5f5;border-radius:6px;padding:8px;font-size:11px;color:#555;">
+              Статистика отказов помогает улучшить алгоритм планировщика
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Биржа внешних заказов -->
+    <div style="background:white;border-radius:12px;padding:20px;border:2px dashed #1976D2;">
+      <div style="font-size:13px;font-weight:800;color:#0d47a1;margin-bottom:12px;">🌐 Биржа внешних заказов — рекомендации для исполнителей с риском 80%</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:12px;">
+        <div>
+          <div style="font-weight:700;color:#555;margin-bottom:8px;">Как работает (будущее B2B):</div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div style="background:#e3f2fd;border-radius:6px;padding:8px;">KARI не справляется с дефицитом → отдаёт слот в биржу</div>
+            <div style="background:#e3f2fd;border-radius:6px;padding:8px;">Другие ритейлеры (B2B клиенты платформы) видят доступных исполнителей</div>
+            <div style="background:#e3f2fd;border-radius:6px;padding:8px;">Исполнитель с риском 80% получает предложения вне KARI → доля KARI снижается</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-weight:700;color:#555;margin-bottom:8px;">Статус для MVP:</div>
+          <div style="background:#fff8e1;border-radius:8px;padding:12px;border:2px dashed #FF9800;text-align:center;">
+            <div style="font-size:24px;margin-bottom:6px;">🚧</div>
+            <div style="font-weight:700;color:#e65100;">Заглушка «Скоро»</div>
+            <div style="font-size:11px;color:#555;margin-top:4px;">
+              Активируется при B2B монетизации платформы.<br>
+              В MVP — вкладка «Другие заказчики» в приложении с сообщением о скором запуске.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ===== ПОДВАЛ ===== -->
+<div class="page-footer">
+  <strong>KARI.САМОЗАНЯТЫЕ</strong> — Внутренняя документация платформы &nbsp;|&nbsp;
+  Конфиденциально &nbsp;|&nbsp;
+  Дата: февраль 2026 &nbsp;|&nbsp;
+  Юрий Владыкин, Директор региона KARI &nbsp;|&nbsp;
+  <strong style="color:#A01F72">v2.0 — обновлено: делегирование, риск 80%, планировщик смен</strong>
+</div>
+
+</body>
+</html>

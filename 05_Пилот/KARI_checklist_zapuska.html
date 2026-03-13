@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KARI.Самозанятые — Чек-лист запуска пилота</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --kari: #A01F72;
+    --kari-dark: #7d1759;
+    --kari-light: #f9eef5;
+    --dark: #242D4A;
+    --text: #333;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --green: #16a34a;
+    --green-light: #dcfce7;
+    --orange: #d97706;
+    --orange-light: #fef3c7;
+    --red: #dc2626;
+    --red-light: #fee2e2;
+    --blue: #2563eb;
+    --blue-light: #dbeafe;
+    --radius: 12px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #f5f5f7;
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* ─── ШАПКА ─── */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a2238 100%);
+    color: #fff;
+    padding: 40px 24px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -50px; right: -50px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: rgba(160,31,114,0.2);
+  }
+  .logo-badge {
+    display: inline-block;
+    background: var(--kari);
+    color: #fff;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    padding: 8px 20px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+  header h1 { font-size: 26px; font-weight: 800; margin-bottom: 8px; }
+  header p { font-size: 15px; color: rgba(255,255,255,0.75); }
+  .header-meta {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .meta-item { font-size: 13px; color: rgba(255,255,255,0.8); }
+  .meta-item b { color: #fff; }
+
+  /* ─── ПРОГРЕСС ─── */
+  .progress-bar-section {
+    background: #fff;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .progress-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .progress-label { font-size: 14px; font-weight: 700; color: var(--dark); }
+  .progress-count { font-size: 14px; font-weight: 800; color: var(--kari); }
+  .progress-bar-wrap { background: var(--border); border-radius: 20px; height: 10px; overflow: hidden; }
+  .progress-bar { height: 100%; border-radius: 20px; background: linear-gradient(90deg, var(--kari), #e91e8c); transition: width 0.4s; }
+
+  /* ─── КОНТЕНТ ─── */
+  .container { max-width: 900px; margin: 0 auto; padding: 32px 16px 60px; }
+
+  /* ─── БЛОК ФАЗЫ ─── */
+  .phase {
+    margin-bottom: 40px;
+  }
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 16px 20px;
+  }
+  .phase-icon { font-size: 24px; }
+  .phase-title { font-size: 18px; font-weight: 800; }
+  .phase-timing { font-size: 13px; color: rgba(255,255,255,0.6); margin-left: auto; }
+  .phase-body {
+    background: #fff;
+    border-radius: 0 0 var(--radius) var(--radius);
+    padding: 8px 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  /* ─── ПУНКТ ЧЕКА ─── */
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+    user-select: none;
+  }
+  .check-item:last-child { border-bottom: none; }
+  .check-item:hover { background: #fafafa; }
+  .check-item.done { background: #f0fdf4; }
+  .check-item.done .check-text { color: var(--muted); }
+  .check-item.done .check-title { text-decoration: line-through; color: var(--muted); }
+  .check-item.critical { border-left: 4px solid var(--red); }
+  .check-item.critical.done { border-left-color: var(--green); }
+
+  .check-box {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    background: #fff;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    transition: all 0.15s;
+  }
+  .check-item.done .check-box {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+  }
+
+  .check-content { flex: 1; }
+  .check-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .check-title { font-size: 14px; font-weight: 700; color: var(--dark); }
+  .check-text { font-size: 13px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
+  .check-owner { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+  .owner-it    { background: var(--blue-light);   color: var(--blue); }
+  .owner-yuri  { background: var(--kari-light);   color: var(--kari); }
+  .owner-all   { background: #f3f4f6;             color: var(--muted); }
+  .owner-store { background: var(--orange-light); color: var(--orange); }
+  .badge-crit  { font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 20px; background: var(--red-light); color: var(--red); text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* ─── АЛЕРТ ─── */
+  .alert-block {
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    font-size: 14px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .alert-block.red    { background: var(--red-light);    color: #991b1b; }
+  .alert-block.orange { background: var(--orange-light); color: #92400e; }
+  .alert-block.green  { background: var(--green-light);  color: #15803d; }
+  .alert-block.blue   { background: var(--blue-light);   color: #1e40af; }
+  .alert-icon-b { font-size: 20px; flex-shrink: 0; }
+
+  /* ─── ЛЕГЕНДА ─── */
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 16px 20px;
+    background: #fff;
+    border-radius: var(--radius);
+    margin-bottom: 28px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--muted); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  /* ─── ИТОГОВЫЙ БЛОК ─── */
+  .summary-card {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a2238 100%);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-top: 32px;
+    text-align: center;
+  }
+  .summary-card h2 { font-size: 22px; font-weight: 800; margin-bottom: 12px; }
+  .summary-card p  { font-size: 14px; opacity: 0.8; margin-bottom: 20px; }
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .summary-num { background: rgba(255,255,255,0.1); border-radius: 10px; padding: 14px 10px; }
+  .summary-num .n { font-size: 28px; font-weight: 900; color: #fff; }
+  .summary-num .l { font-size: 12px; opacity: 0.65; margin-top: 2px; }
+
+  footer {
+    background: var(--dark);
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    padding: 24px;
+    font-size: 13px;
+    margin-top: 40px;
+  }
+  footer strong { color: #fff; }
+
+  @media print {
+    header { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    .phase-header { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    .progress-bar-section { position: static; }
+  }
+
+/* ═══════════════════════════════════════════════════════════
+   МОБИЛЬНАЯ АДАПТАЦИЯ — добавлено 11.03.2026
+   Адаптировано для экранов смартфонов (< 768px)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Таблицы — горизонтальный скролл на всех устройствах */
+table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+/* Изображения — масштабирование */
+img { max-width: 100% !important; height: auto !important; }
+@media (max-width: 768px) {
+  /* Боковое меню — скрываем, убираем отступ */
+  .sidebar { display: none !important; }
+  .main-content { margin-left: 0 !important; padding: 16px !important; }
+  .site-header { position: relative !important; }
+
+  /* Отступы шапки */
+  .header, .page-header { padding: 20px 16px !important; }
+  .header-top { flex-wrap: wrap !important; gap: 8px !important; }
+  .header-meta, .header-actions, .header-badges { flex-wrap: wrap !important; gap: 8px !important; }
+
+  /* Основной контент */
+  .main, .content, .container { padding: 16px !important; }
+
+  /* Типографика */
+  h1 { font-size: 22px !important; }
+  h2 { font-size: 18px !important; }
+  h3 { font-size: 15px !important; }
+
+  /* Горизонтальные ряды — перенос */
+  .header-pills, .filter-tabs, .nav-tabs, .tabs-row,
+  .section-tabs, .tab-bar { flex-wrap: wrap !important; }
+  .step { flex-direction: column !important; }
+
+  /* Кодовые блоки */
+  pre, code {
+    overflow-x: auto !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 13px !important; }
+  .badge, .tag, .pill, .status-badge { font-size: 11px !important; padding: 3px 8px !important; }
+  h1, .header h1, .logo-area h1 { font-size: 19px !important; }
+  .btn-print, .btn-export { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ШАПКА -->
+<header>
+  <div class="logo-badge">KARI</div>
+  <h1>Чек-лист запуска пилота</h1>
+  <p>KARI.Самозанятые · Апрель 2026 · Иркутский и Южный регион</p>
+  <div class="header-meta">
+    <div class="meta-item"><b>100</b> магазинов</div>
+    <div class="meta-item"><b>500</b> самозанятых</div>
+    <div class="meta-item"><b>2</b> региона</div>
+    <div class="meta-item">Дата запуска: <b id="launch-date">__.__.__</b></div>
+  </div>
+</header>
+
+<!-- ПРОГРЕСС -->
+<div class="progress-bar-section">
+  <div class="progress-info">
+    <span class="progress-label">Готовность к запуску</span>
+    <span class="progress-count"><span id="done-count">0</span> / <span id="total-count">0</span> пунктов</span>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ЛЕГЕНДА -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div> IT-команда</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--kari)"></div> Юрий (PO)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--orange)"></div> Директора магазинов</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--muted)"></div> Все участники</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div> Критично — без этого не запускаем</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- ФАЗА 1: ЗА 2 НЕДЕЛИ -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-icon">🛠️</div>
+      <div class="phase-title">Фаза 1 — Подготовка инфраструктуры</div>
+      <div class="phase-timing">За 2 недели до запуска</div>
+    </div>
+    <div class="phase-body">
+
+      <div class="check-item critical" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Сервер развёрнут и доступен</span>
+            <span class="check-owner owner-it">IT</span>
+            <span class="badge-crit">Критично</span>
+          </div>
+          <div class="check-text">Ubuntu 22.04, 8 CPU, 32 GB RAM, SSD 200 GB. Домен api.kari-samozanyatye.ru настроен, SSL-сертификат установлен. По инструкции из KARI_deploy.html.</div>
+        </div>
+      </div>
+
+      <div class="check-item critical" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">PostgreSQL, Redis, MinIO запущены</span>
+            <span class="check-owner owner-it">IT</span>
+            <span class="badge-crit">Критично</span>
+          </div>
+          <div class="check-text">Docker Compose поднят. Базы данных доступны. Миграции Alembic применены (<strong>5 файлов</strong>: 0001-users, 0002-documents, 0003-stop_list, 0004-ratings/chat/penalties/store_blacklists/audit, 0005-fiscal_risk). Команда: <code>alembic upgrade head</code> → должно показать <strong>0005 (head)</strong>. MinIO-бакет создан.</div>
+        </div>
+      </div>
+
+      <div class="check-item critical" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">FastAPI-бэкенд запущен и отвечает</span>
+            <span class="check-owner owner-it">IT</span>
+            <span class="badge-crit">Критично</span>
+          </div>
+          <div class="check-text">GET https://api.kari-samozanyatye.ru/health → {"status":"ok"}. Gunicorn 4 воркера. Celery-воркер запущен на очереди payments.</div>
+        </div>
+      </div>
+
+      <div class="check-item critical" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">SMS-провайдер подключён</span>
+            <span class="check-owner owner-it">IT</span>
+            <span class="badge-crit">Критично</span>
+          </div>
+          <div class="check-text">Переменные среды SMSC_LOGIN, SMSC_PASSWORD заданы. Тестовая СМС на реальный номер прошла.</div>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Фронтенд веб-кабинетов задеплоен</span>
+            <span class="check-owner owner-it">IT</span>
+          </div>
+          <div class="check-text">React-сборка (npm run build) загружена на сервер. Nginx отдаёт https://cabinet.kari-samozanyatye.ru. Страница входа открывается без ошибок.</div>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Grafana-мониторинг настроен</span>
+            <span class="check-owner owner-it">IT</span>
+          </div>
+          <div class="check-text">Дашборд с метриками CPU, RAM, запросов/сек, ошибок API. Алерт на email при downtime > 1 мин.</div>
+        </div>
+      </div>
+
+      <div class="check-item critical" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Интеграция с ФНС «Мой налог» проверена</span>
+            <span class="check-owner owner-it">IT</span>
+            <span class="badge-crit">Критично</span>
+          </div>
+          <div class="check-text">FNS_API_URL, FNS_CLIENT_ID, FNS_CLIENT_SECRET заданы. Запрос проверки тестового ИНН возвращает корректный статус.</div>
+        </div>
+      </div>
+
+      <div class="check-item critical" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Совкомбанк: тестовый перевод выполнен</span>
+            <span class="check-owner owner-it">IT</span>
+            <span class="badge-crit">Критично</span>
+          </div>
+          <div class="check-text">SOVCOMBANK_API_URL, SOVCOMBANK_API_KEY заданы. Тестовая выплата на карту прошла успешно. DEBUG=false в продакшн-среде.</div>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Резервное копирование настроено</span>
+            <span class="check-owner owner-it">IT</span>
+          </div>
+          <div class="check-text">Ежедневный дамп PostgreSQL в S3/облако. Срок хранения — 30 дней. Тестовое восстановление проверено.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- ФАЗА 2: ЗА 1 НЕДЕЛЮ -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-icon">👥</div>
+      <div class="phase-title">Фаза 2 — Регистрация участников пилота</div>
+      <div class="phase-timing">За 1 неделю до запуска</div>
+    </div>
+    <div class="phase-body">
+
+      <div class="check-item critical" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Аккаунты директоров магазинов созданы</span>
+            <span class="check-owner owner-yuri">Юрий</span>
+            <span class="badge-crit">Критично</span>
+          </div>
+          <div class="check-text">Все директора 100 магазинов добавлены в систему: телефон, ФИО, роль store_director, привязка к магазину. Вход через SMS проверен у каждого.</div>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Аккаунты директоров подразделений созданы</span>
+            <span class="check-owner owner-yuri">Юрий</span>
+          </div>
+          <div class="check-text">Директора подразделений Иркутского и Южного регионов добавлены с ролью division_director. Бюджетные лимиты установлены.</div>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">HRD и бухгалтер добавлены в систему</span>
+            <span class="check-owner owner-yuri">Юрий</span>
+          </div>
+          <div class="check-text">Аккаунты с ролью hrd созданы для HR-специалистов и бухгалтеров, которые будут работать с документами и выплатами.</div>
+        </div>
+      </div>
+
+      <div class="check-item critical" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Самозанятые исполнители приглашены</span>
+            <span class="check-owner owner-store">Директора</span>
+            <span class="badge-crit">Критично</span>
+          </div>
+          <div class="check-text">Директора магазинов разослали ссылку/QR-код на приложение Expo Go минимум 50 исполнителям. Целевое кол-во к запуску: 100+ зарегистрированных.</div>
+        </div>
+      </div>
+
+      <div class="check-item critical" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Стоп-лист заполнен (422-ФЗ)</span>
+            <span class="check-owner owner-yuri">HRD</span>
+            <span class="badge-crit">Критично</span>
+          </div>
+          <div class="check-text">HRD загрузил в раздел «🚫 Стоп-лист» всех бывших сотрудников KARI за последние 2 года (через Excel-импорт или вручную). Без этого возможны штрафы ФНС по ст.6 422-ФЗ. Кабинет HRD → «Стоп-лист» → «Импорт Excel». Примечание: причина <code>fiscal_risk</code> добавляется автоматически Celery-задачей — вручную не вносить.</div>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Celery-задача фискального контроля настроена</span>
+            <span class="check-owner owner-it">IT</span>
+          </div>
+          <div class="check-text">В Celery Beat добавлена задача <code>fiscal_risk.run_full_scan</code> на ежедневный запуск в 08:00 МСК. Проверяет всех активных исполнителей по 3 критериям ФНС. При критическом риске — автоматически добавляет в стоп-лист с причиной <code>fiscal_risk</code> и уведомляет директора региона.</div>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Статус ФНС всех исполнителей — активен</span>
+            <span class="check-owner owner-yuri">Юрий</span>
+          </div>
+          <div class="check-text">В кабинете директора региона → раздел «ФНС / Чеки» проверить: нет ли исполнителей с неактивным статусом. Таких — отработать до запуска.</div>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Карты для выплат добавлены у исполнителей</span>
+            <span class="check-owner owner-all">Все</span>
+          </div>
+          <div class="check-text">Каждый исполнитель добавил карту в приложении (Профиль → Реквизиты для выплат). Без карты выплата невозможна.</div>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Договоры ГПХ сформированы и подписаны</span>
+            <span class="check-owner owner-yuri">Юрий</span>
+          </div>
+          <div class="check-text">Система автоматически создаёт договор при первом задании. Проверить: у всех зарегистрированных исполнителей договор подписан через SMS.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- ФАЗА 3: ОБУЧЕНИЕ -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-icon">📚</div>
+      <div class="phase-title">Фаза 3 — Обучение участников</div>
+      <div class="phase-timing">За 3–5 дней до запуска</div>
+    </div>
+    <div class="phase-body">
+
+      <div class="check-item critical" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Директора магазинов обучены — онлайн-сессия</span>
+            <span class="check-owner owner-yuri">Юрий</span>
+            <span class="badge-crit">Критично</span>
+          </div>
+          <div class="check-text">Zoom/Teams встреча. Показать: вход в кабинет, создание задания, просмотр фотоотчёта, приёмка работы. Инструкция KARI_instrukciya_direktora.html разослана.</div>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Исполнители установили и проверили приложение</span>
+            <span class="check-owner owner-store">Директора</span>
+          </div>
+          <div class="check-text">Директора магазинов проконтролировали: каждый исполнитель вошёл в приложение, заполнил ФИО + ИНН, прошёл проверку ФНС. Инструкция KARI_instrukciya_ispolnitelya.html разослана.</div>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">HRD обучены работе с реестрами и ФНС</span>
+            <span class="check-owner owner-yuri">Юрий</span>
+          </div>
+          <div class="check-text">Показать: загрузка Excel-реестра, валидация строк, утверждение реестра, мониторинг аннулированных чеков, экспорт для 1С.</div>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Раздел «Инструкции» в кабинетах показан всем</span>
+            <span class="check-owner owner-yuri">Юрий</span>
+          </div>
+          <div class="check-text">Каждый пользователь знает, что в боковом меню есть пункт «📖 Инструкции» — там пошаговые гайды именно для его роли.</div>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Контакты поддержки розданы всем участникам</span>
+            <span class="check-owner owner-yuri">Юрий</span>
+          </div>
+          <div class="check-text">Горячая линия пилота, email, имя куратора — у каждого директора и исполнителя в телефоне.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- ФАЗА 4: НАКАНУНЕ -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-icon">🌙</div>
+      <div class="phase-title">Фаза 4 — Вечер накануне (день X−1)</div>
+      <div class="phase-timing">Вечер перед запуском</div>
+    </div>
+    <div class="phase-body">
+
+      <div class="check-item critical" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Нагрузочный тест Locust выполнен и пройден</span>
+            <span class="check-owner owner-it">IT</span>
+            <span class="badge-crit">Критично</span>
+          </div>
+          <div class="check-text">Запустить: locust -f tests/locustfile.py --host=https://api.kari-samozanyatye.ru. 600 пользователей, 10 минут. Результат: P95 &lt; 500 мс, ошибок &lt; 1%.</div>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Grafana-дашборд открыт и актуален</span>
+            <span class="check-owner owner-it">IT</span>
+          </div>
+          <div class="check-text">IT дежурный знает URL Grafana. Алерты настроены. Дежурный телефон подтверждён.</div>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Тестовое задание создано и выполнено</span>
+            <span class="check-owner owner-yuri">Юрий</span>
+          </div>
+          <div class="check-text">Создать тестовое задание в кабинете директора магазина → исполнитель берёт его → сдаёт фотоотчёт → директор принимает → выплата проходит. Полный цикл end-to-end.</div>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Резервная копия БД сделана</span>
+            <span class="check-owner owner-it">IT</span>
+          </div>
+          <div class="check-text">pg_dump перед запуском. Файл сохранён отдельно с меткой «pre-pilot». Позволяет откатиться если что-то пойдёт не так.</div>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Plan B: план отката подготовлен</span>
+            <span class="check-owner owner-it">IT</span>
+          </div>
+          <div class="check-text">Если критическая ошибка в день запуска — как быстро откатиться. Кто принимает решение (Юрий). Как сообщить директорам об отсрочке.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- ФАЗА 5: ДЕНЬ ЗАПУСКА -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-icon">🚀</div>
+      <div class="phase-title">Фаза 5 — День X: Запуск!</div>
+      <div class="phase-timing">День запуска пилота</div>
+    </div>
+    <div class="phase-body">
+
+      <div class="check-item critical" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">09:00 — Проверка доступности всех сервисов</span>
+            <span class="check-owner owner-it">IT</span>
+            <span class="badge-crit">Критично</span>
+          </div>
+          <div class="check-text">API healthcheck, веб-кабинет открывается, Expo Go подключается к серверу. Всё зелёное — объявляем старт.</div>
+        </div>
+      </div>
+
+      <div class="check-item critical" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">10:00 — Первые задания созданы директорами магазинов</span>
+            <span class="check-owner owner-store">Директора</span>
+            <span class="badge-crit">Критично</span>
+          </div>
+          <div class="check-text">Каждый директор создаёт минимум 1 задание. Убедиться что задания видны на бирже в мобильном приложении.</div>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Мониторинг ошибок в первые 2 часа</span>
+            <span class="check-owner owner-it">IT</span>
+          </div>
+          <div class="check-text">IT дежурный смотрит Grafana каждые 15 минут. При аномалии (ошибки > 2%, время ответа > 1000 мс) — немедленно звонит Юрию.</div>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">14:00 — Промежуточная проверка с директорами</span>
+            <span class="check-owner owner-yuri">Юрий</span>
+          </div>
+          <div class="check-text">Быстрый звонок или чат с директорами: есть ли проблемы? Кто не смог войти? Кто не видит заданий? Устранить до конца дня.</div>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">18:00 — Итоги первого дня</span>
+            <span class="check-owner owner-yuri">Юрий</span>
+          </div>
+          <div class="check-text">Кабинет директора региона: сколько заданий создано, взято, выполнено. Сколько выплат запущено. Зафиксировать в журнале пилота.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- ФАЗА 6: ПЕРВАЯ НЕДЕЛЯ -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-icon">📊</div>
+      <div class="phase-title">Фаза 6 — Первая неделя работы</div>
+      <div class="phase-timing">День X+1 ... X+7</div>
+    </div>
+    <div class="phase-body">
+
+      <div class="check-item" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Ежедневная проверка ФНС-статусов (07:00)</span>
+            <span class="check-owner owner-it">IT</span>
+          </div>
+          <div class="check-text">Автоматически — Celery Beat задача. Если появился аннулированный статус — уведомление директору региона.</div>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Первые выплаты прошли успешно</span>
+            <span class="check-owner owner-yuri">Юрий</span>
+          </div>
+          <div class="check-text">В кабинете «Выплаты» — убедиться что статусы «Выплачено», а не «Ошибка». Исполнители подтверждают получение денег на карту.</div>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Сбор обратной связи от директоров</span>
+            <span class="check-owner owner-yuri">Юрий</span>
+          </div>
+          <div class="check-text">Опрос (Google Forms или устный звонок): что неудобно, что работает хорошо, чего не хватает. Записать в журнал пилота для доработок.</div>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Сбор обратной связи от исполнителей</span>
+            <span class="check-owner owner-store">Директора</span>
+          </div>
+          <div class="check-text">Директора опрашивают самозанятых: удобно ли приложение, понятен ли процесс, были ли проблемы с оплатой.</div>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggle(this)">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <div class="check-header">
+            <span class="check-title">Неделя 1 — отчёт директору региона</span>
+            <span class="check-owner owner-yuri">Юрий</span>
+          </div>
+          <div class="check-text">Количество заданий, выплат, активных исполнителей, выявленные проблемы. Решение: продолжаем / дорабатываем до расширения пилота.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- КРИТИЧЕСКИЕ РИСКИ -->
+  <div class="alert-block red">
+    <div class="alert-icon-b">🚫</div>
+    <div>
+      <b>Без этого НЕ запускаем:</b> сервер и API, SMS-провайдер, интеграция Совкомбанка (реальные переводы), интеграция ФНС, аккаунты директоров магазинов.
+    </div>
+  </div>
+
+  <div class="alert-block orange">
+    <div class="alert-icon-b">⚠️</div>
+    <div>
+      <b>Если что-то пошло не так:</b> сразу звонить IT-дежурному. Не пытаться чинить самостоятельно. Юрий принимает решение — продолжать или откатиться.
+    </div>
+  </div>
+
+  <!-- ИТОГОВАЯ КАРТОЧКА -->
+  <div class="summary-card">
+    <h2>🎯 Цели пилота</h2>
+    <p>Апрель 2026 — Иркутский и Южный регион</p>
+    <div class="summary-grid">
+      <div class="summary-num"><div class="n">100</div><div class="l">магазинов</div></div>
+      <div class="summary-num"><div class="n">500</div><div class="l">самозанятых</div></div>
+      <div class="summary-num"><div class="n">600</div><div class="l">макс. польз.</div></div>
+      <div class="summary-num"><div class="n">&lt;500</div><div class="l">мс P95</div></div>
+      <div class="summary-num"><div class="n">&lt;1%</div><div class="l">ошибок</div></div>
+      <div class="summary-num"><div class="n">40%</div><div class="l">экономия</div></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <strong>KARI.Самозанятые</strong> · Чек-лист запуска пилота · Апрель 2026<br>
+  <span style="font-size:12px;">Версия 1.0 · Март 2026 · Конфиденциально</span>
+</footer>
+
+<script>
+  // Подсчёт и прогресс
+  function updateProgress() {
+    const items = document.querySelectorAll('.check-item')
+    const done  = document.querySelectorAll('.check-item.done')
+    const total = items.length
+    const count = done.length
+    const pct   = total > 0 ? Math.round(count / total * 100) : 0
+
+    document.getElementById('done-count').textContent  = count
+    document.getElementById('total-count').textContent = total
+    document.getElementById('progress-bar').style.width = pct + '%'
+
+    // Сохраняем состояние в localStorage
+    const state = {}
+    items.forEach((item, i) => { state[i] = item.classList.contains('done') })
+    localStorage.setItem('kari_checklist_pilot', JSON.stringify(state))
+  }
+
+  function toggle(el) {
+    el.classList.toggle('done')
+    updateProgress()
+  }
+
+  // Восстанавливаем состояние при загрузке
+  window.addEventListener('DOMContentLoaded', () => {
+    const items = document.querySelectorAll('.check-item')
+    const saved = JSON.parse(localStorage.getItem('kari_checklist_pilot') || '{}')
+    items.forEach((item, i) => {
+      if (saved[i]) item.classList.add('done')
+    })
+    updateProgress()
+
+    // Дата запуска — можно изменить вручную
+    const launchDate = localStorage.getItem('kari_launch_date') || '__.__.__'
+    document.getElementById('launch-date').textContent = launchDate
+  })
+</script>
+
+</body>
+</html>

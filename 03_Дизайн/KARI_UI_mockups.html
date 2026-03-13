@@ -1,0 +1,2283 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KARI.Самозанятые — UI Макеты</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+  
+  /* ======= СБРОС И БАЗОВЫЕ СТИЛИ ======= */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --red: #A01F72;
+    --black: #242D4A;
+    --gray: #f5f5f5;
+    --white: #ffffff;
+    --green: #4CAF50;
+    --orange: #FF9800;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #f0f0f0;
+    color: var(--black);
+    line-height: 1.5;
+  }
+
+  /* ======= ШАПКА ======= */
+  .site-header {
+    background: #ffffff;
+    color: #333333;
+    padding: 20px 40px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-bottom: 3px solid #A01F72;
+}
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .logo-kari {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: 6px;
+    color: #333333;
+  }
+  .logo-kari span { color: var(--red); }
+  .header-divider {
+    width: 2px;
+    height: 36px;
+    background: rgba(160,31,114,0.3);
+  }
+  .header-title-block h1 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333333;
+    letter-spacing: 0.3px;
+  }
+  .header-title-block p {
+    font-size: 11px;
+    color: #999;
+    margin-top: 2px;
+  }
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .btn-print {
+    background: var(--red);
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-print:hover { opacity: 0.85; }
+  .version-badge {
+    background: rgba(160,31,114,0.08);
+    border: 1px solid rgba(160,31,114,0.25);
+    color: #A01F72;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+  }
+
+  /* ======= НАВИГАЦИЯ ======= */
+  .site-nav {
+    background: white;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 12px 40px;
+    position: sticky;
+    top: 73px;
+    z-index: 999;
+    box-shadow: 0 1px 10px rgba(0,0,0,0.06);
+  }
+  .nav-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .nav-label {
+    font-size: 11px;
+    color: #999;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-right: 6px;
+    white-space: nowrap;
+  }
+  .nav-btn {
+    background: var(--gray);
+    border: 1px solid #e0e0e0;
+    color: var(--black);
+    padding: 6px 13px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .nav-btn:hover { background: var(--red); color: white; border-color: var(--red); }
+  .nav-btn.active { background: var(--red); color: white; border-color: var(--red); }
+
+  /* ======= ОСНОВНОЙ КОНТЕНТ ======= */
+  .main-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 40px 60px;
+  }
+
+  /* ======= СЕКЦИЯ ЭКРАНА ======= */
+  .screen-section {
+    display: flex;
+    align-items: flex-start;
+    gap: 60px;
+    margin-bottom: 80px;
+    padding: 40px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    transition: box-shadow 0.3s;
+  }
+  .screen-section:hover { box-shadow: 0 8px 40px rgba(0,0,0,0.1); }
+  .screen-section.even { flex-direction: row-reverse; }
+
+  /* ======= СМАРТФОН ======= */
+  .phone-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .phone-label {
+    font-size: 11px;
+    color: #999;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+  .phone {
+    width: 280px;
+    height: 560px;
+    border: 10px solid #242D4A;
+    border-radius: 36px;
+    background: #fff;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  /* Кнопки телефона */
+  .phone::before {
+    content: '';
+    position: absolute;
+    left: -13px;
+    top: 90px;
+    width: 3px;
+    height: 28px;
+    background: #333;
+    border-radius: 2px 0 0 2px;
+    box-shadow: 0 36px 0 #333;
+  }
+  .phone::after {
+    content: '';
+    position: absolute;
+    right: -13px;
+    top: 110px;
+    width: 3px;
+    height: 44px;
+    background: #333;
+    border-radius: 0 2px 2px 0;
+  }
+  /* Нотч */
+  .phone-notch {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 20px;
+    background: #242D4A;
+    border-radius: 0 0 12px 12px;
+    z-index: 10;
+  }
+
+  /* ======= СТАТУС-БАР ======= */
+  .status-bar {
+    height: 24px;
+    background: #242D4A;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    font-size: 10px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 5;
+  }
+  .status-right { display: flex; align-items: center; gap: 4px; }
+
+  /* ======= КОНТЕНТ ТЕЛЕФОНА ======= */
+  .phone-content {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ======= НИЖНЯЯ НАВИГАЦИЯ ======= */
+  .bottom-nav {
+    height: 56px;
+    border-top: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-shrink: 0;
+    background: white;
+  }
+  .bnav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    cursor: pointer;
+    padding: 4px 8px;
+  }
+  .bnav-icon { font-size: 18px; }
+  .bnav-label { font-size: 9px; color: #999; }
+  .bnav-item.active .bnav-label { color: var(--red); }
+  .bnav-item.active .bnav-icon { filter: none; }
+
+  /* ======= БЛОК ОПИСАНИЯ ======= */
+  .screen-desc {
+    flex: 1;
+    padding: 8px 0;
+  }
+  .desc-number {
+    font-size: 72px;
+    font-weight: 900;
+    color: var(--red);
+    opacity: 0.12;
+    line-height: 1;
+    margin-bottom: -16px;
+    font-family: 'Nunito', sans-serif;
+  }
+  .desc-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--black);
+    margin-bottom: 10px;
+  }
+  .desc-goal {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+  .desc-features-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #999;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .desc-features {
+    list-style: none;
+    margin-bottom: 20px;
+  }
+  .desc-features li {
+    font-size: 14px;
+    color: #444;
+    padding: 5px 0;
+    padding-left: 18px;
+    position: relative;
+    border-bottom: 1px solid #f5f5f5;
+  }
+  .desc-features li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--red);
+    font-weight: 700;
+  }
+  .dev-note {
+    background: #f8f8f8;
+    border: 1px solid #e8e8e8;
+    border-left: 3px solid var(--red);
+    border-radius: 0 8px 8px 0;
+    padding: 14px;
+    font-size: 12px;
+    color: #555;
+    font-family: 'Courier New', Courier, monospace;
+    line-height: 1.7;
+  }
+  .dev-note-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--red);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  /* ======= ВНУТРЕННИЕ СТИЛИ ЭКРАНОВ ======= */
+
+  /* --- ЭКРАН 1 --- */
+  .s1-inner {
+    flex: 1;
+    background: linear-gradient(160deg, #242D4A 0%, #333 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px;
+    overflow: hidden;
+  }
+  .s1-logo { display: flex; align-items: center; justify-content: center; font-weight: 900; color: white; letter-spacing: 8px; margin-top: 40px; }
+  .s1-line { width: 40px; height: 3px; background: var(--red); margin: 8px auto; }
+  .s1-sub { font-size: 14px; color: #ccc; letter-spacing: 3px; }
+  .s1-features { margin-top: 40px; width: 100%; }
+  .s1-feature { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .s1-check { color: #4CAF50; font-size: 16px; font-weight: 700; }
+  .s1-ftext { color: white; font-size: 13px; }
+  .s1-btn {
+    margin-top: 40px;
+    background: var(--red);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    width: 100%;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .s1-link { color: #aaa; font-size: 12px; text-align: center; margin-top: 12px; }
+
+  /* --- ЭКРАН 2 --- */
+  .top-bar {
+    height: 44px;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .top-bar-left { font-size: 14px; font-weight: 600; }
+  .top-bar-right { font-size: 12px; color: #999; }
+  .progress-bar { height: 4px; background: #f0f0f0; flex-shrink: 0; }
+  .progress-fill { height: 100%; background: var(--red); }
+  .phone-scroll { flex: 1; overflow-y: auto; overflow-x: hidden; }
+  .phone-scroll::-webkit-scrollbar { width: 0; }
+  .s2-content { padding: 20px; }
+  .s2-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .s2-sub { font-size: 13px; color: #666; margin-bottom: 24px; }
+  .s2-input {
+    border: 2px solid var(--red);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 16px;
+    letter-spacing: 2px;
+    width: 100%;
+    color: var(--black);
+    background: white;
+  }
+  .s2-hint { font-size: 11px; color: #999; margin-top: 8px; }
+  .num-keyboard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-top: 20px;
+  }
+  .num-key {
+    height: 44px;
+    border-radius: 8px;
+    background: #f5f5f5;
+    font-size: 18px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--black);
+  }
+  .num-key.empty { background: transparent; }
+  .num-key.del { background: #f5f5f5; font-size: 16px; }
+  .btn-red {
+    background: var(--red);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 13px;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 12px;
+  }
+  /* Кнопка с суммой — двустрочный вариант */
+  .btn-red-amount {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 10px 13px 12px;
+  }
+  .btn-red-label { font-size: 12px; font-weight: 500; opacity: 0.85; letter-spacing: 0.2px; }
+  .btn-red-sum { font-size: 22px; font-weight: 800; letter-spacing: 0.5px; }
+
+  /* --- ЭКРАН 3 --- */
+  .s3-content { padding: 20px; }
+  .s3-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .s3-sub { font-size: 13px; color: #666; margin-bottom: 28px; }
+  .code-fields {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  .code-field {
+    width: 56px;
+    height: 64px;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--black);
+  }
+  .code-field.filled { border-color: var(--red); background: #fff5f5; }
+  .code-field.active { border-color: var(--red); border-width: 2px; }
+  .code-cursor { animation: blink 1s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  .s3-timer { font-size: 12px; color: #999; text-align: center; }
+
+  /* --- ЭКРАН 4 --- */
+  .s4-content { padding: 16px; }
+  .s4-title { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+  .s4-sub { font-size: 12px; color: #666; margin-bottom: 16px; }
+  .photo-zone {
+    border: 2px dashed #ccc;
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    background: #fafafa;
+    margin-bottom: 12px;
+  }
+  .photo-icon { font-size: 32px; }
+  .photo-text { font-size: 13px; color: #666; margin: 8px 0; }
+  .photo-btns { display: flex; gap: 8px; justify-content: center; }
+  .btn-sm-red {
+    background: var(--red);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-sm-gray {
+    background: #f0f0f0;
+    color: #555;
+    border: none;
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .form-field { margin-bottom: 10px; }
+  .form-label { font-size: 10px; color: #999; font-weight: 600; margin-bottom: 3px; }
+  .form-input {
+    border: 1.5px solid #4CAF50;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 12px;
+    width: 100%;
+    color: var(--black);
+    background: #f9fdf9;
+  }
+  .success-badge {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  /* --- ЭКРАН 5 --- */
+  .s5-topbar {
+    height: 44px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .s5-logo { font-size: 14px; font-weight: 700; color: var(--red); letter-spacing: 2px; }
+  .s5-content { flex: 1; overflow-y: auto; padding: 0 16px 8px; }
+  .s5-content::-webkit-scrollbar { width: 0; }
+  .s5-hello { font-size: 16px; font-weight: 700; margin: 12px 0 4px; }
+  .s5-sub { font-size: 12px; color: #666; margin-bottom: 16px; }
+  .balance-card {
+    background: linear-gradient(135deg, #242D4A, #333);
+    border-radius: 16px;
+    padding: 16px;
+    color: white;
+    margin-bottom: 16px;
+  }
+  .balance-label { font-size: 11px; color: #aaa; margin-bottom: 4px; }
+  .balance-amount { font-size: 26px; font-weight: 800; }
+  .balance-btns { display: flex; gap: 8px; margin-top: 12px; }
+  .btn-ghost {
+    background: transparent;
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 8px;
+    font-size: 11px;
+    padding: 6px 12px;
+    cursor: pointer;
+  }
+  .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .section-title { font-size: 14px; font-weight: 700; }
+  .section-link { font-size: 12px; color: var(--red); }
+  .tasks-scroll { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 4px; }
+  .tasks-scroll::-webkit-scrollbar { height: 0; }
+  .task-card {
+    width: 180px;
+    border: 1px solid #f0f0f0;
+    border-radius: 12px;
+    padding: 12px;
+    flex-shrink: 0;
+  }
+  .tag-new { font-size: 9px; background: #fff5f5; color: var(--red); border-radius: 4px; padding: 2px 6px; display: inline-block; font-weight: 700; }
+  .task-name { font-size: 13px; font-weight: 600; margin: 6px 0 4px; }
+  .task-meta { font-size: 11px; color: #666; margin-bottom: 2px; }
+  .task-price { font-size: 16px; font-weight: 700; color: var(--red); margin-top: 8px; }
+  .in-work-card {
+    border-left: 3px solid var(--orange);
+    padding: 12px;
+    background: #fffbf0;
+    border-radius: 0 12px 12px 0;
+    margin-bottom: 8px;
+  }
+  .in-work-name { font-size: 13px; font-weight: 600; }
+  .in-work-place { font-size: 11px; color: #666; margin-top: 2px; }
+  .tag-inwork { font-size: 10px; background: #fff3cd; color: #856404; border-radius: 4px; padding: 2px 6px; display: inline-block; font-weight: 700; margin-top: 6px; }
+
+  /* --- ЭКРАН 6 --- */
+  .s6-topbar {
+    height: 44px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 16px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .filters-row {
+    padding: 8px 16px;
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .filters-row::-webkit-scrollbar { height: 0; }
+  .filter-pill {
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 11px;
+    border: 1px solid #ddd;
+    background: white;
+    color: #555;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .filter-pill.active { background: var(--red); color: white; border-color: var(--red); }
+  .view-toggle {
+    display: flex;
+    margin: 8px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .view-btn {
+    flex: 1;
+    padding: 7px;
+    text-align: center;
+    font-size: 12px;
+    border: none;
+    cursor: pointer;
+    background: white;
+    color: #666;
+  }
+  .view-btn.active { background: var(--red); color: white; }
+  .s6-list { flex: 1; overflow-y: auto; padding: 0 16px 8px; display: flex; flex-direction: column; gap: 10px; }
+  .s6-list::-webkit-scrollbar { width: 0; }
+  .s6-card { border: 1px solid #f0f0f0; border-radius: 14px; padding: 14px; }
+  .s6-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .tag-urgent { font-size: 9px; background: #fff5f5; color: var(--red); border-radius: 4px; padding: 2px 6px; font-weight: 700; }
+  .tag-num { font-size: 10px; color: #999; }
+  .s6-card-title { font-size: 13px; font-weight: 600; margin: 6px 0 4px; }
+  .s6-card-meta { font-size: 11px; color: #666; margin-bottom: 2px; }
+  .s6-card-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+  .s6-price { font-size: 15px; font-weight: 700; color: var(--red); }
+  .btn-take {
+    background: var(--red);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* --- ЭКРАН 7 --- */
+  .s7-topbar {
+    height: 44px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    flex-shrink: 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .s7-content { flex: 1; overflow-y: auto; padding: 12px 16px 8px; }
+  .s7-content::-webkit-scrollbar { width: 0; }
+  .s7-photo {
+    height: 110px;
+    background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+  .s7-photo-icon { font-size: 28px; }
+  .s7-photo-text { font-size: 11px; color: #666; margin-top: 4px; }
+  .s7-status-row { display: flex; justify-content: space-between; align-items: center; }
+  .tag-open { font-size: 10px; background: #e8f5e9; color: #2e7d32; border-radius: 4px; padding: 2px 8px; font-weight: 700; }
+  .s7-title { font-size: 15px; font-weight: 700; margin: 8px 0; line-height: 1.3; }
+  .s7-details { background: #fafafa; border-radius: 12px; padding: 12px; margin: 10px 0; display: flex; flex-direction: column; gap: 7px; }
+  .s7-detail { font-size: 11px; color: #444; display: flex; align-items: flex-start; gap: 6px; }
+  .s7-section-title { font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+  .s7-text { font-size: 11px; color: #444; line-height: 1.5; margin-bottom: 10px; }
+  .s7-req { font-size: 11px; margin-bottom: 4px; }
+  .s7-payment { border-top: 1px solid #f0f0f0; margin-top: 10px; padding-top: 10px; }
+  .s7-pay-row { font-size: 12px; margin-bottom: 4px; }
+  .s7-pay-total { font-size: 14px; font-weight: 700; color: var(--red); margin-top: 6px; }
+  .s7-pay-sub { font-size: 11px; color: #666; }
+
+  /* --- ЭКРАН 8 --- */
+  .s8-content { flex: 1; overflow-y: auto; padding: 12px 16px 8px; }
+  .s8-content::-webkit-scrollbar { width: 0; }
+  .s8-status { background: #fff3cd; border-radius: 8px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .s8-status-text { font-size: 11px; font-weight: 700; color: #856404; }
+  .s8-timer { font-size: 11px; color: #856404; }
+  .s8-title { font-size: 14px; font-weight: 600; margin-bottom: 14px; }
+  .s8-section-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .s8-sub { font-size: 11px; color: #999; margin-bottom: 8px; }
+  .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .photo-cell-done {
+    background: #e8f5e9;
+    border-radius: 8px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: var(--green);
+  }
+  .photo-cell-add {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #ccc;
+  }
+  .photo-count { font-size: 11px; color: #666; text-align: right; margin-top: 4px; }
+  .s8-geo-title { font-size: 13px; font-weight: 600; margin: 14px 0 6px; }
+  .mini-map {
+    height: 80px;
+    background: linear-gradient(135deg, #e8f4f8, #d4e8f0);
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .geo-dot {
+    width: 12px;
+    height: 12px;
+    background: #2196F3;
+    border-radius: 50%;
+    border: 2px solid white;
+    position: relative;
+    z-index: 2;
+  }
+  .geo-pulse {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(33,150,243,0.25);
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse { 0%{transform:scale(0.5);opacity:0.8} 100%{transform:scale(1.8);opacity:0} }
+  .geo-ok { font-size: 11px; color: #2e7d32; margin-top: 6px; }
+  .s8-comment {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 10px;
+    height: 52px;
+    width: 100%;
+    font-size: 12px;
+    color: #999;
+    margin-top: 12px;
+    resize: none;
+    font-family: inherit;
+  }
+  .btn-disabled {
+    background: #e0e0e0;
+    color: #999;
+    border: none;
+    border-radius: 12px;
+    padding: 13px;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 12px;
+    cursor: not-allowed;
+  }
+
+  /* --- ЭКРАН 9 --- */
+  .s9-topbar { height: 44px; padding: 0 16px; display: flex; align-items: center; font-size: 16px; font-weight: 700; flex-shrink: 0; border-bottom: 1px solid #f0f0f0; }
+  .s9-content { flex: 1; overflow-y: auto; padding: 0 16px 8px; }
+  .s9-content::-webkit-scrollbar { width: 0; }
+  .bank-card {
+    background: linear-gradient(135deg, #242D4A 0%, #A01F72 100%);
+    border-radius: 18px;
+    padding: 18px;
+    color: white;
+    margin: 12px 0;
+  }
+  .bank-card-top { display: flex; justify-content: space-between; align-items: center; }
+  .bank-kari { font-size: 12px; font-weight: 700; letter-spacing: 3px; }
+  .bank-label { font-size: 11px; color: rgba(255,255,255,0.7); margin: 16px 0 4px; }
+  .bank-amount { font-size: 28px; font-weight: 800; }
+  .bank-card-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+  .bank-number { font-size: 12px; color: rgba(255,255,255,0.8); }
+  .bank-bank { font-size: 10px; color: rgba(255,255,255,0.7); }
+  .s9-limit { border: 1px solid #f0f0f0; border-radius: 12px; padding: 12px; margin-top: 16px; }
+  .s9-limit-top { display: flex; justify-content: space-between; align-items: center; }
+  .s9-limit-title { font-size: 12px; font-weight: 600; }
+  .s9-limit-q { font-size: 14px; color: #999; cursor: pointer; }
+  .s9-limit-bar { height: 8px; background: #f0f0f0; border-radius: 4px; margin: 8px 0; overflow: hidden; }
+  .s9-limit-fill { height: 100%; background: var(--red); border-radius: 4px; width: 20%; }
+  .s9-limit-text { font-size: 11px; color: #666; }
+  .s9-hist-title { font-size: 14px; font-weight: 700; margin-top: 16px; margin-bottom: 4px; }
+  .tx-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f9f9f9; }
+  .tx-left { display: flex; align-items: center; gap: 8px; }
+  .tx-name { font-size: 12px; color: var(--black); }
+  .tx-date { font-size: 10px; color: #999; }
+  .tx-amount { font-size: 13px; font-weight: 600; color: var(--green); white-space: nowrap; flex-shrink: 0; }
+  .s9-show-all { font-size: 12px; color: var(--red); text-align: center; margin-top: 8px; cursor: pointer; }
+
+  /* --- ЭКРАН 10 --- */
+  .s10-topbar { height: 44px; padding: 0 16px; display: flex; align-items: center; font-size: 16px; font-weight: 700; flex-shrink: 0; border-bottom: 1px solid #f0f0f0; }
+  .s10-content { flex: 1; overflow-y: auto; padding: 0 16px 8px; }
+  .s10-content::-webkit-scrollbar { width: 0; }
+  .profile-block { text-align: center; padding: 16px 0; }
+  .avatar { width: 64px; height: 64px; background: var(--red); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; font-weight: 700; }
+  .profile-name { font-size: 15px; font-weight: 700; margin-top: 10px; }
+  .profile-phone { font-size: 12px; color: #666; }
+  .profile-badge { display: inline-block; background: #e8f5e9; color: #2e7d32; border-radius: 12px; padding: 3px 10px; font-size: 11px; margin-top: 6px; }
+  .stats-grid { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; }
+  .stat-card { display: flex; justify-content: space-between; align-items: center; border: 1px solid #f0f0f0; border-radius: 12px; padding: 12px 14px; }
+  .stat-num { font-size: 18px; font-weight: 800; color: var(--red); white-space: nowrap; }
+  .stat-num.small { font-size: 14px; }
+  .stat-label { font-size: 12px; color: #444; }
+  .menu-list { display: flex; flex-direction: column; }
+  .menu-item { display: flex; align-items: center; padding: 13px 0; border-bottom: 1px solid #f9f9f9; cursor: pointer; }
+  .menu-icon { font-size: 16px; margin-right: 10px; }
+  .menu-text { font-size: 13px; flex: 1; color: var(--black); }
+  .menu-arrow { font-size: 12px; color: #ccc; }
+  .btn-outline {
+    background: white;
+    color: var(--red);
+    border: 1.5px solid var(--red);
+    border-radius: 12px;
+    padding: 12px;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 14px;
+  }
+
+  /* ======= НИЖНИЙ UI-КИТ ======= */
+  .uikit-section {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    padding: 40px;
+    margin-top: 20px;
+  }
+  .uikit-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--gray);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .uikit-title::before {
+    content: '';
+    display: block;
+    width: 4px;
+    height: 24px;
+    background: var(--red);
+    border-radius: 2px;
+  }
+  .palette {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+  .color-swatch {
+    text-align: center;
+  }
+  .color-box {
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  .color-hex { font-size: 12px; font-weight: 700; color: var(--black); font-family: monospace; }
+  .color-name { font-size: 11px; color: #777; }
+  .typo-table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
+  .typo-table th { text-align: left; padding: 10px 14px; background: var(--gray); font-size: 12px; font-weight: 700; color: #555; border-radius: 4px; }
+  .typo-table td { padding: 12px 14px; border-bottom: 1px solid #f5f5f5; font-size: 13px; vertical-align: middle; }
+  .typo-table tr:hover td { background: #fafafa; }
+  .nav-preview {
+    display: flex;
+    gap: 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
+    overflow: hidden;
+    max-width: 400px;
+  }
+  .nav-prev-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 8px;
+    border-right: 1px solid #f0f0f0;
+    background: white;
+  }
+  .nav-prev-item:last-child { border-right: none; }
+  .nav-prev-item.active { background: #fff5f5; }
+  .nav-prev-icon { font-size: 22px; }
+  .nav-prev-label { font-size: 10px; color: #999; margin-top: 4px; }
+  .nav-prev-item.active .nav-prev-label { color: var(--red); }
+  .nav-prev-desc { font-size: 11px; color: #999; text-align: center; margin-top: 8px; padding: 0 4px; }
+
+  /* ======= ПЕЧАТЬ ======= */
+  @media print {
+    .site-header, .site-nav { position: static; }
+    .screen-section { break-inside: avoid; box-shadow: none; border: 1px solid #eee; }
+    .btn-print { display: none; }
+  }
+
+  /* ======= АДАПТИВНОСТЬ ======= */
+  @media (max-width: 900px) {
+    .site-header { padding: 16px 20px; }
+    .site-nav { padding: 10px 20px; top: 65px; }
+    .main-content { padding: 20px 20px 40px; }
+    .screen-section { flex-direction: column !important; align-items: center; gap: 30px; padding: 24px 20px; }
+    .screen-desc { text-align: center; }
+    .desc-number { text-align: left; }
+    .uikit-section { padding: 24px 20px; }
+    .palette { justify-content: center; }
+  }
+
+  /* ======= СЕКЦИЯ РАЗДЕЛИТЕЛЬ ======= */
+  .section-divider {
+    text-align: center;
+    margin: 20px 0 40px;
+    font-size: 11px;
+    color: #bbb;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* ===== ЛОГОТИП KARI ===== */
+  .kari-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+  .kari-logo-symbol {
+    width: 32px;
+    height: 32px;
+    background: #A01F72;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .kari-logo-symbol::after {
+    content: 'r';
+    color: white;
+    font-size: 16px;
+    font-weight: 900;
+    font-style: italic;
+    transform: rotate(45deg);
+    display: block;
+  }
+  .kari-logo-text {
+    font-size: 24px;
+    font-weight: 900;
+    color: #242D4A;
+    letter-spacing: 2px;
+    font-style: italic;
+  }
+  .kari-logo-white .kari-logo-text {
+    color: white;
+  }
+  /* ===== ЛОГОТИП KARI (маленький) ===== */
+  .kari-logo-small {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .kari-logo-small-symbol {
+    width: 18px;
+    height: 18px;
+    background: #A01F72;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .kari-logo-small-symbol::after {
+    content: 'r';
+    color: white;
+    font-size: 9px;
+    font-weight: 900;
+    font-style: italic;
+    transform: rotate(45deg);
+    display: block;
+  }
+  .kari-logo-small-text {
+    font-size: 14px;
+    font-weight: 900;
+    color: #242D4A;
+    font-style: italic;
+  }
+
+  /* ===== НОВЫЙ ЛОГОТИП SVG ===== */
+  .kari-logo-wrap { display: flex; align-items: center; gap: 10px; }
+  .kari-text { font-size: 26px; font-weight: 900; font-style: italic; color: #A01F72; letter-spacing: 1px; font-family: 'Nunito', sans-serif; }
+  .kari-subtext { font-size: 10px; color: #A01F72; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; display: block; margin-top: -4px; }
+
+  /* ===== БЕЛАЯ ШАПКА И МЕНЮ ===== */
+  .page-header, .site-header, .app-header {
+    background: #ffffff !important;
+    border-bottom: 3px solid #A01F72 !important;
+    color: #333333 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+  }
+  .page-header *, .site-header *, .app-header * {
+    color: #333333 !important;
+  }
+  /* Исключения: кнопки и бейджи сохраняют свой цвет */
+  .page-header .btn-print, .site-header .btn-print, .app-header .btn-print,
+  .badge-status, .nav-num, .tab-badge {
+    color: #ffffff !important;
+  }
+  .header-avatar { color: #ffffff !important; }
+
+
+/* ═══════════════════════════════════════════════════════════
+   МОБИЛЬНАЯ АДАПТАЦИЯ — добавлено 11.03.2026
+   Адаптировано для экранов смартфонов (< 768px)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Таблицы — горизонтальный скролл на всех устройствах */
+table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+/* Изображения — масштабирование */
+img { max-width: 100% !important; height: auto !important; }
+@media (max-width: 768px) {
+  /* Все многоколоночные сетки → 1 колонка */
+  .num-keyboard { grid-template-columns: 1fr !important; }
+  .photo-grid { grid-template-columns: 1fr !important; }
+  /* .stats-grid оставляем 3 колонки — экран Profile специально показывает 3 статистики рядом */
+
+  /* Боковое меню — скрываем, убираем отступ */
+  .sidebar { display: none !important; }
+  .main-content { margin-left: 0 !important; padding: 16px !important; }
+  .site-header { position: relative !important; }
+
+  /* Отступы шапки */
+  .header, .page-header { padding: 20px 16px !important; }
+  .header-top { flex-wrap: wrap !important; gap: 8px !important; }
+  .header-meta, .header-actions, .header-badges { flex-wrap: wrap !important; gap: 8px !important; }
+
+  /* Основной контент */
+  .main, .content, .container { padding: 16px !important; }
+
+  /* Типографика */
+  h1 { font-size: 22px !important; }
+  h2 { font-size: 18px !important; }
+  h3 { font-size: 15px !important; }
+
+  /* Горизонтальные ряды — перенос */
+  .header-pills, .filter-tabs, .nav-tabs, .tabs-row,
+  .section-tabs, .tab-bar { flex-wrap: wrap !important; }
+  .step { flex-direction: column !important; }
+
+  /* Кодовые блоки */
+  pre, code {
+    overflow-x: auto !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 13px !important; }
+  .badge, .tag, .pill, .status-badge { font-size: 11px !important; padding: 3px 8px !important; }
+  h1, .header h1, .logo-area h1 { font-size: 19px !important; }
+  .btn-print, .btn-export { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ======= ШАПКА ======= -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo">
+      <div class="kari-logo-wrap">
+  <svg xmlns="http://www.w3.org/2000/svg" height="56" viewBox="0 0 728.5 221.5" style="display:block"><g transform="translate(-56.5 -186.5)"><path transform="matrix(1,0,0,-1,167.381,186.9256)" d="M0 0V0C-60.585 0-109.775-48.659-110.678-109.017-101.105-89.662-88.255-77.239-76.191-67.482-58.14-52.881-36.41-45.828-16.28-44.574 5.777-43.201 23.053-47.846 37.189-59.05 42.293-63.095 46.38-67.877 49.613-73.02 55.602-82.543 58.375-93.663 57.368-105.985 55.198-132.527 33.39-153.87 6.804-155.519-24.699-157.473-50.859-132.506-50.859-101.431-50.859-87.238-45.395-74.325-36.465-64.663-46.559-67.782-56.643-72.841-65.837-80.278-74.971-87.666-85.145-97.851-93.512-111.315-102.647-126.015-106.433-143.045-106.537-160.35V-221.399H0C61.15-221.399 110.721-171.838 110.721-110.7V-110.699C110.721-49.561 61.15 0 0 0" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,484.762,262.1775)" d="M0 0H-51.44L-106.801-52.162V41.158H-144.053V-144.054H-106.801V-91.887L-51.433-144.054H3.854L-76.443-72.024Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,0,595.276)" d="M744.002 189.045H781.255V314.95503H744.002Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,550.4052,371.5924)" d="M0 0C-20.818 0-37.694 16.739-37.694 37.388-37.694 58.037-20.818 74.776 0 74.776 20.818 74.776 37.694 58.037 37.694 37.388 37.694 16.739 20.818 0 0 0M37.738 101.384C26.659 107.826 13.769 111.534 0 111.534-41.285 111.534-74.753 78.338-74.753 37.388-74.753-3.562-41.285-36.758 0-36.758 13.769-36.758 26.659-33.05 37.738-26.609V-34.639H74.99V109.415H37.738Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,762.6282,267.7195)" d="M0 0C12.459 0 22.559 10.1 22.559 22.559 22.559 28.064 20.582 33.104 17.306 37.02 15.132 39.862 12.219 42.197 8.653 43.858-2.579 49.086-18.377 47.019-33.605 38.323-49.001 29.531-61.329 13.083-68.67-6.989V5.542H-105.923V-138.512H-68.67V-37.268C-65.411-6.761-50.524 20.852-30.241 32.433-25.463 35.163-20.667 37.153-16.051 38.402-20.072 34.327-22.559 28.736-22.559 22.559-22.559 10.1-12.459 0 0 0" fill="#a91d7a"/></g></svg>
+  <span class="kari-subtext">самозанятые</span>
+</div>
+      <div class="header-divider"></div>
+      <div class="header-title-block">
+        <h1>UI Макеты мобильного приложения KARI.Самозанятые</h1>
+        <p>Дизайн-спецификация — 10 ключевых экранов пользовательского пути</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span class="version-badge">v1.0 — Февраль 2025</span>
+      <button class="btn-print" onclick="window.print()">Печать</button>
+    </div>
+  </div>
+</header>
+
+<!-- ======= НАВИГАЦИЯ ======= -->
+<nav class="site-nav">
+  <div class="nav-inner">
+    <span class="nav-label">ПЕРЕХОД К:</span>
+    <a href="#screen1" class="nav-btn" data-target="screen1">1. Приветствие</a>
+    <a href="#screen2" class="nav-btn" data-target="screen2">2. Ввод телефона</a>
+    <a href="#screen3" class="nav-btn" data-target="screen3">3. Код из SMS</a>
+    <a href="#screen4" class="nav-btn" data-target="screen4">4. Паспорт</a>
+    <a href="#screen5" class="nav-btn" data-target="screen5">5. Главный экран</a>
+    <a href="#screen6" class="nav-btn" data-target="screen6">6. Биржа заданий</a>
+    <a href="#screen7" class="nav-btn" data-target="screen7">7. Карточка задания</a>
+    <a href="#screen8" class="nav-btn" data-target="screen8">8. Сдача задания</a>
+    <a href="#screen9" class="nav-btn" data-target="screen9">9. Кошелёк</a>
+    <a href="#screen10" class="nav-btn" data-target="screen10">10. Профиль</a>
+  </div>
+</nav>
+
+<!-- ======= ОСНОВНОЙ КОНТЕНТ ======= -->
+<main class="main-content">
+
+  <!-- ===== ЭКРАН 1: ПРИВЕТСТВИЕ ===== -->
+  <section id="screen1" class="screen-section">
+    <!-- Смартфон -->
+    <div class="phone-wrapper">
+      <div class="phone-label">ЭКРАН 1 — 280 × 560px</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <!-- Статус-бар -->
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-right"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+        </div>
+        <!-- Контент -->
+        <div class="phone-content">
+          <div class="s1-inner">
+            <div class="s1-logo"><svg xmlns="http://www.w3.org/2000/svg" height="28" viewBox="0 0 728.5 221.5" style="display:block"><g transform="translate(-56.5 -186.5)"><path transform="matrix(1,0,0,-1,167.381,186.9256)" d="M0 0V0C-60.585 0-109.775-48.659-110.678-109.017-101.105-89.662-88.255-77.239-76.191-67.482-58.14-52.881-36.41-45.828-16.28-44.574 5.777-43.201 23.053-47.846 37.189-59.05 42.293-63.095 46.38-67.877 49.613-73.02 55.602-82.543 58.375-93.663 57.368-105.985 55.198-132.527 33.39-153.87 6.804-155.519-24.699-157.473-50.859-132.506-50.859-101.431-50.859-87.238-45.395-74.325-36.465-64.663-46.559-67.782-56.643-72.841-65.837-80.278-74.971-87.666-85.145-97.851-93.512-111.315-102.647-126.015-106.433-143.045-106.537-160.35V-221.399H0C61.15-221.399 110.721-171.838 110.721-110.7V-110.699C110.721-49.561 61.15 0 0 0" fill="white"/><path transform="matrix(1,0,0,-1,484.762,262.1775)" d="M0 0H-51.44L-106.801-52.162V41.158H-144.053V-144.054H-106.801V-91.887L-51.433-144.054H3.854L-76.443-72.024Z" fill="white"/><path transform="matrix(1,0,0,-1,0,595.276)" d="M744.002 189.045H781.255V314.95503H744.002Z" fill="white"/><path transform="matrix(1,0,0,-1,550.4052,371.5924)" d="M0 0C-20.818 0-37.694 16.739-37.694 37.388-37.694 58.037-20.818 74.776 0 74.776 20.818 74.776 37.694 58.037 37.694 37.388 37.694 16.739 20.818 0 0 0M37.738 101.384C26.659 107.826 13.769 111.534 0 111.534-41.285 111.534-74.753 78.338-74.753 37.388-74.753-3.562-41.285-36.758 0-36.758 13.769-36.758 26.659-33.05 37.738-26.609V-34.639H74.99V109.415H37.738Z" fill="white"/><path transform="matrix(1,0,0,-1,762.6282,267.7195)" d="M0 0C12.459 0 22.559 10.1 22.559 22.559 22.559 28.064 20.582 33.104 17.306 37.02 15.132 39.862 12.219 42.197 8.653 43.858-2.579 49.086-18.377 47.019-33.605 38.323-49.001 29.531-61.329 13.083-68.67-6.989V5.542H-105.923V-138.512H-68.67V-37.268C-65.411-6.761-50.524 20.852-30.241 32.433-25.463 35.163-20.667 37.153-16.051 38.402-20.072 34.327-22.559 28.736-22.559 22.559-22.559 10.1-12.459 0 0 0" fill="white"/></g></svg></div>
+            <div class="s1-line"></div>
+            <div class="s1-sub">Самозанятые</div>
+            <div class="s1-features">
+              <div class="s1-feature"><span class="s1-check">✓</span><span class="s1-ftext">Официально и легально</span></div>
+              <div class="s1-feature"><span class="s1-check">✓</span><span class="s1-ftext">Выплаты за 1 день</span></div>
+              <div class="s1-feature"><span class="s1-check">✓</span><span class="s1-ftext">Удобное приложение</span></div>
+            </div>
+            <button class="s1-btn">Начать работу</button>
+            <div class="s1-link">Уже зарегистрирован? Войти</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Описание -->
+    <div class="screen-desc">
+      <div class="desc-number">01</div>
+      <div class="desc-title">Экран приветствия</div>
+      <div class="desc-goal">Первый экран, который видит новый пользователь. Задача — передать доверие, простоту и ключевые преимущества работы с KARI за несколько секунд.</div>
+      <div class="desc-features-title">Ключевые элементы</div>
+      <ul class="desc-features">
+        <li>Логотип KARI на тёмном фоне — фирменный стиль</li>
+        <li>3 преимущества с зелёными галочками — убеждение</li>
+        <li>CTA-кнопка «Начать работу» — основное действие</li>
+        <li>Ссылка входа для существующих пользователей</li>
+        <li>Тёмный градиентный фон — профессиональный вид</li>
+      </ul>
+      <div class="dev-note">
+        <div class="dev-note-title">Для разработчиков</div>
+        Анимация появления при первом запуске (fade-in, 600ms).<br>
+        Проверка токена при старте: если есть → пропустить экран.<br>
+        Экран: <strong>SplashScreen.tsx</strong><br>
+        Route: <strong>/</strong> → redirect на <strong>/home</strong> если авторизован
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider">— — —</div>
+
+  <!-- ===== ЭКРАН 2: ВВОД ТЕЛЕФОНА ===== -->
+  <section id="screen2" class="screen-section even">
+    <!-- Описание -->
+    <div class="screen-desc">
+      <div class="desc-number">02</div>
+      <div class="desc-title">Ввод номера телефона</div>
+      <div class="desc-goal">Первый шаг регистрации. Минимум трений — только номер телефона, без email и паролей. Встроенная клавиатура исключает переключение раскладки.</div>
+      <div class="desc-features-title">Ключевые элементы</div>
+      <ul class="desc-features">
+        <li>Прогресс «1 из 4» — пользователь знает, сколько шагов осталось</li>
+        <li>Прогресс-бар 25% — визуальный прогресс</li>
+        <li>Поле с маской +7 (___) ___-__-__</li>
+        <li>Встроенная цифровая клавиатура — удобство</li>
+        <li>Согласие с условиями — юридическая защита</li>
+      </ul>
+      <div class="dev-note">
+        <div class="dev-note-title">Для разработчиков</div>
+        Маска ввода: <strong>+7 (___) ___-__-__</strong><br>
+        Автофокус на поле при открытии экрана.<br>
+        SMS через <strong>SMSC.ru API</strong> или <strong>МТС Exolve</strong>.<br>
+        Кнопка «Получить код» активна только при 10 цифрах.<br>
+        POST <strong>/api/auth/send-sms</strong> → { phone }
+      </div>
+    </div>
+    <!-- Смартфон -->
+    <div class="phone-wrapper">
+      <div class="phone-label">ЭКРАН 2 — 280 × 560px</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-right"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+        </div>
+        <div class="phone-content">
+          <div class="top-bar">
+            <span class="top-bar-left">← Регистрация</span>
+            <span class="top-bar-right">1 из 4</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:25%"></div></div>
+          <div class="phone-scroll">
+            <div class="s2-content">
+              <div class="s2-title">Введите номер телефона</div>
+              <div class="s2-sub">Отправим SMS с кодом</div>
+              <div class="s2-input">🇷🇺 +7 (999) ___-__-__</div>
+              <div class="s2-hint">Нажимая «Далее», вы соглашаетесь с условиями использования</div>
+              <div class="num-keyboard">
+                <button class="num-key">1</button>
+                <button class="num-key">2</button>
+                <button class="num-key">3</button>
+                <button class="num-key">4</button>
+                <button class="num-key">5</button>
+                <button class="num-key">6</button>
+                <button class="num-key">7</button>
+                <button class="num-key">8</button>
+                <button class="num-key">9</button>
+                <button class="num-key empty"></button>
+                <button class="num-key">0</button>
+                <button class="num-key del">⌫</button>
+              </div>
+              <button class="btn-red">Получить код</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider">— — —</div>
+
+  <!-- ===== ЭКРАН 3: КОД ИЗ SMS ===== -->
+  <section id="screen3" class="screen-section">
+    <div class="phone-wrapper">
+      <div class="phone-label">ЭКРАН 3 — 280 × 560px</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-right"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+        </div>
+        <div class="phone-content">
+          <div class="top-bar">
+            <span class="top-bar-left">← Подтверждение</span>
+            <span class="top-bar-right">2 из 4</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:50%"></div></div>
+          <div class="phone-scroll">
+            <div class="s3-content">
+              <div class="s3-title">Введите код из SMS</div>
+              <div class="s3-sub">+7 (999) 123-45-67</div>
+              <div class="code-fields">
+                <div class="code-field filled">4</div>
+                <div class="code-field filled">2</div>
+                <div class="code-field active"><span class="code-cursor">|</span></div>
+                <div class="code-field"></div>
+              </div>
+              <div class="s3-timer">Повторить через 45 сек</div>
+              <button class="btn-red" style="margin-top:20px">Подтвердить</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-desc">
+      <div class="desc-number">03</div>
+      <div class="desc-title">Подтверждение кода из SMS</div>
+      <div class="desc-goal">Второй шаг регистрации. Верификация номера телефона через SMS-код. Автоматический переход между полями ускоряет ввод.</div>
+      <div class="desc-features-title">Ключевые элементы</div>
+      <ul class="desc-features">
+        <li>4 отдельных поля для каждой цифры кода</li>
+        <li>Визуальная обратная связь — заполненные поля красные</li>
+        <li>Таймер 60 секунд до повторной отправки</li>
+        <li>Прогресс «2 из 4» и полоска 50%</li>
+        <li>Показ номера телефона для подтверждения</li>
+      </ul>
+      <div class="dev-note">
+        <div class="dev-note-title">Для разработчиков</div>
+        Автопереход к следующему полю после ввода цифры.<br>
+        При вставке из буфера — разбить 4 цифры по полям.<br>
+        Таймер 60 сек → ссылка «Повторить» становится активной.<br>
+        POST <strong>/api/auth/verify-sms</strong> → { phone, code }<br>
+        Ответ: JWT access_token + refresh_token
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider">— — —</div>
+
+  <!-- ===== ЭКРАН 4: ЗАГРУЗКА ПАСПОРТА ===== -->
+  <section id="screen4" class="screen-section even">
+    <div class="screen-desc">
+      <div class="desc-number">04</div>
+      <div class="desc-title">Загрузка документов</div>
+      <div class="desc-goal">Третий шаг регистрации. OCR автоматически распознаёт данные паспорта и ИНН, минимизируя ручной ввод. Интеграция с ФНС подтверждает статус самозанятого.</div>
+      <div class="desc-features-title">Ключевые элементы</div>
+      <ul class="desc-features">
+        <li>Зона загрузки фото — камера или галерея</li>
+        <li>Автозаполнение полей через OCR (Яндекс Vision)</li>
+        <li>Зелёные рамки полей — данные успешно распознаны</li>
+        <li>Зелёная плашка — статус самозанятого подтверждён ФНС</li>
+        <li>Прогресс «3 из 4» и полоска 75%</li>
+      </ul>
+      <div class="dev-note">
+        <div class="dev-note-title">Для разработчиков</div>
+        OCR через <strong>Яндекс Vision API</strong> (распознавание паспорта).<br>
+        Проверка ИНН: GET <strong>/api/fns/check-inn?inn=771234567890</strong><br>
+        Хранение фото: <strong>MinIO</strong> S3-совместимое хранилище.<br>
+        Шифрование документов: AES-256 в БД.<br>
+        Фото паспорта НЕ хранится после распознавания (GDPR/152-ФЗ).
+      </div>
+    </div>
+    <div class="phone-wrapper">
+      <div class="phone-label">ЭКРАН 4 — 280 × 560px</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-right"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+        </div>
+        <div class="phone-content">
+          <div class="top-bar">
+            <span class="top-bar-left">← Документы</span>
+            <span class="top-bar-right">3 из 4</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:75%"></div></div>
+          <div class="phone-scroll">
+            <div class="s4-content">
+              <div class="s4-title">Загрузите паспорт</div>
+              <div class="s4-sub">Разворот с фотографией</div>
+              <div class="photo-zone">
+                <div class="photo-icon">📷</div>
+                <div class="photo-text">Сфотографируйте паспорт</div>
+                <div class="photo-btns">
+                  <button class="btn-sm-red">📷 Камера</button>
+                  <button class="btn-sm-gray">🖼 Галерея</button>
+                </div>
+              </div>
+              <div class="form-field">
+                <div class="form-label">ФИО</div>
+                <input class="form-input" value="Иванов Иван Иванович" readonly>
+              </div>
+              <div class="form-field">
+                <div class="form-label">Серия и номер</div>
+                <input class="form-input" value="4515 123456" readonly>
+              </div>
+              <div class="form-field">
+                <div class="form-label">ИНН</div>
+                <input class="form-input" value="771234567890" readonly>
+              </div>
+              <div class="success-badge">✓ Статус самозанятого подтверждён ФНС</div>
+              <button class="btn-red">Продолжить</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider">— — —</div>
+
+  <!-- ===== ЭКРАН 5: ГЛАВНЫЙ ЭКРАН ===== -->
+  <section id="screen5" class="screen-section">
+    <div class="phone-wrapper">
+      <div class="phone-label">ЭКРАН 5 — 280 × 560px</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-right"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+        </div>
+        <div class="phone-content">
+          <div class="s5-topbar">
+            <span style="font-size:15px;font-weight:700;color:var(--black)">Главная</span>
+            <span style="font-size:18px">🔔</span>
+          </div>
+          <div class="s5-content">
+            <div class="s5-hello">Привет, Иван! 👋</div>
+            <div class="s5-sub">Найдите подходящее задание</div>
+            <div class="balance-card">
+              <div class="balance-label">Мой баланс</div>
+              <div class="balance-amount">12 500 ₽</div>
+              <div class="balance-btns">
+                <button class="btn-ghost">Вывести</button>
+                <button class="btn-ghost">История</button>
+              </div>
+            </div>
+            <div class="section-header">
+              <span class="section-title">Новые задания</span>
+              <span class="section-link">Все →</span>
+            </div>
+            <div class="tasks-scroll">
+              <div class="task-card">
+                <span class="tag-new">НОВОЕ</span>
+                <div class="task-name">Мерчандайзинг</div>
+                <div class="task-meta">📍 KARI Арбат</div>
+                <div class="task-meta">📅 25 февраля</div>
+                <div class="task-price">2 500 ₽</div>
+              </div>
+              <div class="task-card">
+                <div class="task-name">Промоутер</div>
+                <div class="task-meta">📍 KARI Тверская</div>
+                <div class="task-meta">📅 26 февраля</div>
+                <div class="task-price">3 000 ₽</div>
+              </div>
+            </div>
+            <div class="section-header" style="margin-top:16px">
+              <span class="section-title">В работе</span>
+            </div>
+            <div class="in-work-card">
+              <div class="in-work-name">Выкладка товара</div>
+              <div class="in-work-place">KARI Пушкинская</div>
+              <span class="tag-inwork">В РАБОТЕ</span>
+            </div>
+          </div>
+          <div class="bottom-nav">
+            <div class="bnav-item active"><span class="bnav-icon">🏠</span><span class="bnav-label">Главная</span></div>
+            <div class="bnav-item"><span class="bnav-icon">📋</span><span class="bnav-label">Задания</span></div>
+            <div class="bnav-item"><span class="bnav-icon">📄</span><span class="bnav-label">Документы</span></div>
+            <div class="bnav-item"><span class="bnav-icon">👤</span><span class="bnav-label">Профиль</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-desc">
+      <div class="desc-number">05</div>
+      <div class="desc-title">Главный экран</div>
+      <div class="desc-goal">Центральный хаб приложения. Пользователь сразу видит свой баланс, новые задания и текущую работу. Всё важное — в одном месте.</div>
+      <div class="desc-features-title">Ключевые элементы</div>
+      <ul class="desc-features">
+        <li>Баланс-карточка с тёмным градиентом — главная цифра</li>
+        <li>Кнопки «Вывести» и «История» для быстрого доступа</li>
+        <li>Горизонтальный скролл новых заданий</li>
+        <li>Карточка «В работе» с оранжевой меткой</li>
+        <li>Нижняя навигация из 4 пунктов</li>
+      </ul>
+      <div class="dev-note">
+        <div class="dev-note-title">Для разработчиков</div>
+        Баланс: GET <strong>/api/wallet/balance</strong><br>
+        Задания: GET <strong>/api/tasks?limit=2&sort=new</strong><br>
+        В работе: GET <strong>/api/tasks?status=in_progress</strong><br>
+        WebSocket для обновления баланса в реальном времени.<br>
+        Pull-to-refresh для обновления списка заданий.
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider">— — —</div>
+
+  <!-- ===== ЭКРАН 6: БИРЖА ЗАДАНИЙ ===== -->
+  <section id="screen6" class="screen-section even">
+    <div class="screen-desc">
+      <div class="desc-number">06</div>
+      <div class="desc-title">Биржа заданий</div>
+      <div class="desc-goal">Каталог всех доступных заданий с фильтрацией по типу работы. Пользователь может переключиться между списком и картой для удобного поиска.</div>
+      <div class="desc-features-title">Ключевые элементы</div>
+      <ul class="desc-features">
+        <li>Фильтры-таблетки по категориям работ</li>
+        <li>Переключатель список / карта</li>
+        <li>Карточки с тегом «СРОЧНО» и номером задания</li>
+        <li>Кнопка «Взять →» прямо в карточке</li>
+        <li>Бесконечная прокрутка (пагинация)</li>
+      </ul>
+      <div class="dev-note">
+        <div class="dev-note-title">Для разработчиков</div>
+        Фильтры через query params: GET <strong>/api/tasks?category=merch</strong><br>
+        Пагинация: <strong>?page=1&limit=10</strong> (бесконечная прокрутка).<br>
+        Кэш ответа: <strong>5 минут в Redis</strong>.<br>
+        Карта: Яндекс.Карты JS API v3.<br>
+        Инвалидация кэша при взятии задания другим пользователем.
+      </div>
+    </div>
+    <div class="phone-wrapper">
+      <div class="phone-label">ЭКРАН 6 — 280 × 560px</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-right"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+        </div>
+        <div class="phone-content">
+          <div class="s6-topbar">Задания</div>
+          <div class="filters-row">
+            <span class="filter-pill active">Все ✓</span>
+            <span class="filter-pill">Мерчандайзинг</span>
+            <span class="filter-pill">Промо</span>
+            <span class="filter-pill">Курьер</span>
+            <span class="filter-pill">Уборка</span>
+          </div>
+          <div class="view-toggle">
+            <button class="view-btn active">📋 Список</button>
+            <button class="view-btn">🗺 Карта</button>
+          </div>
+          <div class="s6-list">
+            <div class="s6-card">
+              <div class="s6-card-top"><span class="tag-urgent">СРОЧНО</span><span class="tag-num">#1247</span></div>
+              <div class="s6-card-title">Мерчандайзинг — выкладка коллекции</div>
+              <div class="s6-card-meta">📍 KARI Арбат, Москва</div>
+              <div class="s6-card-meta">🕐 25 фев, 10:00–14:00</div>
+              <div class="s6-card-bottom">
+                <span class="s6-price">2 500 ₽</span>
+                <button class="btn-take">Взять →</button>
+              </div>
+            </div>
+            <div class="s6-card">
+              <div class="s6-card-top"><span></span><span class="tag-num">#1248</span></div>
+              <div class="s6-card-title">Промоутер на акции</div>
+              <div class="s6-card-meta">📍 KARI Тверская</div>
+              <div class="s6-card-meta">🕐 26 фев, 12:00–18:00</div>
+              <div class="s6-card-bottom">
+                <span class="s6-price">3 600 ₽</span>
+                <button class="btn-take">Взять →</button>
+              </div>
+            </div>
+            <div class="s6-card">
+              <div class="s6-card-top"><span></span><span class="tag-num">#1249</span></div>
+              <div class="s6-card-title">Уборка торгового зала</div>
+              <div class="s6-card-meta">📍 KARI Пушкинская</div>
+              <div class="s6-card-meta">🕐 27 фев, 08:00–10:00</div>
+              <div class="s6-card-bottom">
+                <span class="s6-price">1 800 ₽</span>
+                <button class="btn-take">Взять →</button>
+              </div>
+            </div>
+          </div>
+          <div class="bottom-nav">
+            <div class="bnav-item"><span class="bnav-icon">🏠</span><span class="bnav-label">Главная</span></div>
+            <div class="bnav-item active"><span class="bnav-icon">📋</span><span class="bnav-label" style="color:var(--red)">Задания</span></div>
+            <div class="bnav-item"><span class="bnav-icon">📄</span><span class="bnav-label">Документы</span></div>
+            <div class="bnav-item"><span class="bnav-icon">👤</span><span class="bnav-label">Профиль</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider">— — —</div>
+
+  <!-- ===== ЭКРАН 7: КАРТОЧКА ЗАДАНИЯ ===== -->
+  <section id="screen7" class="screen-section">
+    <div class="phone-wrapper">
+      <div class="phone-label">ЭКРАН 7 — 280 × 560px</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-right"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+        </div>
+        <div class="phone-content">
+          <div class="s7-topbar">← Задание #1247</div>
+          <div class="s7-content">
+            <div class="s7-photo">
+              <div class="s7-photo-icon">🏪</div>
+              <div class="s7-photo-text">KARI Арбат</div>
+            </div>
+            <div class="s7-status-row">
+              <span class="tag-open">ОТКРЫТО</span>
+              <span style="font-size:10px;color:#999">#1247</span>
+            </div>
+            <div class="s7-title">Мерчандайзинг — выкладка новой коллекции</div>
+            <div class="s7-details">
+              <div class="s7-detail">🏪 KARI Арбат, ул. Арбат, 12</div>
+              <div class="s7-detail">📅 25 февраля 2025, 10:00–14:00</div>
+              <div class="s7-detail">⏱ Длительность: 4 часа</div>
+              <div class="s7-detail">👤 Нужен 1 исполнитель</div>
+            </div>
+            <div class="s7-section-title">Описание</div>
+            <div class="s7-text">Выложить новую коллекцию по планограмме. Материалы предоставляет магазин.</div>
+            <div class="s7-section-title">Требования</div>
+            <div class="s7-req">✓ Опыт мерчандайзинга</div>
+            <div class="s7-req">✓ Удобная одежда</div>
+            <div class="s7-payment">
+              <div class="s7-pay-row">Задание: 2 500 ₽</div>
+              <div class="s7-pay-row s7-pay-sub">+ налог (6%): 150 ₽</div>
+              <div class="s7-pay-total">Итого: 2 650 ₽</div>
+            </div>
+            <button class="btn-red" style="margin-top:12px">Взять задание</button>
+          </div>
+          <div class="bottom-nav">
+            <div class="bnav-item"><span class="bnav-icon">🏠</span><span class="bnav-label">Главная</span></div>
+            <div class="bnav-item active"><span class="bnav-icon">📋</span><span class="bnav-label" style="color:var(--red)">Задания</span></div>
+            <div class="bnav-item"><span class="bnav-icon">📄</span><span class="bnav-label">Документы</span></div>
+            <div class="bnav-item"><span class="bnav-icon">👤</span><span class="bnav-label">Профиль</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-desc">
+      <div class="desc-number">07</div>
+      <div class="desc-title">Карточка задания</div>
+      <div class="desc-goal">Детальная страница задания со всей необходимой информацией. Прозрачное отображение оплаты с учётом налога формирует доверие у исполнителя.</div>
+      <div class="desc-features-title">Ключевые элементы</div>
+      <ul class="desc-features">
+        <li>Фото/превью магазина для идентификации места</li>
+        <li>Полный адрес, дата, время, длительность</li>
+        <li>Описание и требования к исполнителю</li>
+        <li>Разбивка оплаты: задание + налог = итого</li>
+        <li>Большая красная кнопка «Взять задание»</li>
+      </ul>
+      <div class="dev-note">
+        <div class="dev-note-title">Для разработчиков</div>
+        GET <strong>/api/tasks/:id</strong> — загрузка данных задания.<br>
+        POST <strong>/api/tasks/:id/take</strong> — взять задание.<br>
+        Проверка статуса перед взятием (задание может быть занято).<br>
+        Если задание уже взято → показать toast «Уже недоступно».<br>
+        Налог 6% рассчитывается на бэкенде, не на клиенте.
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider">— — —</div>
+
+  <!-- ===== ЭКРАН 8: СДАЧА ЗАДАНИЯ ===== -->
+  <section id="screen8" class="screen-section even">
+    <div class="screen-desc">
+      <div class="desc-number">08</div>
+      <div class="desc-title">Сдача выполненного задания</div>
+      <div class="desc-goal">Экран фиксации результата работы. Три обязательных фото и подтверждение геолокации обеспечивают качественную приёмку и защищают от споров.</div>
+      <div class="desc-features-title">Ключевые элементы</div>
+      <ul class="desc-features">
+        <li>Жёлтый статус «В РАБОТЕ» с таймером</li>
+        <li>Сетка 3 фото — минимальный фотоотчёт</li>
+        <li>Индикатор прогресса загрузки фото</li>
+        <li>Мини-карта с синей точкой геолокации</li>
+        <li>Кнопка активируется только после 3 фото</li>
+      </ul>
+      <div class="dev-note">
+        <div class="dev-note-title">Для разработчиков</div>
+        Загрузка фото: POST <strong>/api/tasks/:id/photos</strong> (multipart).<br>
+        Геолокация: <strong>navigator.geolocation.getCurrentPosition()</strong><br>
+        Проверка радиуса: расстояние от магазина не более 200м.<br>
+        Кнопка «Отправить»: активна когда photos.length >= 3 && inRadius.<br>
+        POST <strong>/api/tasks/:id/submit</strong> → { photoIds[], comment, geoLat, geoLon }
+      </div>
+    </div>
+    <div class="phone-wrapper">
+      <div class="phone-label">ЭКРАН 8 — 280 × 560px</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-right"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+        </div>
+        <div class="phone-content">
+          <div class="top-bar" style="height:44px">
+            <span class="top-bar-left">← Сдать работу</span>
+          </div>
+          <div class="s8-content">
+            <div class="s8-status">
+              <span class="s8-status-text">В РАБОТЕ</span>
+              <span class="s8-timer">⏱ 2ч 34м</span>
+            </div>
+            <div class="s8-title">Мерчандайзинг — выкладка</div>
+            <div class="s8-section-title">Фотоотчёт</div>
+            <div class="s8-sub">Минимум 3 фото</div>
+            <div class="photo-grid">
+              <div class="photo-cell-done">✓</div>
+              <div class="photo-cell-done">✓</div>
+              <div class="photo-cell-add">+</div>
+            </div>
+            <div class="photo-count">2 из 3 фото загружено</div>
+            <div class="s8-geo-title">Геолокация</div>
+            <div class="mini-map">
+              <div class="geo-pulse"></div>
+              <div class="geo-dot"></div>
+            </div>
+            <div class="geo-ok">✓ Вы в магазине KARI Арбат</div>
+            <textarea class="s8-comment" placeholder="Комментарий к работе..."></textarea>
+            <button class="btn-disabled">Отправить на проверку</button>
+          </div>
+          <div class="bottom-nav">
+            <div class="bnav-item"><span class="bnav-icon">🏠</span><span class="bnav-label">Главная</span></div>
+            <div class="bnav-item active"><span class="bnav-icon">📋</span><span class="bnav-label" style="color:var(--red)">Задания</span></div>
+            <div class="bnav-item"><span class="bnav-icon">📄</span><span class="bnav-label">Документы</span></div>
+            <div class="bnav-item"><span class="bnav-icon">👤</span><span class="bnav-label">Профиль</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider">— — —</div>
+
+  <!-- ===== ЭКРАН 9: КОШЕЛЁК ===== -->
+  <section id="screen9" class="screen-section">
+    <div class="phone-wrapper">
+      <div class="phone-label">ЭКРАН 9 — 280 × 560px</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-right"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+        </div>
+        <div class="phone-content">
+          <div class="s9-topbar">Мой кошелёк</div>
+          <div class="s9-content">
+            <button class="btn-red btn-red-amount">
+              <span class="btn-red-label">Вывести на карту</span>
+              <span class="btn-red-sum">12 500 ₽</span>
+            </button>
+            <div class="s9-limit">
+              <div class="s9-limit-top">
+                <span class="s9-limit-title">Лимит самозанятого</span>
+                <span class="s9-limit-q">?</span>
+              </div>
+              <div class="s9-limit-bar"><div class="s9-limit-fill"></div></div>
+              <div class="s9-limit-text">480 000 ₽ из 2 400 000 ₽</div>
+            </div>
+            <div class="s9-hist-title">История операций</div>
+            <div class="tx-row">
+              <div class="tx-left">
+                <span>✅</span>
+                <div>
+                  <div class="tx-name">Мерчандайзинг KARI Арбат</div>
+                  <div class="tx-date">25 февраля</div>
+                </div>
+              </div>
+              <span class="tx-amount">+2 650 ₽</span>
+            </div>
+            <div class="tx-row">
+              <div class="tx-left">
+                <span>✅</span>
+                <div>
+                  <div class="tx-name">Промоутер KARI Тверская</div>
+                  <div class="tx-date">20 февраля</div>
+                </div>
+              </div>
+              <span class="tx-amount">+3 816 ₽</span>
+            </div>
+            <div class="tx-row">
+              <div class="tx-left">
+                <span>✅</span>
+                <div>
+                  <div class="tx-name">Уборка KARI Пушкинская</div>
+                  <div class="tx-date">15 февраля</div>
+                </div>
+              </div>
+              <span class="tx-amount">+1 908 ₽</span>
+            </div>
+            <div class="s9-show-all">Показать все →</div>
+          </div>
+          <div class="bottom-nav">
+            <div class="bnav-item active"><span class="bnav-icon">🏠</span><span class="bnav-label" style="color:var(--red)">Главная</span></div>
+            <div class="bnav-item"><span class="bnav-icon">📋</span><span class="bnav-label">Задания</span></div>
+            <div class="bnav-item"><span class="bnav-icon">📄</span><span class="bnav-label">Документы</span></div>
+            <div class="bnav-item"><span class="bnav-icon">👤</span><span class="bnav-label">Профиль</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-desc">
+      <div class="desc-number">09</div>
+      <div class="desc-title">Кошелёк и выплаты</div>
+      <div class="desc-goal">Финансовый центр приложения. Самозанятый видит баланс, привязанную карту, лимит годового дохода и полную историю выплат.</div>
+      <div class="desc-features-title">Ключевые элементы</div>
+      <ul class="desc-features">
+        <li>Банковская карточка с градиентом KARI</li>
+        <li>Большая сумма доступная к выводу</li>
+        <li>Прогресс-бар лимита 2.4М ₽ в год</li>
+        <li>История операций с зелёными суммами</li>
+        <li>Кнопка «Вывести на карту»</li>
+      </ul>
+      <div class="dev-note">
+        <div class="dev-note-title">Для разработчиков</div>
+        GET <strong>/api/wallet/balance</strong> — текущий баланс.<br>
+        GET <strong>/api/wallet/transactions?limit=20</strong> — история.<br>
+        POST <strong>/api/wallet/withdraw</strong> → { amount, cardId }<br>
+        Проверка лимита 2.4М ₽ перед выплатой.<br>
+        Выплаты через <strong>Совкомбанк API</strong>.<br>
+        Чек для ФНС: автоматически через <strong>API «Мой налог»</strong>.
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider">— — —</div>
+
+  <!-- ===== ЭКРАН 10: ПРОФИЛЬ ===== -->
+  <section id="screen10" class="screen-section even">
+    <div class="screen-desc">
+      <div class="desc-number">10</div>
+      <div class="desc-title">Профиль пользователя</div>
+      <div class="desc-goal">Личный кабинет с персональной статистикой, доступом к документам и настройкам. Рейтинг 4.9 мотивирует к качественной работе.</div>
+      <div class="desc-features-title">Ключевые элементы</div>
+      <ul class="desc-features">
+        <li>Аватар с инициалами — персонализация</li>
+        <li>Зелёный статус «Самозанятый» от ФНС</li>
+        <li>3 ключевые цифры: задания, рейтинг, заработок</li>
+        <li>Меню: документы, карта, уведомления, безопасность</li>
+        <li>Телефон горячей линии 8-800 в разделе «Помощь»</li>
+      </ul>
+      <div class="dev-note">
+        <div class="dev-note-title">Для разработчиков</div>
+        GET <strong>/api/profile</strong> — данные пользователя + статистика.<br>
+        Рейтинг рассчитывается из оценок директоров (1–5 звёзд).<br>
+        Документы (договоры, акты): GET <strong>/api/documents</strong><br>
+        PUSH-уведомления: <strong>Firebase Cloud Messaging (FCM)</strong>.<br>
+        Биометрический вход: Face ID / Touch ID через <strong>expo-local-authentication</strong>.
+      </div>
+    </div>
+    <div class="phone-wrapper">
+      <div class="phone-label">ЭКРАН 10 — 280 × 560px</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-right"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+        </div>
+        <div class="phone-content">
+          <div class="s10-topbar">Профиль</div>
+          <div class="s10-content">
+            <div class="profile-block">
+              <div class="avatar">ИИ</div>
+              <div class="profile-name">Иванов Иван Иванович</div>
+              <div class="profile-phone">+7 (999) 123-45-67</div>
+              <span class="profile-badge">✓ Самозанятый</span>
+            </div>
+            <div class="stats-grid">
+              <div class="stat-card">
+                <span class="stat-label">📋 Заданий выполнено</span>
+                <span class="stat-num">47</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-label">⭐ Рейтинг</span>
+                <span class="stat-num">4.9</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-label">💰 Заработано</span>
+                <span class="stat-num small">124 850 ₽</span>
+              </div>
+            </div>
+            <div class="menu-list">
+              <div class="menu-item"><span class="menu-icon">📄</span><span class="menu-text">Мои документы</span><span class="menu-arrow">→</span></div>
+              <div class="menu-item"><span class="menu-icon">💳</span><span class="menu-text">Банковская карта</span><span class="menu-arrow">→</span></div>
+              <div class="menu-item"><span class="menu-icon">🔔</span><span class="menu-text">Уведомления</span><span class="menu-arrow">→</span></div>
+              <div class="menu-item"><span class="menu-icon">🔒</span><span class="menu-text">Безопасность</span><span class="menu-arrow">→</span></div>
+              <div class="menu-item"><span class="menu-icon">❓</span><span class="menu-text">Помощь | 8-800-500-XX-XX</span><span class="menu-arrow">→</span></div>
+            </div>
+            <button class="btn-outline">Выйти из аккаунта</button>
+          </div>
+          <div class="bottom-nav">
+            <div class="bnav-item"><span class="bnav-icon">🏠</span><span class="bnav-label">Главная</span></div>
+            <div class="bnav-item"><span class="bnav-icon">📋</span><span class="bnav-label">Задания</span></div>
+            <div class="bnav-item"><span class="bnav-icon">📄</span><span class="bnav-label">Документы</span></div>
+            <div class="bnav-item active"><span class="bnav-icon">👤</span><span class="bnav-label" style="color:var(--red)">Профиль</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= UI-КИТ ======= -->
+  <div class="uikit-section">
+
+    <!-- Цветовая палитра -->
+    <div class="uikit-title">Цветовая палитра</div>
+    <div class="palette">
+      <div class="color-swatch">
+        <div class="color-box" style="background:#A01F72"></div>
+        <div class="color-hex">#A01F72</div>
+        <div class="color-name">Основной красный</div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-box" style="background:#242D4A; border:1px solid #eee"></div>
+        <div class="color-hex">#242D4A</div>
+        <div class="color-name">Основной чёрный</div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-box" style="background:#f5f5f5; border:1px solid #eee"></div>
+        <div class="color-hex">#f5f5f5</div>
+        <div class="color-name">Фон серый</div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-box" style="background:#4CAF50"></div>
+        <div class="color-hex">#4CAF50</div>
+        <div class="color-name">Успех зелёный</div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-box" style="background:#FF9800"></div>
+        <div class="color-hex">#FF9800</div>
+        <div class="color-name">Внимание оранжевый</div>
+      </div>
+    </div>
+
+    <!-- Типографика -->
+    <div class="uikit-title">Типографика</div>
+    <table class="typo-table">
+      <thead>
+        <tr>
+          <th>Назначение</th>
+          <th>Размер</th>
+          <th>Вес</th>
+          <th>Пример</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Заголовок экрана</td>
+          <td><code>18px</code></td>
+          <td><code>700</code></td>
+          <td style="font-size:18px;font-weight:700">Биржа заданий</td>
+        </tr>
+        <tr>
+          <td>Карточка название</td>
+          <td><code>14px</code></td>
+          <td><code>600</code></td>
+          <td style="font-size:14px;font-weight:600">Мерчандайзинг</td>
+        </tr>
+        <tr>
+          <td>Основной текст</td>
+          <td><code>13px</code></td>
+          <td><code>400</code></td>
+          <td style="font-size:13px;font-weight:400">Выложить коллекцию по планограмме</td>
+        </tr>
+        <tr>
+          <td>Подписи</td>
+          <td><code>11px</code></td>
+          <td><code>400</code></td>
+          <td style="font-size:11px;color:#666">25 февраля 2025</td>
+        </tr>
+        <tr>
+          <td>Метки (теги)</td>
+          <td><code>10px</code></td>
+          <td><code>700</code></td>
+          <td><span style="font-size:10px;font-weight:700;background:#fff5f5;color:#A01F72;border-radius:4px;padding:2px 6px">НОВОЕ</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Нижняя навигация -->
+    <div class="uikit-title">Нижняя навигация</div>
+    <div class="nav-preview">
+      <div class="nav-prev-item active">
+        <span class="nav-prev-icon">🏠</span>
+        <span class="nav-prev-label" style="color:var(--red)">Главная</span>
+      </div>
+      <div class="nav-prev-item">
+        <span class="nav-prev-icon">📋</span>
+        <span class="nav-prev-label">Задания</span>
+      </div>
+      <div class="nav-prev-item">
+        <span class="nav-prev-icon">📄</span>
+        <span class="nav-prev-label">Документы</span>
+      </div>
+      <div class="nav-prev-item">
+        <span class="nav-prev-icon">👤</span>
+        <span class="nav-prev-label">Профиль</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:0;max-width:400px;margin-top:12px">
+      <div class="nav-prev-desc" style="flex:1">Баланс + новые задания + в работе</div>
+      <div class="nav-prev-desc" style="flex:1">Биржа заданий + фильтры + карта</div>
+      <div class="nav-prev-desc" style="flex:1">Договоры + акты + справки</div>
+      <div class="nav-prev-desc" style="flex:1">Данные + статистика + настройки</div>
+    </div>
+
+  </div>
+
+
+  <!-- ======= БЛОК: EMPTY STATES + ACCESSIBILITY ======= -->
+  <section style="background:white; border-radius:16px; padding:40px; margin-bottom:40px; box-shadow:0 2px 12px rgba(0,0,0,0.07);">
+
+    <div style="display:flex; align-items:center; gap:14px; margin-bottom:8px;">
+      <div style="background:#A01F72; color:white; font-size:13px; font-weight:900; padding:4px 14px; border-radius:4px;">UI/UX</div>
+      <h2 style="font-size:22px; font-weight:900; color:#242D4A;">Empty States — пустые состояния</h2>
+    </div>
+    <p style="color:#6b7280; font-size:14px; margin-bottom:32px;">Мотивационные экраны, которые удерживают пользователя при отсутствии данных</p>
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+
+      <!-- Кошелёк пуст -->
+      <div style="border:2px dashed #e5e7eb; border-radius:16px; padding:32px 20px; text-align:center; background:#fafafa;">
+        <div style="font-size:52px; margin-bottom:14px;">💰</div>
+        <div style="font-size:18px; font-weight:900; color:#242D4A; margin-bottom:8px;">Первые деньги<br>уже близко</div>
+        <div style="font-size:13px; color:#6b7280; margin-bottom:20px; line-height:1.5;">Выполни первое задание —<br>оплата придёт за 3 дня</div>
+        <div style="background:#A01F72; color:white; padding:11px 20px; border-radius:8px; font-size:13px; font-weight:700; display:inline-block; cursor:pointer;">Найти задание</div>
+        <div style="margin-top:14px; font-size:12px; color:#6b7280; background:#f3f4f6; padding:8px 12px; border-radius:8px;">💡 Средний заработок в марте: <strong>12 400 ₽</strong></div>
+      </div>
+
+      <!-- Нет заданий поблизости -->
+      <div style="border:2px dashed #e5e7eb; border-radius:16px; padding:32px 20px; text-align:center; background:#fafafa;">
+        <div style="font-size:52px; margin-bottom:14px;">🗺️</div>
+        <div style="font-size:18px; font-weight:900; color:#242D4A; margin-bottom:8px;">Нет заданий<br>поблизости</div>
+        <div style="font-size:13px; color:#6b7280; margin-bottom:20px; line-height:1.5;">Новые появляются каждое утро.<br>Включи уведомления — сообщим первым</div>
+        <div style="background:#A01F72; color:white; padding:11px 20px; border-radius:8px; font-size:13px; font-weight:700; display:inline-block; cursor:pointer; margin-bottom:8px;">Включить уведомления</div><br>
+        <div style="border:2px solid #A01F72; color:#A01F72; padding:9px 20px; border-radius:8px; font-size:13px; font-weight:700; display:inline-block; cursor:pointer;">Расширить радиус</div>
+        <div style="margin-top:14px; font-size:12px; color:#6b7280;">↓ Потяните, чтобы обновить</div>
+      </div>
+
+      <!-- Всё выполнено -->
+      <div style="border:2px dashed #e5e7eb; border-radius:16px; padding:32px 20px; text-align:center; background:#fafafa;">
+        <div style="font-size:52px; margin-bottom:14px;">🏆</div>
+        <div style="font-size:18px; font-weight:900; color:#242D4A; margin-bottom:8px;">Всё сделано! 🎉</div>
+        <div style="font-size:13px; color:#6b7280; margin-bottom:16px; line-height:1.5;">Вы выполнили все задания.<br>Новые появятся завтра с 9:00</div>
+        <div style="background:white; border-radius:8px; padding:12px; margin:0 0 16px; text-align:left; border:1px solid #e5e7eb;">
+          <div style="font-size:10px; font-weight:800; letter-spacing:1px; color:#6b7280; margin-bottom:6px; text-transform:uppercase;">До серебряного статуса</div>
+          <div style="background:#f3f4f6; border-radius:4px; height:8px; overflow:hidden; margin-bottom:4px;">
+            <div style="background:#A01F72; width:70%; height:100%; border-radius:4px;"></div>
+          </div>
+          <div style="font-size:12px; color:#6b7280;">Ещё 3 задания</div>
+        </div>
+        <div style="background:#A01F72; color:white; padding:11px 20px; border-radius:8px; font-size:13px; font-weight:700; display:inline-block; cursor:pointer;">История выплат</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ======= БЛОК: ACCESSIBILITY WCAG 2.1 ======= -->
+  <section style="background:white; border-radius:16px; padding:40px; margin-bottom:40px; box-shadow:0 2px 12px rgba(0,0,0,0.07);">
+
+    <div style="display:flex; align-items:center; gap:14px; margin-bottom:8px;">
+      <div style="background:#242D4A; color:white; font-size:13px; font-weight:900; padding:4px 14px; border-radius:4px;">A11Y</div>
+      <h2 style="font-size:22px; font-weight:900; color:#242D4A;">Accessibility — WCAG 2.1</h2>
+    </div>
+    <p style="color:#6b7280; font-size:14px; margin-bottom:28px;">Аудит цветовой схемы и рекомендации для мобильного приложения</p>
+
+    <!-- Контраст -->
+    <h3 style="font-size:15px; font-weight:800; color:#242D4A; padding:10px 14px; border-left:4px solid #A01F72; background:#fdf0f8; border-radius:0 8px 8px 0; margin-bottom:16px;">🎨 Аудит цветового контраста</h3>
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; font-size:14px; display:table;">
+        <thead>
+          <tr style="background:#242D4A; color:white;">
+            <th style="padding:10px 14px; text-align:left;">Пара цветов</th>
+            <th style="padding:10px 14px; text-align:center;">Контраст</th>
+            <th style="padding:10px 14px; text-align:center;">WCAG AA (4.5:1)</th>
+            <th style="padding:10px 14px; text-align:center;">WCAG AAA (7:1)</th>
+            <th style="padding:10px 14px; text-align:left;">Вывод</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid #f0f0f4;">
+            <td style="padding:10px 14px;"><span style="background:#A01F72;color:white;padding:2px 8px;border-radius:4px;font-size:12px;">#A01F72</span> на <span style="background:white;border:1px solid #ddd;padding:2px 8px;border-radius:4px;font-size:12px;">#FFFFFF</span></td>
+            <td style="padding:10px 14px; text-align:center; font-weight:700;">5.2 : 1</td>
+            <td style="padding:10px 14px; text-align:center;"><span style="background:#dcfce7;color:#15803d;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:700;">✅ Pass</span></td>
+            <td style="padding:10px 14px; text-align:center;"><span style="background:#fee2e2;color:#dc2626;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:700;">❌ Fail</span></td>
+            <td style="padding:10px 14px;">Допустимо для кнопок ≥ 14px bold</td>
+          </tr>
+          <tr style="border-bottom:1px solid #f0f0f4;">
+            <td style="padding:10px 14px;"><span style="background:#242D4A;color:white;padding:2px 8px;border-radius:4px;font-size:12px;">#242D4A</span> на <span style="background:white;border:1px solid #ddd;padding:2px 8px;border-radius:4px;font-size:12px;">#FFFFFF</span></td>
+            <td style="padding:10px 14px; text-align:center; font-weight:700;">12.6 : 1</td>
+            <td style="padding:10px 14px; text-align:center;"><span style="background:#dcfce7;color:#15803d;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:700;">✅ Pass</span></td>
+            <td style="padding:10px 14px; text-align:center;"><span style="background:#dcfce7;color:#15803d;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:700;">✅ Pass</span></td>
+            <td style="padding:10px 14px;">Отлично — основной текст</td>
+          </tr>
+          <tr style="border-bottom:1px solid #f0f0f4; background:#fff8f8;">
+            <td style="padding:10px 14px;"><span style="background:#A01F72;color:white;padding:2px 8px;border-radius:4px;font-size:12px;">#A01F72</span> на <span style="background:#242D4A;color:white;padding:2px 8px;border-radius:4px;font-size:12px;">#242D4A</span></td>
+            <td style="padding:10px 14px; text-align:center; font-weight:700; color:#dc2626;">2.8 : 1</td>
+            <td style="padding:10px 14px; text-align:center;"><span style="background:#fee2e2;color:#dc2626;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:700;">❌ Fail</span></td>
+            <td style="padding:10px 14px; text-align:center;"><span style="background:#fee2e2;color:#dc2626;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:700;">❌ Fail</span></td>
+            <td style="padding:10px 14px;"><strong>⚠️ ПРОБЛЕМА</strong> — заменить на <code style="background:#f3f4f6;padding:1px 5px;border-radius:3px;">#D4479E</code> или белый</td>
+          </tr>
+          <tr>
+            <td style="padding:10px 14px;"><span style="background:white;border:1px solid #ddd;padding:2px 8px;border-radius:4px;font-size:12px;">#FFFFFF</span> на <span style="background:#A01F72;color:white;padding:2px 8px;border-radius:4px;font-size:12px;">#A01F72</span></td>
+            <td style="padding:10px 14px; text-align:center; font-weight:700;">5.2 : 1</td>
+            <td style="padding:10px 14px; text-align:center;"><span style="background:#dcfce7;color:#15803d;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:700;">✅ Pass</span></td>
+            <td style="padding:10px 14px; text-align:center;"><span style="background:#fee2e2;color:#dc2626;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:700;">❌ Fail</span></td>
+            <td style="padding:10px 14px;">Допустимо для кнопок</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 4 правила -->
+    <h3 style="font-size:15px; font-weight:800; color:#242D4A; padding:10px 14px; border-left:4px solid #242D4A; background:#f5f5f7; border-radius:0 8px 8px 0; margin:24px 0 16px;">📋 Ключевые правила реализации</h3>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+
+      <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:16px;">
+        <div style="font-weight:800; color:#1e40af; margin-bottom:8px;">👆 Touch targets — мин. 44×44dp</div>
+        <div style="font-size:13px; color:#374151;">Все кнопки-иконки (чат, уведомления, фильтры) должны иметь зону касания минимум 44×44dp. Использовать <code style="background:#dbeafe;padding:1px 5px;border-radius:3px;">hitSlop</code> если визуально меньше.</div>
+      </div>
+
+      <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:16px;">
+        <div style="font-weight:800; color:#15803d; margin-bottom:8px;">🔊 Screen Reader labels</div>
+        <div style="font-size:13px; color:#374151;">Каждая иконка-кнопка: <code style="background:#dcfce7;padding:1px 5px;border-radius:3px;">accessibilityLabel</code> с описанием действия. Статусные бейджи: роль <code style="background:#dcfce7;padding:1px 5px;border-radius:3px;">text</code> + метка «Статус: в работе».</div>
+      </div>
+
+      <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:16px;">
+        <div style="font-weight:800; color:#92400e; margin-bottom:8px;">⚡ Reduce Motion</div>
+        <div style="font-size:13px; color:#374151;">Анимации конфетти и slide-transitions отключать при системной настройке «Уменьшить движение». Использовать <code style="background:#fef9c3;padding:1px 5px;border-radius:3px;">AccessibilityInfo.isReduceMotionEnabled()</code>.</div>
+      </div>
+
+      <div style="background:#fdf0f8; border:1px solid #f0abcf; border-radius:10px; padding:16px;">
+        <div style="font-weight:800; color:#A01F72; margin-bottom:8px;">🎨 Цвет ≠ единственный индикатор</div>
+        <div style="font-size:13px; color:#374151;">Статусы всегда дублировать иконкой + текстом:<br>❌ Только зелёная точка<br>✅ 🟢 «Активно» | 🟡 «На проверке» | 🔴 «Отклонено»</div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:16px; padding:14px 16px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; font-size:13px;">
+      <strong>📄 Полная спецификация:</strong> <a href="KARI_mobile_spec.html#s9" style="color:#A01F72; font-weight:700;">02_ТЗ_и_схемы / KARI_mobile_spec.html → Раздел 9</a>
+    </div>
+
+  </section>
+
+</main>
+
+<!-- ======= JAVASCRIPT ======= -->
+<script>
+  // === АКТИВНАЯ НАВИГАЦИЯ ПРИ ПРОКРУТКЕ (IntersectionObserver) ===
+  const navBtns = document.querySelectorAll('.nav-btn');
+  const sections = document.querySelectorAll('.screen-section[id]');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.getAttribute('id');
+        navBtns.forEach(btn => {
+          btn.classList.remove('active');
+          if (btn.getAttribute('data-target') === id) {
+            btn.classList.add('active');
+          }
+        });
+      }
+    });
+  }, {
+    // Срабатывает когда 30% секции видно на экране
+    threshold: 0.3,
+    rootMargin: '-100px 0px -100px 0px'
+  });
+
+  sections.forEach(section => observer.observe(section));
+
+  // === ПЛАВНЫЙ СКРОЛЛ С УЧЁТОМ ШАПКИ ===
+  navBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = btn.getAttribute('data-target');
+      const target = document.getElementById(targetId);
+      if (target) {
+        // Высота шапки + навигации = примерно 130px
+        const offset = 130;
+        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
+  });
+
+  // === АНИМАЦИЯ ПУЛЬСА ГЕОЛОКАЦИИ ===
+  // CSS-анимация уже в стилях, JS не нужен
+
+  // === ТАЙМЕР ОБРАТНОГО ОТСЧЁТА ДЛЯ ЭКРАНА 3 ===
+  let timerSeconds = 45;
+  const timerEl = document.querySelector('.s3-timer');
+  const timerInterval = setInterval(() => {
+    timerSeconds--;
+    if (timerEl) {
+      if (timerSeconds > 0) {
+        timerEl.textContent = 'Повторить через ' + timerSeconds + ' сек';
+      } else {
+        timerEl.textContent = 'Отправить код повторно';
+        timerEl.style.color = '#A01F72';
+        timerEl.style.cursor = 'pointer';
+        clearInterval(timerInterval);
+      }
+    }
+  }, 1000);
+
+  // === TOOLTIP ДЛЯ КНОПКИ "?" ЛИМИТА ===
+  const limitQ = document.querySelector('.s9-limit-q');
+  if (limitQ) {
+    limitQ.addEventListener('click', () => {
+      alert('Лимит дохода самозанятого — 2 400 000 ₽ в год.\nПри превышении необходимо зарегистрировать ИП или ООО.');
+    });
+  }
+
+  // === КНОПКИ КЛАВИАТУРЫ (ЭКРАН 2) ===
+  const numKeys = document.querySelectorAll('.num-key:not(.empty)');
+  const phoneInput = document.querySelector('.s2-input');
+  let digits = [];
+  if (phoneInput) {
+    numKeys.forEach(key => {
+      key.addEventListener('click', () => {
+        if (key.textContent === '⌫') {
+          if (digits.length > 0) digits.pop();
+        } else {
+          if (digits.length < 10) digits.push(key.textContent);
+        }
+        // Форматируем
+        let d = digits.join('');
+        let formatted = '🇷🇺 +7 (';
+        if (d.length >= 1) formatted += d.substring(0,3);
+        if (d.length < 3) formatted += '_'.repeat(3 - d.length);
+        formatted += ') ';
+        if (d.length >= 4) formatted += d.substring(3,6);
+        if (d.length < 6) formatted += '_'.repeat(Math.max(0, 6 - d.length));
+        formatted += '-';
+        if (d.length >= 7) formatted += d.substring(6,8);
+        if (d.length < 8) formatted += '_'.repeat(Math.max(0, 8 - d.length));
+        formatted += '-';
+        if (d.length >= 9) formatted += d.substring(8,10);
+        if (d.length < 10) formatted += '_'.repeat(Math.max(0, 10 - d.length));
+        phoneInput.textContent = formatted;
+      });
+    });
+  }
+
+  // === ПОДСВЕТКА АКТИВНОГО ЭЛЕМЕНТА НИЖНЕЙ НАВИГАЦИИ (внутри телефонов) ===
+  document.querySelectorAll('.bottom-nav .bnav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const parentNav = item.closest('.bottom-nav');
+      parentNav.querySelectorAll('.bnav-item').forEach(i => {
+        i.classList.remove('active');
+        i.querySelector('.bnav-label').style.color = '#999';
+      });
+      item.classList.add('active');
+      item.querySelector('.bnav-label').style.color = '#A01F72';
+    });
+  });
+
+  // === ПЕРЕКЛЮЧАТЕЛЬ ФИЛЬТРОВ (ЭКРАН 6) ===
+  document.querySelectorAll('.filter-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+    });
+  });
+
+  // === ПЕРЕКЛЮЧАТЕЛЬ СПИСОК/КАРТА (ЭКРАН 6) ===
+  document.querySelectorAll('.view-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const parent = btn.closest('.view-toggle');
+      parent.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  console.log('%cKARI.Самозанятые — UI Макеты v1.0', 'color:#A01F72;font-size:16px;font-weight:bold');
+  console.log('%c10 экранов загружено успешно', 'color:#4CAF50;font-size:12px');
+</script>
+
+</body>
+</html>

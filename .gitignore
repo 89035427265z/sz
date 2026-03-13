@@ -1,0 +1,56 @@
+# =============================================================================
+# KARI.Самозанятые — .gitignore
+# =============================================================================
+
+# ⚠️ СЕКРЕТЫ — никогда не заливать в git!
+.env
+.env.local
+.env.production
+firebase-credentials.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+*.egg
+
+# Node.js / React
+node_modules/
+frontend/dist/
+mobile/node_modules/
+mobile/.expo/
+mobile/dist/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# Docker volumes (данные БД — не в git)
+postgres_data/
+minio_data/
+
+# Alembic — не игнорируем, миграции нужны
+# backend/alembic/versions/ — оставляем
+
+# Временные файлы
+*.tmp
+*.bak
+*.orig

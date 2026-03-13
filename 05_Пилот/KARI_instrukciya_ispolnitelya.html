@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KARI.Самозанятые — Инструкция для исполнителей</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --kari: #A01F72;
+    --kari-dark: #7d1759;
+    --kari-light: #f9eef5;
+    --dark: #242D4A;
+    --text: #333;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --green: #16a34a;
+    --green-light: #dcfce7;
+    --blue: #2563eb;
+    --blue-light: #dbeafe;
+    --orange: #d97706;
+    --orange-light: #fef3c7;
+    --red: #dc2626;
+    --red-light: #fee2e2;
+    --radius: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #f5f5f7;
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* ─── ШАПКА ─── */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a2238 100%);
+    color: #fff;
+    padding: 40px 24px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(160,31,114,0.2);
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: -40px;
+    width: 150px; height: 150px;
+    border-radius: 50%;
+    background: rgba(160,31,114,0.15);
+  }
+  .logo-badge {
+    display: inline-block;
+    background: var(--kari);
+    color: #fff;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    padding: 8px 20px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+  header h1 {
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+  header p {
+    font-size: 15px;
+    color: rgba(255,255,255,0.75);
+  }
+  .header-pills {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .pill {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  /* ─── НАВИГАЦИЯ ─── */
+  nav {
+    background: #fff;
+    border-bottom: 2px solid var(--kari);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+  nav ul {
+    display: inline-flex;
+    list-style: none;
+    padding: 0 16px;
+    gap: 4px;
+  }
+  nav a {
+    display: block;
+    padding: 14px 16px;
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 13px;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+  }
+  nav a:hover { color: var(--kari); border-bottom-color: var(--kari); }
+
+  /* ─── КОНТЕНТ ─── */
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 32px 16px 60px;
+  }
+
+  /* ─── HERO-БЛОК ─── */
+  .hero {
+    background: linear-gradient(135deg, var(--kari) 0%, #7d1759 100%);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .hero-phone {
+    font-size: 64px;
+    flex-shrink: 0;
+  }
+  .hero h2 { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+  .hero p { font-size: 15px; opacity: 0.9; line-height: 1.5; }
+
+  /* ─── РАЗДЕЛЫ ─── */
+  section { margin-bottom: 40px; }
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .section-num {
+    background: var(--kari);
+    color: #fff;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .section-title h2 {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--dark);
+  }
+
+  /* ─── КАРТОЧКИ ─── */
+  .card {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .card-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ─── ШАГИ (нумерованные) ─── */
+  .steps { display: flex; flex-direction: column; gap: 16px; }
+  .step {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .step-num {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--kari-light);
+    color: var(--kari);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-content h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 4px;
+  }
+  .step-content p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .step-content .tip {
+    display: inline-block;
+    background: var(--blue-light);
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-top: 6px;
+  }
+
+  /* ─── ЭКРАНЫ ТЕЛЕФОНА ─── */
+  .phone-screens {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+    margin-top: 4px;
+  }
+  .phone-screen {
+    background: var(--dark);
+    border-radius: 16px;
+    padding: 16px 12px;
+    text-align: center;
+    color: #fff;
+    border: 3px solid rgba(255,255,255,0.1);
+  }
+  .phone-screen .screen-icon { font-size: 28px; margin-bottom: 8px; }
+  .phone-screen .screen-name { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+  .phone-screen .screen-desc { font-size: 11px; opacity: 0.65; line-height: 1.4; }
+
+  /* ─── АЛЕРТЫ ─── */
+  .alert {
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 14px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+  .alert-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .alert-green  { background: var(--green-light);  color: #15803d; }
+  .alert-orange { background: var(--orange-light); color: #92400e; }
+  .alert-red    { background: var(--red-light);    color: #991b1b; }
+  .alert-blue   { background: var(--blue-light);   color: #1e40af; }
+  .alert b { font-weight: 800; }
+
+  /* ─── ТАБЛИЦА СТАТУСОВ ─── */
+  .status-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .status-table th {
+    background: var(--dark);
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 700;
+  }
+  .status-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .status-table tr:last-child td { border-bottom: none; }
+  .status-table tr:nth-child(even) td { background: #fafafa; }
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .badge-green  { background: var(--green-light);  color: var(--green); }
+  .badge-orange { background: var(--orange-light); color: var(--orange); }
+  .badge-red    { background: var(--red-light);    color: var(--red); }
+  .badge-blue   { background: var(--blue-light);   color: var(--blue); }
+  .badge-gray   { background: #f3f4f6; color: #6b7280; }
+  .badge-kari   { background: var(--kari-light); color: var(--kari); }
+
+  /* ─── FAQ ─── */
+  .faq-item {
+    background: #fff;
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+  }
+  .faq-q {
+    padding: 16px 20px;
+    font-weight: 700;
+    color: var(--dark);
+    font-size: 15px;
+    border-left: 4px solid var(--kari);
+    background: var(--kari-light);
+  }
+  .faq-a {
+    padding: 14px 20px;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* ─── ЛИМИТ ─── */
+  .limit-bar-wrap {
+    background: var(--border);
+    border-radius: 20px;
+    height: 12px;
+    margin: 8px 0 4px;
+    overflow: hidden;
+  }
+  .limit-bar {
+    height: 100%;
+    border-radius: 20px;
+    background: linear-gradient(90deg, var(--green), #84cc16);
+    width: 32%;
+    transition: width 0.4s;
+  }
+
+  /* ─── КОНТАКТЫ ─── */
+  .contacts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .contact-card {
+    background: var(--dark);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+  }
+  .contact-card .icon { font-size: 28px; margin-bottom: 8px; }
+  .contact-card .label { font-size: 11px; opacity: 0.7; margin-bottom: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .contact-card .value { font-size: 15px; font-weight: 800; color: #fff; text-decoration: none; }
+  .contact-card .value:hover { color: #f3c6e5; }
+
+  /* ─── РАЗДЕЛИТЕЛЬ ─── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 8px 0 20px;
+  }
+
+  /* ─── ФОТО-ТРЕБОВАНИЯ ─── */
+  .photo-rules {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+    margin-top: 4px;
+  }
+  .photo-rule {
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+  .photo-rule .icon { font-size: 28px; margin-bottom: 6px; }
+  .photo-rule .text { font-size: 13px; font-weight: 700; color: var(--dark); }
+  .photo-rule .sub  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .photo-rule.ok  { background: var(--green-light); }
+  .photo-rule.warn { background: var(--orange-light); }
+  .photo-rule.bad { background: var(--red-light); }
+
+  /* ─── ФУТЕР ─── */
+  footer {
+    background: var(--dark);
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    padding: 24px;
+    font-size: 13px;
+    margin-top: 40px;
+  }
+  footer strong { color: #fff; }
+
+  @media(max-width: 600px) {
+    header h1 { font-size: 20px; }
+    .hero { flex-direction: column; text-align: center; }
+    .hero-phone { font-size: 48px; }
+  }
+
+/* ═══════════════════════════════════════════════════════════
+   МОБИЛЬНАЯ АДАПТАЦИЯ — добавлено 11.03.2026
+   Адаптировано для экранов смартфонов (< 768px)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Таблицы — горизонтальный скролл на всех устройствах */
+table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+/* Изображения — масштабирование */
+img { max-width: 100% !important; height: auto !important; }
+@media (max-width: 768px) {
+  /* Боковое меню — скрываем, убираем отступ */
+  .sidebar { display: none !important; }
+  .main-content { margin-left: 0 !important; padding: 16px !important; }
+  .site-header { position: relative !important; }
+
+  /* Отступы шапки */
+  .header, .page-header { padding: 20px 16px !important; }
+  .header-top { flex-wrap: wrap !important; gap: 8px !important; }
+  .header-meta, .header-actions, .header-badges { flex-wrap: wrap !important; gap: 8px !important; }
+
+  /* Основной контент */
+  .main, .content, .container { padding: 16px !important; }
+
+  /* Типографика */
+  h1 { font-size: 22px !important; }
+  h2 { font-size: 18px !important; }
+  h3 { font-size: 15px !important; }
+
+  /* Горизонтальные ряды — перенос */
+  .header-pills, .filter-tabs, .nav-tabs, .tabs-row,
+  .section-tabs, .tab-bar { flex-wrap: wrap !important; }
+  .step { flex-direction: column !important; }
+
+  /* Кодовые блоки */
+  pre, code {
+    overflow-x: auto !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 13px !important; }
+  .badge, .tag, .pill, .status-badge { font-size: 11px !important; padding: 3px 8px !important; }
+  h1, .header h1, .logo-area h1 { font-size: 19px !important; }
+  .btn-print, .btn-export { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ШАПКА -->
+<header>
+  <div class="logo-badge">KARI</div>
+  <h1>Инструкция для самозанятых исполнителей</h1>
+  <p>Пилот 2026 · Иркутский и Южный регион</p>
+  <div class="header-pills">
+    <span class="pill">📱 Мобильное приложение</span>
+    <span class="pill">💰 Выплаты на карту</span>
+    <span class="pill">📄 Чеки ФНС автоматически</span>
+  </div>
+</header>
+
+<!-- НАВИГАЦИЯ -->
+<nav>
+  <ul>
+    <li><a href="#start">Начало работы</a></li>
+    <li><a href="#tasks">Биржа заданий</a></li>
+    <li><a href="#report">Сдача задания</a></li>
+    <li><a href="#wallet">Кошелёк</a></li>
+    <li><a href="#docs">Документы</a></li>
+    <li><a href="#status">Статусы</a></li>
+    <li><a href="#faq">Вопросы</a></li>
+    <li><a href="#contacts">Поддержка</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-phone">📱</div>
+    <div>
+      <h2>Добро пожаловать в KARI.Самозанятые!</h2>
+      <p>Через это приложение вы будете получать задания от магазинов KARI, сдавать выполненную работу и получать оплату на карту — автоматически, без бумаг и очередей. Чеки в ФНС формируются сами.</p>
+    </div>
+  </div>
+
+  <!-- 1. НАЧАЛО РАБОТЫ -->
+  <section id="start">
+    <div class="section-title">
+      <div class="section-num">1</div>
+      <h2>Начало работы — установка и регистрация</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📲 Шаг 1 — Установите приложение</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Скачайте Expo Go</h4>
+            <p>Откройте <b>App Store</b> (iPhone) или <b>Google Play</b> (Android), найдите приложение <b>«Expo Go»</b> и установите его. Это временное решение для пилота.</p>
+            <span class="tip">Бесплатно · 0 рублей</span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Получите ссылку на приложение</h4>
+            <p>Директор вашего магазина или куратор пилота пришлёт вам ссылку вида <b>exp://...</b> или QR-код. Откройте ссылку или отсканируйте QR через Expo Go.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Дождитесь загрузки</h4>
+            <p>Приложение загрузится за 10–30 секунд. Вы увидите экран ввода номера телефона.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔐 Шаг 2 — Войдите по номеру телефона</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Введите номер телефона</h4>
+            <p>Введите ваш мобильный номер в формате <b>+7 (XXX) XXX-XX-XX</b>. Нажмите «Получить код».</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Введите SMS-код</h4>
+            <p>Придёт СМС с 4-значным кодом. Введите его в приложение. Код действует 5 минут. Если не пришёл — нажмите «Отправить повторно» через 60 секунд.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="alert alert-blue">
+        <div class="alert-icon">ℹ️</div>
+        <div>Номер телефона должен совпадать с тем, который вы указали при регистрации как самозанятый в приложении «Мой налог».</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📋 Шаг 3 — Заполните профиль (первый вход)</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Введите ФИО</h4>
+            <p>Укажите полное имя — так, как в паспорте. Это имя будет в договорах и актах.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Введите ИНН</h4>
+            <p>ИНН — 12 цифр. Найти его можно в приложении «Мой налог» или на сайте nalog.ru по паспортным данным.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Проверка статуса в ФНС</h4>
+            <p>Система автоматически проверит ваш статус самозанятого в ФНС. Если статус <b style="color:var(--green)">✅ Активен</b> — готово. Если нет — сначала зарегистрируйтесь в «Мой налог».</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Добавьте реквизиты для выплат</h4>
+            <p>Укажите карту (любого банка), на которую будете получать оплату. Это делается один раз.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Экраны приложения -->
+    <div class="card">
+      <div class="card-title">🗺️ Разделы приложения</div>
+      <div class="phone-screens">
+        <div class="phone-screen">
+          <div class="screen-icon">🏠</div>
+          <div class="screen-name">Главная</div>
+          <div class="screen-desc">Баланс, активное задание, последние выплаты</div>
+        </div>
+        <div class="phone-screen">
+          <div class="screen-icon">📋</div>
+          <div class="screen-name">Задания</div>
+          <div class="screen-desc">Биржа доступных заданий, поиск и фильтры</div>
+        </div>
+        <div class="phone-screen">
+          <div class="screen-icon">💰</div>
+          <div class="screen-name">Кошелёк</div>
+          <div class="screen-desc">История выплат, документы, лимит дохода</div>
+        </div>
+        <div class="phone-screen">
+          <div class="screen-icon">👤</div>
+          <div class="screen-name">Профиль</div>
+          <div class="screen-desc">ИНН, статус ФНС, настройки уведомлений</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. БИРЖА ЗАДАНИЙ -->
+  <section id="tasks">
+    <div class="section-title">
+      <div class="section-num">2</div>
+      <h2>Биржа заданий — как найти и взять работу</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔍 Просмотр доступных заданий</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Откройте вкладку «Задания»</h4>
+            <p>Внизу экрана нажмите на значок 📋. Вы увидите список всех доступных заданий в вашем регионе.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Изучите карточку задания</h4>
+            <p>В каждой карточке указано: <b>название</b>, <b>магазин и адрес</b>, <b>сумма оплаты</b>, <b>дата</b>, <b>сколько часов работы</b>, сколько исполнителей нужно.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Используйте фильтры</h4>
+            <p>Сверху три вкладки: <b>«Доступные»</b> — новые задания, <b>«В работе»</b> — взятые вами, <b>«Выполненные»</b> — завершённые.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">✅ Как взять задание</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Откройте карточку задания</h4>
+            <p>Нажмите на задание, которое вас интересует. Прочитайте полное описание, требования, адрес магазина.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Нажмите «Взять задание»</h4>
+            <p>Кнопка внизу карточки. Появится окно подтверждения — нажмите «Подтвердить».</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Задание у вас!</h4>
+            <p>Оно переместится во вкладку «В работе». Придёт уведомление на телефон. Теперь выполните задание в указанный срок.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="alert alert-orange">
+        <div class="alert-icon">⚠️</div>
+        <div><b>Важно:</b> одновременно можно иметь только <b>одно активное задание</b>. Выполните его и сдайте — тогда сможете взять следующее.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">❌ Как отказаться от задания</div>
+      <p style="font-size:14px; color:var(--muted); margin-bottom:12px;">Если планы изменились, вы можете отказаться <b>до начала выполнения</b>.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Откройте своё активное задание</h4>
+            <p>Вкладка «В работе» → нажмите на задание.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Нажмите «Отказаться»</h4>
+            <p>Подтвердите отказ. Задание вернётся в биржу для других исполнителей.</p>
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="alert alert-red">
+        <div class="alert-icon">🚫</div>
+        <div><b>Не злоупотребляйте отказами.</b> Частые отказы могут повлиять на вашу репутацию в системе.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. СДАЧА ЗАДАНИЯ -->
+  <section id="report">
+    <div class="section-title">
+      <div class="section-num">3</div>
+      <h2>Сдача задания — фотоотчёт</h2>
+    </div>
+
+    <div class="alert alert-green" style="margin-bottom:16px;">
+      <div class="alert-icon">✅</div>
+      <div>Выполнили работу? Сдайте задание через приложение прямо из магазина. Директор получит уведомление и примет работу.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📸 Как сдать задание</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Откройте активное задание</h4>
+            <p>Вкладка «В работе» → нажмите на задание → кнопка «Сдать работу».</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Сфотографируйте результат</h4>
+            <p>Сделайте <b>1–3 фотографии</b> выполненной работы. Можно снять через камеру прямо в приложении или выбрать из галереи.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Разрешите геолокацию</h4>
+            <p>Приложение автоматически определит ваше местонахождение. Это нужно для подтверждения того, что вы находились в магазине.</p>
+            <span class="tip">Нужен интернет и разрешение на геолокацию</span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Добавьте комментарий (по желанию)</h4>
+            <p>Если есть что сообщить директору — напишите в поле комментария (до 500 символов).</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h4>Нажмите «Отправить отчёт»</h4>
+            <p>Отчёт уйдёт директору магазина на проверку. Вы получите уведомление, когда работа будет принята.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📷 Требования к фотографиям</div>
+      <div class="photo-rules">
+        <div class="photo-rule ok">
+          <div class="icon">✅</div>
+          <div class="text">Чёткие фото</div>
+          <div class="sub">Хорошее освещение, в фокусе</div>
+        </div>
+        <div class="photo-rule ok">
+          <div class="icon">✅</div>
+          <div class="text">Виден результат</div>
+          <div class="sub">Чистый зал, выложенный товар и т.д.</div>
+        </div>
+        <div class="photo-rule warn">
+          <div class="icon">⚠️</div>
+          <div class="text">Разрешение</div>
+          <div class="sub">Мин. 1280×720 пикселей (любой смартфон 2020+ подходит)</div>
+        </div>
+        <div class="photo-rule bad">
+          <div class="icon">🚫</div>
+          <div class="text">Не принимаются</div>
+          <div class="sub">Тёмные, размытые, не относящиеся к заданию</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="alert alert-blue">
+        <div class="alert-icon">💡</div>
+        <div>Фотографируйте <b>до уборки инвентаря</b> — пока ещё видна работа. Это подтвердит, что задание выполнено.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⏱️ Что происходит после сдачи</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num" style="background:#fef3c7; color:#d97706;">1</div>
+          <div class="step-content">
+            <h4>Задание на проверке</h4>
+            <p>Директор магазина получает фотоотчёт и проверяет работу. Обычно это занимает до 2 часов.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num" style="background:#dcfce7; color:#16a34a;">2</div>
+          <div class="step-content">
+            <h4>Приёмка → выплата запускается автоматически</h4>
+            <p>Когда директор нажмёт «Принять работу», система автоматически создаёт выплату и отправляет её в банк.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num" style="background:#dbeafe; color:#2563eb;">3</div>
+          <div class="step-content">
+            <h4>Деньги на карте</h4>
+            <p>Оплата поступит на вашу карту в течение 1–2 рабочих дней. Чек в ФНС формируется автоматически.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. КОШЕЛЁК -->
+  <section id="wallet">
+    <div class="section-title">
+      <div class="section-num">4</div>
+      <h2>Кошелёк — выплаты и лимит дохода</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💳 Что видно в кошельке</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">→</div>
+          <div class="step-content">
+            <h4>Баланс и ожидаемые выплаты</h4>
+            <p>Сумма уже поступивших выплат и те, что ещё обрабатываются.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">→</div>
+          <div class="step-content">
+            <h4>История выплат</h4>
+            <p>Все выплаты с датой, суммой, названием задания и статусом.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">→</div>
+          <div class="step-content">
+            <h4>Лимит дохода самозанятого</h4>
+            <p>По закону самозанятый может зарабатывать не более <b>2 400 000 рублей в год</b>. В кошельке видно, сколько уже заработано и сколько осталось.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div style="font-size:14px; color:var(--muted); margin-bottom:4px;">Пример: израсходовано 32% годового лимита</div>
+      <div class="limit-bar-wrap"><div class="limit-bar"></div></div>
+      <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:700;">
+        <span style="color:var(--green)">768 000 руб получено</span>
+        <span style="color:var(--muted)">из 2 400 000 руб/год</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💡 Налог — KARI платит за вас</div>
+      <div class="alert alert-green">
+        <div class="alert-icon">🎁</div>
+        <div>
+          <b>KARI компенсирует ваш налог 6%.</b><br>
+          Вы получаете полную сумму задания. Налог за вас уже оплачен компанией — делать ничего не нужно.
+        </div>
+      </div>
+
+      <div style="margin-top:12px; font-size:14px; color:var(--muted);">
+        <b style="color:var(--dark);">Пример:</b> задание стоит 1 500 руб. KARI дополнительно начисляет 90 руб (6%). Вы получаете 1 500 руб. Чек в ФНС на 1 590 руб оформляется автоматически.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⚠️ Если лимит дохода заканчивается</div>
+      <div class="alert alert-orange">
+        <div class="alert-icon">⚠️</div>
+        <div><b>При достижении 90% лимита</b> (2 160 000 руб) — система предупредит вас. При достижении 100% — новые задания брать нельзя. В этом случае вам нужно перейти на ИП или завершить год.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. ДОКУМЕНТЫ -->
+  <section id="docs">
+    <div class="section-title">
+      <div class="section-num">5</div>
+      <h2>Документы — договоры и акты</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📄 Где найти документы</div>
+      <p style="font-size:14px; color:var(--muted); margin-bottom:16px;">Раздел «Кошелёк» → вкладка «Документы»</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">→</div>
+          <div class="step-content">
+            <h4>Договор гражданско-правового характера (ГПХ)</h4>
+            <p>Подписывается при первом задании. Это рамочный договор между вами и KARI.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">→</div>
+          <div class="step-content">
+            <h4>Акт выполненных работ</h4>
+            <p>Формируется автоматически после каждого принятого задания. Содержит: что сделано, когда, сумма.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">✍️ Как подписать документ (ЭПД через SMS)</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Документ появится в разделе «Документы»</h4>
+            <p>Со статусом <span class="badge badge-orange">Ожидает подписи</span>. Нажмите на него.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Прочитайте документ</h4>
+            <p>Прокрутите до конца. Убедитесь, что всё верно: ваши данные, сумма, описание работы.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Нажмите «Подписать через SMS»</h4>
+            <p>Придёт SMS с кодом. Введите его в приложение — документ подписан. Это юридически значимая подпись (ПЭП).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="alert alert-blue">
+        <div class="alert-icon">ℹ️</div>
+        <div>Подписанный документ всегда доступен в приложении. Его также можно сохранить на телефон для своих записей.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. СТАТУСЫ -->
+  <section id="status">
+    <div class="section-title">
+      <div class="section-num">6</div>
+      <h2>Статусы заданий и выплат</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📋 Статусы заданий</div>
+      <table class="status-table">
+        <thead>
+          <tr><th>Статус</th><th>Что это значит</th><th>Ваши действия</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-blue">Доступно</span></td>
+            <td>Задание открыто для всех</td>
+            <td>Можно взять</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-orange">В работе</span></td>
+            <td>Вы взяли задание</td>
+            <td>Выполните и сдайте фотоотчёт</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-kari">На проверке</span></td>
+            <td>Отчёт отправлен директору</td>
+            <td>Ждите — директор проверяет</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-green">Выполнено</span></td>
+            <td>Работа принята директором</td>
+            <td>Выплата запущена автоматически</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-red">Отклонено</span></td>
+            <td>Директор не принял работу</td>
+            <td>Свяжитесь с директором для уточнения</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💰 Статусы выплат</div>
+      <table class="status-table">
+        <thead>
+          <tr><th>Статус</th><th>Что это значит</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-gray">Ожидает</span></td>
+            <td>Выплата создана, ждёт обработки банком</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-orange">Обрабатывается</span></td>
+            <td>Банк переводит деньги</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-green">Выплачено</span></td>
+            <td>Деньги поступили на карту ✅</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-red">Ошибка</span></td>
+            <td>Проблема с переводом — система повторит автоматически (до 3 раз)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 7. FAQ -->
+  <section id="faq">
+    <div class="section-title">
+      <div class="section-num">7</div>
+      <h2>Частые вопросы</h2>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">❓ Что делать, если SMS-код не приходит?</div>
+      <div class="faq-a">
+        Подождите 60 секунд и нажмите «Отправить повторно». Проверьте, что нет блокировки SMS от неизвестных номеров. Если проблема сохраняется — позвоните в поддержку.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">❓ Мой ИНН не прошёл проверку в ФНС — что делать?</div>
+      <div class="faq-a">
+        Убедитесь, что вы зарегистрированы как самозанятый в приложении «Мой налог». Регистрация занимает около 10 минут. После этого повторите проверку в нашем приложении — статус обновляется автоматически.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">❓ Когда придут деньги за выполненное задание?</div>
+      <div class="faq-a">
+        После того как директор магазина принял вашу работу, деньги поступают на карту в течение <b>1–2 рабочих дней</b>. Статус выплаты можно отслеживать в разделе «Кошелёк».
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">❓ Нужно ли самому платить налог?</div>
+      <div class="faq-a">
+        Нет. KARI автоматически формирует чек в ФНС и компенсирует 6% налога. Вы получаете полную сумму задания. Следить за налогами не нужно.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">❓ Можно ли работать в нескольких магазинах?</div>
+      <div class="faq-a">
+        Да! Задания могут быть из разных магазинов KARI вашего региона. Вы сами выбираете, какие задания брать. Но одновременно — только одно активное задание.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">❓ Что если я не успею выполнить задание к дедлайну?</div>
+      <div class="faq-a">
+        Немедленно сообщите директору магазина. Если задание не выполнено и не сдано до дедлайна, оно может быть отмечено как просроченное. Регулярные просрочки влияют на приоритет при получении новых заданий.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">❓ Где найти свои договоры и акты?</div>
+      <div class="faq-a">
+        Все документы в разделе «Кошелёк» → вкладка «Документы». Они хранятся в системе и всегда доступны. Для подписи используется SMS-код.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">❓ Как изменить карту для выплат?</div>
+      <div class="faq-a">
+        Раздел «Профиль» → «Реквизиты для выплат» → кнопка «Изменить карту». Новая карта будет применяться к следующим выплатам.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">❓ Приложение зависло или не загружается — что делать?</div>
+      <div class="faq-a">
+        Закройте приложение полностью и откройте снова. Если не помогает — проверьте интернет-соединение. При повторной проблеме — обратитесь в поддержку, указав модель телефона и описание ошибки.
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. ПОДДЕРЖКА -->
+  <section id="contacts">
+    <div class="section-title">
+      <div class="section-num">8</div>
+      <h2>Поддержка</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🆘 Куда обращаться</div>
+      <div class="contacts-grid">
+        <div class="contact-card">
+          <div class="icon">💬</div>
+          <div class="label">Директор магазина</div>
+          <div class="value">Первый контакт</div>
+        </div>
+        <div class="contact-card">
+          <div class="icon">📞</div>
+          <div class="label">Горячая линия пилота</div>
+          <a href="tel:+73952000000" class="value">+7 (3952) 00-00-00</a>
+        </div>
+        <div class="contact-card">
+          <div class="icon">📧</div>
+          <div class="label">Электронная почта</div>
+          <a href="mailto:pilot@kari.com" class="value">pilot@kari.com</a>
+        </div>
+        <div class="contact-card">
+          <div class="icon">⏰</div>
+          <div class="label">Время работы</div>
+          <div class="value">Пн–Пт 9:00–18:00</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📋 Что сообщать при обращении</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Ваш номер телефона</h4>
+            <p>По нему вас найдут в системе.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Описание проблемы</h4>
+            <p>Что именно происходит, на каком шаге, какая ошибка появилась.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Скриншот (если есть)</h4>
+            <p>Сделайте снимок экрана с ошибкой — это ускорит решение.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Краткий чек-лист -->
+    <div class="card" style="background: linear-gradient(135deg, var(--dark) 0%, #1a2238 100%); color: #fff;">
+      <div class="card-title" style="color:#fff;">✅ Быстрый чек-лист исполнителя</div>
+      <div style="display:flex; flex-direction:column; gap:10px; font-size:14px; margin-top:4px;">
+        <label style="display:flex; align-items:center; gap:10px;">
+          <input type="checkbox" style="width:18px; height:18px; accent-color:var(--kari);"> Установил Expo Go и открыл приложение
+        </label>
+        <label style="display:flex; align-items:center; gap:10px;">
+          <input type="checkbox" style="width:18px; height:18px; accent-color:var(--kari);"> Вошёл по номеру телефона через SMS
+        </label>
+        <label style="display:flex; align-items:center; gap:10px;">
+          <input type="checkbox" style="width:18px; height:18px; accent-color:var(--kari);"> Заполнил ФИО и ИНН, прошёл проверку ФНС
+        </label>
+        <label style="display:flex; align-items:center; gap:10px;">
+          <input type="checkbox" style="width:18px; height:18px; accent-color:var(--kari);"> Добавил карту для выплат
+        </label>
+        <label style="display:flex; align-items:center; gap:10px;">
+          <input type="checkbox" style="width:18px; height:18px; accent-color:var(--kari);"> Нашёл задание на бирже и взял его
+        </label>
+        <label style="display:flex; align-items:center; gap:10px;">
+          <input type="checkbox" style="width:18px; height:18px; accent-color:var(--kari);"> Выполнил задание и отправил фотоотчёт
+        </label>
+        <label style="display:flex; align-items:center; gap:10px;">
+          <input type="checkbox" style="width:18px; height:18px; accent-color:var(--kari);"> Подписал документы через SMS-код
+        </label>
+        <label style="display:flex; align-items:center; gap:10px;">
+          <input type="checkbox" style="width:18px; height:18px; accent-color:var(--kari);"> Проверил выплату в разделе «Кошелёк»
+        </label>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <strong>KARI.Самозанятые</strong> · Пилот Апрель 2026 · Иркутский и Южный регион<br>
+  <span style="font-size:12px;">Версия инструкции 1.0 · Март 2026</span>
+</footer>
+
+</body>
+</html>

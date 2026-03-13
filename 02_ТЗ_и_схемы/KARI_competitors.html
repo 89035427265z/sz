@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KARI.Самозанятые — Анализ конкурентов</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --kari: #A01F72; --kari-dark: #7a1750; --navy: #242D4A;
+  --gray: #f5f5f5; --mid: #e0e0e0; --text: #333; --white: #fff;
+  --green: #2e7d32; --green-light: #e8f5e9;
+  --orange: #e65100; --orange-light: #fff3e0;
+  --red: #c62828; --red-light: #ffebee;
+  --blue: #1565c0; --blue-light: #e3f2fd;
+  --purple: #6a1b9a; --purple-light: #f3e5f5;
+}
+body { font-family: 'Nunito', sans-serif; background: var(--gray); color: var(--text); font-size: 14px; }
+
+/* ШАПКА */
+.header {
+  background: white; border-bottom: 3px solid var(--kari);
+  padding: 16px 40px; display: flex; align-items: center;
+  justify-content: space-between; position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-text { font-size: 22px; font-weight: 900; color: var(--navy); letter-spacing: 1px; }
+.logo-text span { color: var(--kari); }
+.logo-sub { font-size: 10px; font-weight: 700; color: #999; letter-spacing: 2px; text-transform: uppercase; }
+.header-badge { background: var(--kari); color: white; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+
+/* ВРАППЕР */
+.wrap { max-width: 1100px; margin: 0 auto; padding: 32px 24px 60px; }
+
+/* KPI КАРТОЧКИ ВВЕРХУ */
+.kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 32px; }
+.kpi-card {
+  background: white; border-radius: 12px; padding: 18px 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08); text-align: center;
+  border-top: 4px solid var(--kari);
+}
+.kpi-val { font-size: 26px; font-weight: 900; color: var(--navy); line-height: 1; margin-bottom: 4px; }
+.kpi-label { font-size: 11px; font-weight: 700; color: #888; }
+
+/* БЛОК */
+.block {
+  background: white; border-radius: 12px; margin-bottom: 24px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08); overflow: hidden;
+}
+.block-header {
+  background: var(--navy); padding: 16px 24px;
+  display: flex; align-items: center; gap: 14px;
+}
+.block-num {
+  background: var(--kari); color: white; width: 32px; height: 32px;
+  border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 800; flex-shrink: 0;
+}
+.block-title { color: white; font-size: 16px; font-weight: 800; }
+.block-sub { color: rgba(255,255,255,0.5); font-size: 12px; margin-top: 2px; }
+.block-body { padding: 24px 28px; }
+
+/* КАРТОЧКИ КОНКУРЕНТОВ */
+.comp-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.comp-card {
+  border: 1.5px solid var(--mid); border-radius: 10px; overflow: hidden;
+}
+.comp-head {
+  padding: 14px 18px; display: flex; align-items: center; justify-content: space-between;
+}
+.comp-name { font-size: 16px; font-weight: 900; }
+.comp-tag {
+  font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.tag-current { background: #fff3e0; color: #e65100; }
+.tag-leader { background: #e8f5e9; color: #2e7d32; }
+.tag-retail { background: #e3f2fd; color: #1565c0; }
+.tag-finance { background: #f3e5f5; color: #6a1b9a; }
+.tag-own { background: #fef3c7; color: #92400e; }
+
+.comp-body { padding: 14px 18px; }
+.comp-section { margin-bottom: 12px; }
+.comp-section:last-child { margin-bottom: 0; }
+.comp-section-title {
+  font-size: 11px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.8px; color: #aaa; margin-bottom: 6px;
+}
+.feature-list { list-style: none; }
+.feature-list li {
+  font-size: 13px; color: #444; padding: 3px 0;
+  padding-left: 18px; position: relative;
+}
+.feature-list li::before {
+  content: '✓'; position: absolute; left: 0;
+  color: var(--green); font-weight: 800; font-size: 12px;
+}
+.feature-list li.minus::before { content: '✗'; color: var(--red); }
+.feature-list li.warn::before { content: '!'; color: var(--orange); font-size: 11px; top: 4px; }
+
+.comp-stat {
+  display: flex; gap: 12px; margin-top: 10px; flex-wrap: wrap;
+}
+.comp-stat-item {
+  background: var(--gray); border-radius: 8px; padding: 6px 12px;
+  text-align: center; flex: 1; min-width: 70px;
+}
+.comp-stat-val { font-size: 15px; font-weight: 900; color: var(--navy); }
+.comp-stat-key { font-size: 10px; color: #888; font-weight: 600; }
+
+.comp-price {
+  background: var(--orange-light); border-radius: 8px; padding: 8px 12px;
+  font-size: 13px; color: var(--orange); font-weight: 700; margin-top: 8px;
+}
+
+/* СРАВНИТЕЛЬНАЯ ТАБЛИЦА */
+.cmp-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.cmp-table th {
+  background: var(--navy); color: white; padding: 10px 12px;
+  text-align: left; font-weight: 700; font-size: 12px;
+}
+.cmp-table th:first-child { width: 200px; }
+.cmp-table th.kari-col { background: var(--kari); }
+.cmp-table td {
+  padding: 9px 12px; border-bottom: 1px solid var(--mid);
+  vertical-align: middle;
+}
+.cmp-table tr:last-child td { border-bottom: none; }
+.cmp-table tr:hover td { background: #fafafa; }
+.cmp-table td:first-child { font-weight: 700; color: var(--navy); font-size: 12px; }
+.cmp-table td.kari-col { background: #fff0f8; }
+.check { color: var(--green); font-size: 16px; font-weight: 900; }
+.cross { color: #ccc; font-size: 16px; }
+.partial { color: var(--orange); font-size: 13px; font-weight: 700; }
+
+/* ИНСАЙТЫ */
+.insight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.insight-card {
+  border-radius: 10px; padding: 18px; position: relative; overflow: hidden;
+}
+.insight-card.green { background: var(--green-light); border: 1.5px solid #a5d6a7; }
+.insight-card.orange { background: var(--orange-light); border: 1.5px solid #ffcc80; }
+.insight-card.blue { background: var(--blue-light); border: 1.5px solid #90caf9; }
+.insight-card.red { background: var(--red-light); border: 1.5px solid #ef9a9a; }
+.insight-card.purple { background: var(--purple-light); border: 1.5px solid #ce93d8; }
+.insight-icon { font-size: 28px; margin-bottom: 8px; }
+.insight-title { font-size: 14px; font-weight: 900; color: var(--navy); margin-bottom: 6px; }
+.insight-text { font-size: 12px; line-height: 1.6; color: #555; }
+
+/* РЕКОМЕНДАЦИИ */
+.rec-list { list-style: none; }
+.rec-item {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 14px 0; border-bottom: 1px solid var(--mid);
+}
+.rec-item:last-child { border-bottom: none; }
+.rec-num {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--kari); color: white; font-weight: 900; font-size: 14px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.rec-content { flex: 1; }
+.rec-title { font-size: 14px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+.rec-desc { font-size: 12px; color: #666; line-height: 1.6; }
+.rec-source { font-size: 11px; color: #aaa; margin-top: 4px; }
+.priority-badge {
+  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px;
+  margin-left: 8px; text-transform: uppercase;
+}
+.p-high { background: #ffebee; color: #c62828; }
+.p-mid { background: #fff3e0; color: #e65100; }
+.p-low { background: #e8f5e9; color: #2e7d32; }
+
+/* СЕКЦИЯ ЗАГОЛОВОК */
+.section-intro {
+  background: linear-gradient(135deg, var(--navy) 0%, #3a4a6a 100%);
+  border-radius: 12px; padding: 28px 32px; margin-bottom: 28px; color: white;
+}
+.section-intro h2 { font-size: 22px; font-weight: 900; margin-bottom: 8px; }
+.section-intro p { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.7; max-width: 700px; }
+
+@media print {
+  .header { position: static; }
+  .block { box-shadow: none; break-inside: avoid; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   МОБИЛЬНАЯ АДАПТАЦИЯ — добавлено 11.03.2026
+   Адаптировано для экранов смартфонов (< 768px)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Таблицы — горизонтальный скролл на всех устройствах */
+table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+/* Изображения — масштабирование */
+img { max-width: 100% !important; height: auto !important; }
+@media (max-width: 900px) {
+  /* Сетки 4-5 колонок → 2 колонки */
+  .kpi-row { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 768px) {
+  /* Все многоколоночные сетки → 1 колонка */
+  .kpi-row { grid-template-columns: 1fr !important; }
+  .comp-grid { grid-template-columns: 1fr !important; }
+  .insight-grid { grid-template-columns: 1fr !important; }
+
+  /* Боковое меню — скрываем, убираем отступ */
+  .sidebar { display: none !important; }
+  .main-content { margin-left: 0 !important; padding: 16px !important; }
+  .site-header { position: relative !important; }
+
+  /* Отступы шапки */
+  .header, .page-header { padding: 20px 16px !important; }
+  .header-top { flex-wrap: wrap !important; gap: 8px !important; }
+  .header-meta, .header-actions, .header-badges { flex-wrap: wrap !important; gap: 8px !important; }
+
+  /* Основной контент */
+  .main, .content, .container { padding: 16px !important; }
+
+  /* Типографика */
+  h1 { font-size: 22px !important; }
+  h2 { font-size: 18px !important; }
+  h3 { font-size: 15px !important; }
+
+  /* Горизонтальные ряды — перенос */
+  .header-pills, .filter-tabs, .nav-tabs, .tabs-row,
+  .section-tabs, .tab-bar { flex-wrap: wrap !important; }
+  .step { flex-direction: column !important; }
+
+  /* Кодовые блоки */
+  pre, code {
+    overflow-x: auto !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 13px !important; }
+  .badge, .tag, .pill, .status-badge { font-size: 11px !important; padding: 3px 8px !important; }
+  h1, .header h1, .logo-area h1 { font-size: 19px !important; }
+  .btn-print, .btn-export { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ШАПКА -->
+<div class="header">
+  <div class="logo" style="display:flex;align-items:center;gap:10px">
+    <svg xmlns="http://www.w3.org/2000/svg" height="56" viewBox="0 0 728.5 221.5" style="display:block"><g transform="translate(-56.5 -186.5)"><path transform="matrix(1,0,0,-1,167.381,186.9256)" d="M0 0V0C-60.585 0-109.775-48.659-110.678-109.017-101.105-89.662-88.255-77.239-76.191-67.482-58.14-52.881-36.41-45.828-16.28-44.574 5.777-43.201 23.053-47.846 37.189-59.05 42.293-63.095 46.38-67.877 49.613-73.02 55.602-82.543 58.375-93.663 57.368-105.985 55.198-132.527 33.39-153.87 6.804-155.519-24.699-157.473-50.859-132.506-50.859-101.431-50.859-87.238-45.395-74.325-36.465-64.663-46.559-67.782-56.643-72.841-65.837-80.278-74.971-87.666-85.145-97.851-93.512-111.315-102.647-126.015-106.433-143.045-106.537-160.35V-221.399H0C61.15-221.399 110.721-171.838 110.721-110.7V-110.699C110.721-49.561 61.15 0 0 0" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,484.762,262.1775)" d="M0 0H-51.44L-106.801-52.162V41.158H-144.053V-144.054H-106.801V-91.887L-51.433-144.054H3.854L-76.443-72.024Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,0,595.276)" d="M744.002 189.045H781.255V314.95503H744.002Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,550.4052,371.5924)" d="M0 0C-20.818 0-37.694 16.739-37.694 37.388-37.694 58.037-20.818 74.776 0 74.776 20.818 74.776 37.694 58.037 37.694 37.388 37.694 16.739 20.818 0 0 0M37.738 101.384C26.659 107.826 13.769 111.534 0 111.534-41.285 111.534-74.753 78.338-74.753 37.388-74.753-3.562-41.285-36.758 0-36.758 13.769-36.758 26.659-33.05 37.738-26.609V-34.639H74.99V109.415H37.738Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,762.6282,267.7195)" d="M0 0C12.459 0 22.559 10.1 22.559 22.559 22.559 28.064 20.582 33.104 17.306 37.02 15.132 39.862 12.219 42.197 8.653 43.858-2.579 49.086-18.377 47.019-33.605 38.323-49.001 29.531-61.329 13.083-68.67-6.989V5.542H-105.923V-138.512H-68.67V-37.268C-65.411-6.761-50.524 20.852-30.241 32.433-25.463 35.163-20.667 37.153-16.051 38.402-20.072 34.327-22.559 28.736-22.559 22.559-22.559 10.1-12.459 0 0 0" fill="#a91d7a"/></g></svg>
+    <div class="logo-sub">Анализ рынка</div>
+  </div>
+  <div class="header-badge">Конкурентный анализ — март 2026</div>
+</div>
+
+<div class="wrap">
+
+  <!-- ВВОДНЫЙ БЛОК -->
+  <div class="section-intro">
+    <h2>Анализ операторов электронных площадок для самозанятых</h2>
+    <p>Изучено 9 платформ: 7 операторов из реестра ФНС (62 оператора на рынке) + 2 собственных решения крупных ритейлеров — <strong>ВкусВилл</strong> и <strong>Золотое Яблоко</strong>. Цель — выявить лучшие практики, опыт и функции для KARI.Самозанятые. Особое внимание — опыту ритейлеров, которые уже построили собственные платформы: чему у них учиться и в чём KARI их опередит.</p>
+  </div>
+
+  <!-- KPI РЫНКА -->
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-val">62</div>
+      <div class="kpi-label">Операторов в реестре ФНС</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">1М+</div>
+      <div class="kpi-label">Исполнителей у лидеров</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">1–4,5%</div>
+      <div class="kpi-label">Комиссия платформ</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">3</div>
+      <div class="kpi-label">Ритейлера создали свои платформы</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">24/7</div>
+      <div class="kpi-label">Выплаты у лучших сервисов</div>
+    </div>
+  </div>
+
+  <!-- КАРТОЧКИ КОНКУРЕНТОВ -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-num">1</div>
+      <div>
+        <div class="block-title">Профили ключевых платформ</div>
+        <div class="block-sub">Изучены: Наймикс, Консоль.Про, Qugo, Рокет Ворк, Скилла, Ventra Go!, Wowworks · и собственные решения ритейлеров: ВкусВилл, Золотое Яблоко</div>
+      </div>
+    </div>
+    <div class="block-body">
+      <div class="comp-grid">
+
+        <!-- НАЙМИКС -->
+        <div class="comp-card">
+          <div class="comp-head" style="background:#fff8f0; border-bottom:1.5px solid #ffe0b2;">
+            <div class="comp-name" style="color:#e65100;">Наймикс</div>
+            <span class="comp-tag tag-current">Текущий провайдер KARI</span>
+          </div>
+          <div class="comp-body">
+            <div class="comp-section">
+              <div class="comp-section-title">Что умеет</div>
+              <ul class="feature-list">
+                <li>Маркетплейс подработок по всей России</li>
+                <li>Мобильное приложение для исполнителей</li>
+                <li>Наймикс КЭДО — электронный документооборот</li>
+                <li>Наймикс Рекрутмент — подбор персонала</li>
+              </ul>
+            </div>
+            <div class="comp-section">
+              <div class="comp-section-title">Слабые стороны</div>
+              <ul class="feature-list">
+                <li class="minus">Внешний сервис — нет контроля данных</li>
+                <li class="minus">Нет кастомизации под бренд KARI</li>
+                <li class="minus">Нет системы бюджетных лимитов</li>
+                <li class="minus">Зависимость от тарифов провайдера</li>
+              </ul>
+            </div>
+            <div class="comp-price">⚠️ Причина замены: нет гибкости и контроля</div>
+          </div>
+        </div>
+
+        <!-- КОНСОЛЬ.ПРО -->
+        <div class="comp-card">
+          <div class="comp-head" style="background:#f0fff4; border-bottom:1.5px solid #a5d6a7;">
+            <div class="comp-name" style="color:#2e7d32;">Консоль.Про</div>
+            <span class="comp-tag tag-leader">Лидер рынка</span>
+          </div>
+          <div class="comp-body">
+            <div class="comp-section">
+              <div class="comp-section-title">Что умеет</div>
+              <ul class="feature-list">
+                <li>~1 млн зарегистрированных исполнителей</li>
+                <li>Публичная биржа + приглашение конкретных исполнителей</li>
+                <li>Авто-формирование договоров, актов, чеков</li>
+                <li>Выплаты через СБП сразу после задания</li>
+                <li>Проверка статуса самозанятого перед каждой выплатой</li>
+                <li>Развитый API для интеграции с любыми системами</li>
+                <li>Konsol HRM — работа через расчётный счёт банка</li>
+                <li>«Налоговая копилка» — авто-уплата налога за исполнителя</li>
+              </ul>
+            </div>
+            <div class="comp-section">
+              <div class="comp-section-title">Ключевые инсайты для KARI</div>
+              <ul class="feature-list">
+                <li class="warn">Задания через шаблоны — ускоряет работу директоров магазинов</li>
+                <li class="warn">Налоговая копилка — удобная фича для удержания исполнителей</li>
+              </ul>
+            </div>
+            <div class="comp-stat">
+              <div class="comp-stat-item"><div class="comp-stat-val">1М+</div><div class="comp-stat-key">исполнителей</div></div>
+              <div class="comp-stat-item"><div class="comp-stat-val">API</div><div class="comp-stat-key">интеграция</div></div>
+              <div class="comp-stat-item"><div class="comp-stat-val">PCI DSS</div><div class="comp-stat-key">безопасность</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- QUGO -->
+        <div class="comp-card">
+          <div class="comp-head" style="background:#f0f4ff; border-bottom:1.5px solid #90caf9;">
+            <div class="comp-name" style="color:#1565c0;">Qugo</div>
+            <span class="comp-tag tag-finance">Финтех-лидер</span>
+          </div>
+          <div class="comp-body">
+            <div class="comp-section">
+              <div class="comp-section-title">Что умеет</div>
+              <ul class="feature-list">
+                <li>Выплаты на карты ЛЮБОГО российского банка</li>
+                <li>Массовые выплаты по реестрам (загрузка списком)</li>
+                <li>Проверка статуса ФНС перед КАЖДОЙ выплатой</li>
+                <li>Авто-формирование закрывающих документов</li>
+                <li>Онбординг через колл-центр (помогают стать самозанятым)</li>
+                <li>API + 1С-модуль + интеграция в мобильное приложение</li>
+                <li>Поддержка нескольких языков</li>
+                <li>Отслеживание аннулирования чеков</li>
+              </ul>
+            </div>
+            <div class="comp-section">
+              <div class="comp-section-title">Ключевые инсайты для KARI</div>
+              <ul class="feature-list">
+                <li class="warn">Массовые реестровые выплаты — критично при 500+ самозанятых</li>
+                <li class="warn">Колл-центр онбординга — снижает барьер входа для исполнителей</li>
+                <li class="warn">Отслеживание аннулирования чеков — защита от налоговых рисков</li>
+              </ul>
+            </div>
+            <div class="comp-stat">
+              <div class="comp-stat-item"><div class="comp-stat-val">2 200+</div><div class="comp-stat-key">клиентов</div></div>
+              <div class="comp-stat-item"><div class="comp-stat-val">25 000</div><div class="comp-stat-key">транзакций/день</div></div>
+              <div class="comp-stat-item"><div class="comp-stat-val">500К+</div><div class="comp-stat-key">исполнителей</div></div>
+            </div>
+            <div class="comp-price">💰 Комиссия: от 1% до 4,5% (от оборота)</div>
+          </div>
+        </div>
+
+        <!-- РОКЕТ ВОРК -->
+        <div class="comp-card">
+          <div class="comp-head" style="background:#fdf0ff; border-bottom:1.5px solid #ce93d8;">
+            <div class="comp-name" style="color:#6a1b9a;">Рокет Ворк</div>
+            <span class="comp-tag tag-finance">Технологический лидер</span>
+          </div>
+          <div class="comp-body">
+            <div class="comp-section">
+              <div class="comp-section-title">Что умеет</div>
+              <ul class="feature-list">
+                <li>Двойная проверка ФНС — перед договором И перед выплатой</li>
+                <li>СБП-переводы 24/7 включая выходные и праздники</li>
+                <li>Работа с 3 типами: самозанятый, ИП, физлицо по ГПХ</li>
+                <li>Подписание ЭП + технология блокчейн для документов</li>
+                <li>Интеграция с 1С:ЗУП и SAP</li>
+                <li>Страхование ответственности исполнителя</li>
+                <li>Беззалоговое кредитование при кассовых разрывах</li>
+                <li>Уведомления в ФМС для нерезидентов</li>
+                <li>Реестр российского ПО + лицензия ФСБ</li>
+              </ul>
+            </div>
+            <div class="comp-section">
+              <div class="comp-section-title">Ключевые инсайты для KARI</div>
+              <ul class="feature-list">
+                <li class="warn">Двойная проверка ФНС — более надёжная защита</li>
+                <li class="warn">Страхование — защита KARI при порче имущества в магазине</li>
+                <li class="warn">Кредитование при кассовых разрывах — стоит рассмотреть</li>
+              </ul>
+            </div>
+            <div class="comp-price">🚀 Первый месяц бесплатно до 100 000 ₽</div>
+          </div>
+        </div>
+
+        <!-- СКИЛЛА -->
+        <div class="comp-card">
+          <div class="comp-head" style="background:#e3f2fd; border-bottom:1.5px solid #90caf9;">
+            <div class="comp-name" style="color:#1565c0;">Скилла Работа</div>
+            <span class="comp-tag tag-retail">Ритейл-специалист</span>
+          </div>
+          <div class="comp-body">
+            <div class="comp-section">
+              <div class="comp-section-title">Что умеет (фокус на ритейл)</div>
+              <ul class="feature-list">
+                <li>Специализация: розница, грузчики, клиринг, ТЦ</li>
+                <li>Клиенты: CDEK, Dodo Pizza, Ozon, М.Видео</li>
+                <li>GPS-отслеживание рабочего времени исполнителей</li>
+                <li>Мобильное приложение (500K+ скачиваний)</li>
+                <li>Массовые выплаты 24/7</li>
+                <li>100% онлайн-документооборот</li>
+                <li>Интеграция с 1С</li>
+                <li>Работа в 65 городах России</li>
+              </ul>
+            </div>
+            <div class="comp-section">
+              <div class="comp-section-title">Ключевые инсайты для KARI</div>
+              <ul class="feature-list">
+                <li class="warn">GPS-трекинг — контроль присутствия в магазине</li>
+                <li class="warn">10 000 человек ежедневно — масштаб доказан</li>
+              </ul>
+            </div>
+            <div class="comp-stat">
+              <div class="comp-stat-item"><div class="comp-stat-val">65</div><div class="comp-stat-key">городов</div></div>
+              <div class="comp-stat-item"><div class="comp-stat-val">10К</div><div class="comp-stat-key">чел/день</div></div>
+              <div class="comp-stat-item"><div class="comp-stat-val">7,4 млрд</div><div class="comp-stat-key">выручка 2024</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VENTRA GO + WOWWORKS -->
+        <div class="comp-card">
+          <div class="comp-head" style="background:#f0fff4; border-bottom:1.5px solid #a5d6a7;">
+            <div class="comp-name" style="color:#2e7d32;">Ventra Go! + Wowworks</div>
+            <span class="comp-tag tag-retail">Ритейл — опыт</span>
+          </div>
+          <div class="comp-body">
+            <div class="comp-section">
+              <div class="comp-section-title">Ventra Go! — что умеет</div>
+              <ul class="feature-list">
+                <li>QR-коды для подтверждения явки и выполнения задания</li>
+                <li>Выплаты в день выполнения или на следующий день</li>
+                <li>Мобильное приложение-маркетплейс смен</li>
+                <li>Фокус: розничные магазины, склады</li>
+              </ul>
+            </div>
+            <div class="comp-section">
+              <div class="comp-section-title">Wowworks — что умеет</div>
+              <ul class="feature-list">
+                <li>Рейтинговая система: исключение при рейтинге ниже 4/5</li>
+                <li>Куратор платформы контролирует выполнение каждого задания</li>
+                <li>Фотоотчёты выполненных работ</li>
+                <li>Работа без абонентской платы (только за результат)</li>
+                <li>Уведомления через SMS, email, Telegram</li>
+                <li>20 специализаций, 100 000 мастеров</li>
+              </ul>
+            </div>
+            <div class="comp-section">
+              <div class="comp-section-title">Ключевые инсайты для KARI</div>
+              <ul class="feature-list">
+                <li class="warn">QR-подтверждение явки — простой контроль без GPS</li>
+                <li class="warn">Фотоотчёт как доказательство выполнения работы</li>
+                <li class="warn">Рейтинг с порогом отсечения — мотивация качества</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- ВКУСВИЛЛ -->
+        <div class="comp-card">
+          <div class="comp-head" style="background:#f0fdf4; border-bottom:1.5px solid #86efac;">
+            <div class="comp-name" style="color:#166534;">ВкусВилл</div>
+            <span class="comp-tag tag-own">Собственное решение ритейлера</span>
+          </div>
+          <div class="comp-body">
+            <div class="comp-section">
+              <div class="comp-section-title">Модель и платформа</div>
+              <ul class="feature-list">
+                <li>Пионер «партнёрской модели» в российском ритейле</li>
+                <li>1 400+ магазинов — партнёры на самозанятости / ИП</li>
+                <li>Собственная платформа управления партнёрами (не коммерческая)</li>
+                <li>100% цифровой онбординг: договор + акт без бумаги</li>
+                <li>Личный кабинет партнёра: выручка, остатки, KPI, расчёты</li>
+                <li>Интеграция с ERP-системой сети — данные о продажах в реальном времени</li>
+                <li>Автоматические расчёты по итогам периода без ручного ввода</li>
+                <li>Прозрачная отчётность: партнёр видит все свои финансы онлайн</li>
+              </ul>
+            </div>
+            <div class="comp-section">
+              <div class="comp-section-title">Ограничения — чего нет</div>
+              <ul class="feature-list">
+                <li class="minus">Модель «аренда секции» — не применима для задачных исполнителей</li>
+                <li class="minus">Нет биржи разовых заданий (только долгосрочное партнёрство)</li>
+                <li class="minus">Нет бюджетных лимитов по магазинам / иерархии прав</li>
+                <li class="minus">Платформа не продаётся — только для внутреннего использования</li>
+              </ul>
+            </div>
+            <div class="comp-section">
+              <div class="comp-section-title">Ключевые инсайты для KARI</div>
+              <ul class="feature-list">
+                <li class="warn">Полный отказ от бумаг в 1 400+ точках — доказывает, что 100% цифра реально</li>
+                <li class="warn">Прозрачность финансов для партнёра — повышает доверие и снижает споры</li>
+                <li class="warn">Интеграция с ERP — то, что даёт KARI конкурентное преимущество при B2B-продаже</li>
+              </ul>
+            </div>
+            <div class="comp-stat">
+              <div class="comp-stat-item"><div class="comp-stat-val">1 400+</div><div class="comp-stat-key">партнёрских магазинов</div></div>
+              <div class="comp-stat-item"><div class="comp-stat-val">100%</div><div class="comp-stat-key">цифровой ЭДО</div></div>
+              <div class="comp-stat-item"><div class="comp-stat-val">~2016</div><div class="comp-stat-key">год запуска</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ЗОЛОТОЕ ЯБЛОКО -->
+        <div class="comp-card">
+          <div class="comp-head" style="background:#fffbeb; border-bottom:1.5px solid #fcd34d;">
+            <div class="comp-name" style="color:#92400e;">Золотое Яблоко</div>
+            <span class="comp-tag tag-own">Собственное решение ритейлера</span>
+          </div>
+          <div class="comp-body">
+            <div class="comp-section">
+              <div class="comp-section-title">Модель и платформа</div>
+              <ul class="feature-list">
+                <li>Быстрорастущий бьюти-ритейл: 150+ магазинов в крупных городах</li>
+                <li>Собственная цифровая платформа для промоутеров-самозанятых</li>
+                <li>Мобильное приложение: промоутер видит доступные слоты в магазинах</li>
+                <li>Расписание смен + система бронирования времени</li>
+                <li>Брифинги брендов встроены в задание — инструктаж прямо в приложении</li>
+                <li>Цифровые акты и договоры — подписание за 2 минуты через SMS</li>
+                <li>Выплата в день выполнения через партнёрский банк</li>
+                <li>Рейтинговая система: лучшие промоутеры получают приоритет на лучшие слоты</li>
+              </ul>
+            </div>
+            <div class="comp-section">
+              <div class="comp-section-title">Ограничения — чего нет</div>
+              <ul class="feature-list">
+                <li class="minus">Узкая специализация — только промоутеры beauty-сегмента</li>
+                <li class="minus">Нет бюджетных лимитов по магазинам и иерархии прав</li>
+                <li class="minus">Нет массовых выплат по Excel-реестру</li>
+                <li class="minus">Нет контроля аннулирования чеков ФНС</li>
+              </ul>
+            </div>
+            <div class="comp-section">
+              <div class="comp-section-title">Ключевые инсайты для KARI</div>
+              <ul class="feature-list">
+                <li class="warn">Брифинг внутри задания — добавить в KARI инструктаж для мерчандайзеров</li>
+                <li class="warn">Слоты вместо «свободных заданий» — даёт исполнителю предсказуемость</li>
+                <li class="warn">Рейтинг с реальным влиянием: лучший исполнитель → лучшее задание</li>
+              </ul>
+            </div>
+            <div class="comp-stat">
+              <div class="comp-stat-item"><div class="comp-stat-val">150+</div><div class="comp-stat-key">магазинов</div></div>
+              <div class="comp-stat-item"><div class="comp-stat-val">Mobile</div><div class="comp-stat-key">first подход</div></div>
+              <div class="comp-stat-item"><div class="comp-stat-val">1 день</div><div class="comp-stat-key">скорость выплаты</div></div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /comp-grid -->
+    </div>
+  </div>
+
+  <!-- СРАВНИТЕЛЬНАЯ ТАБЛИЦА ФУНКЦИЙ -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-num">2</div>
+      <div>
+        <div class="block-title">Сравнение функций: конкуренты vs KARI.Самозанятые</div>
+        <div class="block-sub">Что уже есть в нашем ТЗ, чего не хватает · включая собственные решения ВкусВилл и Золотое Яблоко</div>
+      </div>
+    </div>
+    <div class="block-body">
+      <div style="overflow-x:auto">
+      <table class="cmp-table" style="min-width:900px">
+        <thead>
+          <tr>
+            <th>Функция</th>
+            <th>Наймикс</th>
+            <th>Консоль.Про</th>
+            <th>Qugo</th>
+            <th>Рокет Ворк</th>
+            <th>Скилла</th>
+            <th style="background:#166534;">ВкусВилл</th>
+            <th style="background:#92400e;">Зол. Яблоко</th>
+            <th class="kari-col">KARI (ТЗ v3)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Мобильное приложение</td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td class="kari-col"><span class="check">✓</span> готово</td>
+          </tr>
+          <tr>
+            <td>Биржа / биржа заданий</td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="partial">слоты партнёра</span></td>
+            <td><span class="partial">слоты смен</span></td>
+            <td class="kari-col"><span class="check">✓</span> готово</td>
+          </tr>
+          <tr>
+            <td>Проверка статуса ФНС</td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span> двойная</td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td class="kari-col"><span class="check">✓</span> готово</td>
+          </tr>
+          <tr>
+            <td>Авто-документооборот (договоры, акты, чеки)</td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td class="kari-col"><span class="check">✓</span> готово</td>
+          </tr>
+          <tr>
+            <td>Подписание ЭП / ПЭП через SMS</td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span> блокчейн</td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td class="kari-col"><span class="check">✓</span> готово</td>
+          </tr>
+          <tr>
+            <td>Выплаты 24/7</td>
+            <td><span class="cross">—</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span> 1 день</td>
+            <td class="kari-col"><span class="partial">Совкомбанк</span></td>
+          </tr>
+          <tr>
+            <td>Массовые выплаты по реестрам (Excel)</td>
+            <td><span class="cross">—</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td class="kari-col"><span class="check">✓</span> в ТЗ v3</td>
+          </tr>
+          <tr>
+            <td>Бюджетные лимиты по магазинам</td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td class="kari-col" style="font-weight:900;color:#2e7d32;">✓ УНИКАЛЬНО!</td>
+          </tr>
+          <tr>
+            <td>Делегирование прав внутри компании</td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td class="kari-col" style="font-weight:900;color:#2e7d32;">✓ УНИКАЛЬНО!</td>
+          </tr>
+          <tr>
+            <td>Контроль лимита 2,4 млн ₽/год</td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td class="kari-col"><span class="check">✓</span> готово</td>
+          </tr>
+          <tr>
+            <td>Интеграция с ERP / 1С компании</td>
+            <td><span class="cross">—</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span> ERP</td>
+            <td><span class="cross">—</span></td>
+            <td class="kari-col"><span class="cross">— нет в ТЗ</span></td>
+          </tr>
+          <tr>
+            <td>Фотоотчёт выполнения работы</td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="check">✓</span></td>
+            <td class="kari-col"><span class="check">✓</span> в ТЗ v3</td>
+          </tr>
+          <tr>
+            <td>Рейтинговая система исполнителей</td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="check">✓</span></td>
+            <td class="kari-col"><span class="cross">— нет в ТЗ</span></td>
+          </tr>
+          <tr>
+            <td>Отслеживание аннулирования чеков ФНС</td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="cross">—</span></td>
+            <td class="kari-col"><span class="check">✓</span> в ТЗ v3</td>
+          </tr>
+          <tr>
+            <td>Брифинг / инструктаж внутри задания</td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="check">✓</span></td>
+            <td class="kari-col"><span class="cross">— нет в ТЗ</span></td>
+          </tr>
+          <tr>
+            <td>Авто-уплата налога за исполнителя</td>
+            <td><span class="cross">—</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td class="kari-col"><span class="partial">компенсация 6%</span></td>
+          </tr>
+          <tr>
+            <td>Шаблоны заданий</td>
+            <td><span class="cross">—</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="check">✓</span></td>
+            <td class="kari-col"><span class="cross">— нет в ТЗ</span></td>
+          </tr>
+          <tr>
+            <td>Страхование исполнителя</td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td class="kari-col"><span class="cross">— нет в ТЗ</span></td>
+          </tr>
+          <tr>
+            <td>Платформа не продаётся (только внутри)</td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="check">✓</span> только ВВ</td>
+            <td><span class="check">✓</span> только ЗЯ</td>
+            <td class="kari-col" style="font-weight:900;color:#2e7d32;">B2B УНИКАЛЬНО!</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ИНСАЙТЫ -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-num">3</div>
+      <div>
+        <div class="block-title">Ключевые инсайты рынка</div>
+        <div class="block-sub">Что делают лучшие платформы и что это значит для KARI</div>
+      </div>
+    </div>
+    <div class="block-body">
+      <div class="insight-grid">
+
+        <div class="insight-card green">
+          <div class="insight-icon">✅</div>
+          <div class="insight-title">KARI уже обгоняет рынок в 2 ключевых вещах</div>
+          <div class="insight-text">Система бюджетных лимитов по магазинам и делегирование прав внутри иерархии — этого нет ни у одного конкурента. Это сильное конкурентное преимущество при B2B-продаже.</div>
+        </div>
+
+        <div class="insight-card orange">
+          <div class="insight-icon">⚡</div>
+          <div class="insight-title">Массовые выплаты — критично при масштабе</div>
+          <div class="insight-text">При 500+ самозанятых вручную создавать каждую выплату невозможно. Все лидеры поддерживают загрузку реестров (Excel-список → массовая выплата). Это нужно добавить в ТЗ.</div>
+        </div>
+
+        <div class="insight-card blue">
+          <div class="insight-icon">📸</div>
+          <div class="insight-title">Фотоотчёт = доказательство выполнения</div>
+          <div class="insight-text">Wowworks и Ventra Go! требуют фото «до/после» при сдаче задания. Для магазина KARI (выкладка товара, уборка, мерчандайзинг) — это обязательная функция.</div>
+        </div>
+
+        <div class="insight-card red">
+          <div class="insight-icon">🔍</div>
+          <div class="insight-title">Аннулирование чека — скрытый риск</div>
+          <div class="insight-text">Самозанятый может аннулировать чек после выплаты. Qugo и Рокет Ворк отслеживают это автоматически и уведомляют компанию. Без этого — налоговый риск для KARI.</div>
+        </div>
+
+        <div class="insight-card purple">
+          <div class="insight-icon">⭐</div>
+          <div class="insight-title">Рейтинг исполнителей — удержание качества</div>
+          <div class="insight-text">Wowworks отсекает всех с рейтингом ниже 4/5. Для KARI это важно: хорошие исполнители должны получать приоритет в заданиях, слабые — предупреждение.</div>
+        </div>
+
+        <div class="insight-card green">
+          <div class="insight-icon">📋</div>
+          <div class="insight-title">Шаблоны заданий — экономят время директоров</div>
+          <div class="insight-text">Консоль.Про и Qugo позволяют создавать задания из готовых шаблонов. Директор магазина не пишет описание заново — выбирает «Выкладка обуви» и указывает только дату и оплату.</div>
+        </div>
+
+        <div class="insight-card" style="background:#f0fdf4;border:1.5px solid #86efac;">
+          <div class="insight-icon">🛒</div>
+          <div class="insight-title">ВкусВилл: 100% цифра в 1 400 точках — это уже доказано</div>
+          <div class="insight-text">ВкусВилл полностью отказался от бумажного ЭДО в 1 400+ магазинах. Это прямое доказательство, что полная «цифровизация» самозанятых в большой розничной сети работает. Для KARI — аргумент на переговорах с IT и руководством.</div>
+        </div>
+
+        <div class="insight-card" style="background:#fffbeb;border:1.5px solid #fcd34d;">
+          <div class="insight-icon">🍎</div>
+          <div class="insight-title">Золотое Яблоко: брифинг внутри задания — новая идея для KARI</div>
+          <div class="insight-text">В приложении ЗЯ промоутер видит брифинг бренда прямо внутри задания — что говорить покупателям, какие акции проводить. Для KARI это переносится как «Инструктаж мерчандайзера» — стандарты выкладки, фото правильного результата, правила магазина.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- РЕКОМЕНДАЦИИ -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-num">4</div>
+      <div>
+        <div class="block-title">Рекомендации: что добавить в KARI.Самозанятые</div>
+        <div class="block-sub">На основе анализа лучших практик рынка — приоритизированный список доработок ТЗ</div>
+      </div>
+    </div>
+    <div class="block-body">
+      <ul class="rec-list">
+
+        <li class="rec-item">
+          <div class="rec-num">1</div>
+          <div class="rec-content">
+            <div class="rec-title">
+              Массовые выплаты по реестрам
+              <span class="priority-badge p-high">Высокий приоритет</span>
+            </div>
+            <div class="rec-desc">Добавить в ТЗ функцию загрузки Excel-реестра с именами, суммами и назначениями → система проводит выплаты всем сразу. При 500+ самозанятых это сэкономит несколько часов работы еженедельно.</div>
+            <div class="rec-source">Опыт: Qugo, Рокет Ворк, Скилла</div>
+          </div>
+        </li>
+
+        <li class="rec-item">
+          <div class="rec-num">2</div>
+          <div class="rec-content">
+            <div class="rec-title">
+              Отслеживание аннулирования чеков
+              <span class="priority-badge p-high">Высокий приоритет</span>
+            </div>
+            <div class="rec-desc">Система должна автоматически проверять, не аннулировал ли исполнитель чек после получения денег. Если аннулировал — уведомление директору и блокировка новых заданий. Без этого KARI несёт налоговые риски.</div>
+            <div class="rec-source">Опыт: Qugo, Рокет Ворк</div>
+          </div>
+        </li>
+
+        <li class="rec-item">
+          <div class="rec-num">3</div>
+          <div class="rec-content">
+            <div class="rec-title">
+              Фотоотчёт при сдаче задания
+              <span class="priority-badge p-high">Высокий приоритет</span>
+            </div>
+            <div class="rec-desc">Исполнитель обязан приложить 1–3 фото при закрытии задания (например: «выкладка до» и «выкладка после»). Фото хранятся в системе и прикрепляются к акту. Директор магазина видит доказательство до нажатия «Принять».</div>
+            <div class="rec-source">Опыт: Wowworks, Ventra Go!</div>
+          </div>
+        </li>
+
+        <li class="rec-item">
+          <div class="rec-num">4</div>
+          <div class="rec-content">
+            <div class="rec-title">
+              Рейтинговая система исполнителей
+              <span class="priority-badge p-mid">Средний приоритет</span>
+            </div>
+            <div class="rec-desc">После каждого задания директор магазина ставит оценку 1–5. Накопленный рейтинг виден на карточке исполнителя. Ввести правило: рейтинг ниже 3 — предупреждение, ниже 2.5 — ограничение новых заданий.</div>
+            <div class="rec-source">Опыт: Wowworks (порог 4/5), все крупные платформы</div>
+          </div>
+        </li>
+
+        <li class="rec-item">
+          <div class="rec-num">5</div>
+          <div class="rec-content">
+            <div class="rec-title">
+              Шаблоны заданий
+              <span class="priority-badge p-mid">Средний приоритет</span>
+            </div>
+            <div class="rec-desc">Администратор (Юрий) создаёт типовые шаблоны: «Выкладка обуви», «Инвентаризация», «Уборка торгового зала», «Промо у входа» — с описанием, типовой суммой и требованиями. Директор магазина создаёт задание в 2 клика, выбирая из готовых шаблонов.</div>
+            <div class="rec-source">Опыт: Консоль.Про, Qugo</div>
+          </div>
+        </li>
+
+        <li class="rec-item">
+          <div class="rec-num">6</div>
+          <div class="rec-content">
+            <div class="rec-title">
+              QR-код подтверждение явки в магазин
+              <span class="priority-badge p-mid">Средний приоритет</span>
+            </div>
+            <div class="rec-desc">В каждом магазине размещается QR-код. Исполнитель сканирует при приходе и уходе. Система фиксирует время присутствия. Альтернатива GPS-трекингу — проще и не требует постоянной геолокации.</div>
+            <div class="rec-source">Опыт: Ventra Go!</div>
+          </div>
+        </li>
+
+        <li class="rec-item">
+          <div class="rec-num">7</div>
+          <div class="rec-content">
+            <div class="rec-title">
+              Интеграция с 1С
+              <span class="priority-badge p-mid">Средний приоритет</span>
+            </div>
+            <div class="rec-desc">Выгрузка данных о выплатах и актах в 1С:Бухгалтерия и 1С:ЗУП. Это требование почти любого корпоративного клиента. Критично для B2B-монетизации платформы.</div>
+            <div class="rec-source">Опыт: Qugo, Рокет Ворк, Скилла</div>
+          </div>
+        </li>
+
+        <li class="rec-item">
+          <div class="rec-num">8</div>
+          <div class="rec-content">
+            <div class="rec-title">
+              Страхование ответственности исполнителя
+              <span class="priority-badge p-low">Низкий приоритет</span>
+            </div>
+            <div class="rec-desc">Опционально: при допуске в магазин исполнитель застрахован на случай порчи товара или оборудования. Страховка оформляется автоматически при принятии задания. Снижает риски для KARI.</div>
+            <div class="rec-source">Опыт: Рокет Ворк</div>
+          </div>
+        </li>
+
+        <li class="rec-item">
+          <div class="rec-num">9</div>
+          <div class="rec-content">
+            <div class="rec-title">
+              Онбординг: помощь в получении статуса самозанятого
+              <span class="priority-badge p-low">Низкий приоритет</span>
+            </div>
+            <div class="rec-desc">Встроенный мастер-помощник в приложении: «У вас нет статуса самозанятого — вот как его получить за 10 минут». Пошаговая инструкция + ссылка на приложение «Мой налог». Снижает барьер для новых исполнителей.</div>
+            <div class="rec-source">Опыт: Qugo (колл-центр онбординга)</div>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+
+  <!-- ИТОГОВЫЙ ВЫВОД -->
+  <div style="background:linear-gradient(135deg,#A01F72,#7a1750); border-radius:12px; padding:28px 32px; color:white;">
+    <div style="font-size:18px;font-weight:900;margin-bottom:12px;">Итоговый вывод</div>
+    <div style="font-size:13px;line-height:1.9;color:rgba(255,255,255,0.9);max-width:800px;">
+      KARI.Самозанятые уже опережает рынок по 3 ключевым параметрам: <strong>бюджетные лимиты, делегирование прав, B2B-монетизация</strong> — этого нет ни у кого, включая ВкусВилл и Золотое Яблоко.<br><br>
+      Опыт ритейлеров подтверждает главное: <strong>ВкусВилл доказал</strong> — полная цифровизация 1 400+ магазинов реальна. <strong>Золотое Яблоко подсказало</strong> новую идею — брифинг/инструктаж мерчандайзера внутри задания, которую стоит добавить в KARI.<br><br>
+      Пробелы, закрытые в ТЗ v3: <strong>массовые выплаты, фотоотчёт, контроль аннулирования чеков</strong> — всё реализовано. Остаётся рассмотреть: <strong>шаблоны заданий, брифинг в задании, рейтинг исполнителей</strong>.
+    </div>
+    <div style="margin-top:18px;font-size:12px;color:rgba(255,255,255,0.5);">Документ: KARI_competitors.html | Анализ: март 2026 | Изучено платформ: 9 (7 операторов ФНС + ВкусВилл + Золотое Яблоко) | Реестр ФНС: 62 оператора</div>
+  </div>
+
+</div><!-- /wrap -->
+</body>
+</html>

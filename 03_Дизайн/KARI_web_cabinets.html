@@ -1,0 +1,2378 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KARI Самозанятые — Веб-кабинеты</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<!-- SheetJS для Excel-выгрузки с форматированием -->
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+<style>
+/* ===== СБРОС И БАЗОВЫЕ СТИЛИ ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --kari-purple: #A01F72;
+  --kari-dark: #242D4A;
+  --kari-bg: #f5f5f5;
+  --kari-white: #ffffff;
+  --kari-success: #4CAF50;
+  --kari-warning: #FF9800;
+  --kari-danger: #e53935;
+  --kari-info: #1976D2;
+  --shadow-sm: 0 1px 4px rgba(0,0,0,0.08);
+  --shadow-md: 0 2px 12px rgba(0,0,0,0.10);
+  --shadow-lg: 0 4px 24px rgba(0,0,0,0.13);
+  --radius: 10px;
+  --sidebar-width: 220px;
+  --header-height: 60px;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--kari-bg);
+  color: var(--kari-dark);
+  font-size: 14px;
+  min-height: 100vh;
+}
+
+/* ===== ЛОГОТИП KARI ===== */
+.kari-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.kari-logo-pin {
+  width: 28px; height: 28px;
+  background: var(--kari-purple);
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  position: relative;
+  flex-shrink: 0;
+}
+.kari-logo-pin::after {
+  content: 'r';
+  color: white;
+  font-size: 13px;
+  font-weight: 900;
+  font-style: italic;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.kari-logo-text { font-size: 22px; font-weight: 900; color: #A01F72; font-style: italic; letter-spacing: 1px; }
+.kari-logo-sub { font-size: 10px; color: rgba(160,31,114,0.75); font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; }
+
+/* ===== ПЕРЕКЛЮЧАТЕЛЬ КАБИНЕТОВ ===== */
+.cabinet-switcher {
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  border-bottom: 3px solid var(--kari-purple);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+.cabinet-tab {
+  padding: 14px 48px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(0,0,0,0.45);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  transition: all 0.2s;
+  letter-spacing: 0.3px;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cabinet-tab:hover { color: rgba(0,0,0,0.75); background: rgba(160,31,114,0.04); }
+.cabinet-tab.active {
+  color: #A01F72;
+  border-bottom-color: var(--kari-purple);
+  background: rgba(160,31,114,0.08);
+}
+.cabinet-tab .tab-badge {
+  background: var(--kari-purple);
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 20px;
+}
+
+/* ===== КАБИНЕТ-ОБЁРТКА ===== */
+.cabinet { display: none; }
+.cabinet.active { display: block; }
+
+/* ===== ШАПКА ===== */
+.app-header {
+  height: var(--header-height);
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 20px;
+  border-bottom: 3px solid #A01F72;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  position: sticky;
+  top: 47px;
+  z-index: 900;
+}
+.header-title {
+  flex: 1;
+  text-align: center;
+  color: #555555;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+.header-title span { color: #333333; font-weight: 800; }
+.header-right { display: flex; align-items: center; gap: 14px; }
+.header-avatar {
+  width: 36px; height: 36px;
+  background: var(--kari-purple);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; color: #fff;
+  letter-spacing: 0.5px;
+}
+.header-user-name { color: #333333; font-size: 13px; font-weight: 700; }
+.btn-header { padding: 6px 16px; border-radius: 6px; border: none; font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.btn-logout { background: #ffffff; color: #A01F72; border: 1px solid #A01F72; }
+.btn-logout:hover { background: #FFF0F8; color: #A01F72; }
+.btn-print { background: #ffffff; color: #A01F72; border: 1px solid #A01F72; }
+.btn-print:hover { background: rgba(255,255,255,0.18); color: #fff; }
+
+/* ===== LAYOUT (SIDEBAR + CONTENT) ===== */
+.app-layout {
+  display: flex;
+  min-height: calc(100vh - 107px);
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--kari-white);
+  box-shadow: 2px 0 12px rgba(0,0,0,0.07);
+  position: sticky;
+  top: 107px;
+  height: calc(100vh - 107px);
+  overflow-y: auto;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+.sidebar-menu { padding: 12px 0; flex: 1; }
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  color: #666;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+  position: relative;
+  border-left: 3px solid transparent;
+  text-decoration: none;
+}
+.menu-item:hover { background: rgba(154,30,102,0.05); color: var(--kari-dark); }
+.menu-item.active {
+  background: rgba(154,30,102,0.07);
+  color: var(--kari-purple);
+  border-left-color: var(--kari-purple);
+  font-weight: 800;
+}
+.menu-item .menu-icon { font-size: 15px; width: 20px; text-align: center; }
+.menu-item.disabled { opacity: 0.4; cursor: not-allowed; }
+.sidebar-user {
+  padding: 16px;
+  border-top: 1px solid #eee;
+  background: #fafafa;
+}
+.sidebar-user-role { font-size: 11px; color: #999; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.sidebar-user-info { display: flex; flex-direction: column; gap: 3px; }
+.sidebar-user-info span { font-size: 12px; color: var(--kari-dark); font-weight: 700; }
+.sidebar-user-info small { font-size: 11px; color: #888; font-weight: 600; }
+.sidebar-stat {
+  margin-top: 8px;
+  background: rgba(154,30,102,0.07);
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sidebar-stat-label { font-size: 11px; color: #888; font-weight: 600; }
+.sidebar-stat-value { font-size: 16px; font-weight: 900; color: var(--kari-purple); }
+
+/* ===== ОСНОВНОЙ КОНТЕНТ ===== */
+.main-content { flex: 1; padding: 24px; min-width: 0; overflow-x: auto; }
+
+/* ===== ЗАГОЛОВОК РАЗДЕЛА ===== */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.section-title { font-size: 18px; font-weight: 900; color: var(--kari-dark); }
+.section-subtitle { font-size: 12px; color: #999; font-weight: 600; margin-top: 2px; }
+.section-actions { display: flex; gap: 10px; }
+
+/* ===== КНОПКИ ===== */
+.btn {
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: none;
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.btn-primary { background: var(--kari-purple); color: #fff; }
+.btn-primary:hover { background: #7d1852; box-shadow: 0 3px 10px rgba(154,30,102,0.3); }
+.btn-secondary { background: #f0f0f0; color: #555; }
+.btn-secondary:hover { background: #e0e0e0; }
+.btn-outline { background: transparent; color: var(--kari-purple); border: 2px solid var(--kari-purple); }
+.btn-outline:hover { background: var(--kari-purple); color: #fff; }
+.btn-sm { padding: 5px 12px; font-size: 12px; border-radius: 6px; }
+.btn-danger { background: var(--kari-danger); color: #fff; }
+.btn-warning { background: var(--kari-warning); color: #fff; }
+.btn-success { background: var(--kari-success); color: #fff; }
+
+/* ===== KPI КАРТОЧКИ ===== */
+.kpi-grid { display: grid; gap: 16px; margin-bottom: 24px; }
+.kpi-grid-4 { grid-template-columns: repeat(4, 1fr); }
+.kpi-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.kpi-card {
+  background: var(--kari-white);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  border-top: 4px solid var(--kari-purple);
+  position: relative;
+  overflow: hidden;
+}
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  opacity: 0.06;
+}
+.kpi-card.purple { border-top-color: var(--kari-purple); }
+.kpi-card.purple::before { background: var(--kari-purple); }
+.kpi-card.blue { border-top-color: var(--kari-dark); }
+.kpi-card.blue::before { background: var(--kari-dark); }
+.kpi-card.green { border-top-color: var(--kari-success); }
+.kpi-card.green::before { background: var(--kari-success); }
+.kpi-card.orange { border-top-color: var(--kari-warning); }
+.kpi-card.orange::before { background: var(--kari-warning); }
+
+.kpi-label { font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.kpi-value { font-size: 26px; font-weight: 900; color: var(--kari-dark); line-height: 1; margin-bottom: 6px; }
+.kpi-card.purple .kpi-value { color: var(--kari-purple); }
+.kpi-card.green .kpi-value { color: var(--kari-success); }
+.kpi-card.orange .kpi-value { color: var(--kari-warning); }
+.kpi-sub { font-size: 12px; color: #aaa; font-weight: 600; }
+
+/* ===== ПРОГРЕСС-БАР ===== */
+.progress-wrap { margin-top: 10px; }
+.progress-bar-bg { height: 6px; background: #eee; border-radius: 3px; overflow: hidden; }
+.progress-bar-fill { height: 100%; border-radius: 3px; transition: width 0.4s; }
+.progress-bar-fill.green { background: var(--kari-success); }
+.progress-bar-fill.yellow { background: var(--kari-warning); }
+.progress-bar-fill.red { background: var(--kari-danger); }
+.progress-pct { font-size: 11px; color: #aaa; font-weight: 700; margin-top: 4px; }
+
+/* Прогресс в таблице */
+.table-progress { display: flex; align-items: center; gap: 8px; min-width: 120px; }
+.table-progress-bar { flex: 1; height: 6px; background: #eee; border-radius: 3px; overflow: hidden; }
+.table-progress-fill { height: 100%; border-radius: 3px; }
+.table-progress-pct { font-size: 11px; font-weight: 800; color: #555; width: 32px; text-align: right; }
+
+/* ===== БЛОК КОНТЕНТА ===== */
+.content-block {
+  background: var(--kari-white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.content-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.content-block-title { font-size: 15px; font-weight: 800; color: var(--kari-dark); }
+.content-block-body { padding: 16px 20px; }
+
+/* ===== ФИЛЬТРЫ ===== */
+.filters-row {
+  display: flex;
+  gap: 10px;
+  padding: 12px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.filter-input {
+  padding: 7px 12px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 7px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--kari-dark);
+  outline: none;
+  transition: border-color 0.2s;
+  min-width: 180px;
+}
+.filter-input:focus { border-color: var(--kari-purple); }
+.filter-select {
+  padding: 7px 12px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 7px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--kari-dark);
+  outline: none;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.filter-select:focus { border-color: var(--kari-purple); }
+
+/* ===== ТАБЛИЦЫ ===== */
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th {
+  padding: 10px 14px;
+  background: #f8f8f8;
+  font-size: 11px;
+  font-weight: 800;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: left;
+  border-bottom: 2px solid #eee;
+  white-space: nowrap;
+}
+.data-table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid #f4f4f4;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--kari-dark);
+  vertical-align: middle;
+}
+.data-table tr:hover td { background: rgba(154,30,102,0.02); }
+.data-table tr.row-critical td { background: rgba(229,57,53,0.06); }
+.data-table tr.row-changed td { background: rgba(255,152,0,0.08); }
+
+/* Поле ввода лимита */
+.limit-input {
+  padding: 6px 10px;
+  border: 1.5px solid #ddd;
+  border-radius: 6px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--kari-dark);
+  width: 120px;
+  outline: none;
+  transition: border-color 0.2s;
+  text-align: right;
+}
+.limit-input:focus { border-color: var(--kari-purple); }
+.limit-input.changed { border-color: var(--kari-warning); background: rgba(255,152,0,0.05); }
+.limit-input:disabled {
+  background: #f5f5f5;
+  color: #aaa;
+  border-color: #eee;
+  cursor: not-allowed;
+}
+
+/* ===== СТАТУС-БЕЙДЖИ ===== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+.badge-success { background: rgba(76,175,80,0.12); color: #388E3C; }
+.badge-danger { background: rgba(229,57,53,0.12); color: var(--kari-danger); }
+.badge-warning { background: rgba(255,152,0,0.12); color: #E65100; }
+.badge-orange { background: rgba(255,152,0,0.12); color: #E65100; }
+.badge-info { background: rgba(25,118,210,0.1); color: var(--kari-info); }
+
+/* ===== ПАГИНАЦИЯ ===== */
+.table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-top: 1px solid #f0f0f0;
+  color: #aaa;
+  font-size: 12px;
+  font-weight: 600;
+}
+.pagination { display: flex; gap: 4px; }
+.page-btn {
+  width: 30px; height: 30px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 6px;
+  background: #fff;
+  font-family: 'Nunito', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  color: #666;
+}
+.page-btn:hover { border-color: var(--kari-purple); color: var(--kari-purple); }
+.page-btn.active { background: var(--kari-purple); border-color: var(--kari-purple); color: #fff; }
+
+/* ===== ИСТОРИЯ ИЗМЕНЕНИЙ ===== */
+.history-table { width: 100%; border-collapse: collapse; }
+.history-table td { padding: 9px 14px; border-bottom: 1px solid #f4f4f4; font-size: 12px; color: #666; font-weight: 600; }
+.history-table td:first-child { font-weight: 800; color: var(--kari-dark); }
+.history-table tr:last-child td { border-bottom: none; }
+.history-time { color: #bbb; font-size: 11px; }
+
+/* ===== ПРЕДУПРЕЖДЕНИЕ ===== */
+.alert {
+  padding: 14px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.alert-warning { background: rgba(255,152,0,0.10); border-left: 4px solid var(--kari-warning); color: #7a4f00; }
+.alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+/* ===== МОДАЛЬНЫЕ ОКНА ===== */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(36,45,74,0.55);
+  z-index: 9000;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(2px);
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: var(--shadow-lg);
+  width: 480px;
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: modalIn 0.22s ease;
+}
+@keyframes modalIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.modal-title { font-size: 16px; font-weight: 900; color: var(--kari-dark); }
+.modal-close {
+  width: 30px; height: 30px;
+  border: none;
+  background: #f0f0f0;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  color: #888;
+  transition: all 0.2s;
+}
+.modal-close:hover { background: #e0e0e0; color: var(--kari-dark); }
+.modal-body { padding: 20px 24px; }
+.modal-footer { padding: 14px 24px 20px; display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid #f0f0f0; }
+
+/* Поля формы */
+.form-group { margin-bottom: 16px; }
+.form-label { display: block; font-size: 12px; font-weight: 800; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.form-control {
+  width: 100%;
+  padding: 9px 13px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 8px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--kari-dark);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.form-control:focus { border-color: var(--kari-purple); }
+.form-control:disabled { background: #f5f5f5; color: #999; cursor: not-allowed; }
+textarea.form-control { min-height: 90px; resize: vertical; }
+
+/* Чекбоксы */
+.checkbox-group { display: flex; flex-direction: column; gap: 8px; }
+.checkbox-item { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; font-weight: 700; color: var(--kari-dark); }
+.checkbox-item input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--kari-purple); cursor: pointer; }
+
+/* Переключатель */
+.radio-group { display: flex; gap: 16px; }
+.radio-item { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; cursor: pointer; }
+.radio-item input[type=radio] { accent-color: var(--kari-purple); cursor: pointer; }
+
+/* Статичное поле */
+.form-static { padding: 9px 13px; background: #f7f7f7; border-radius: 8px; font-size: 13px; font-weight: 800; color: var(--kari-dark); border: 1.5px solid #eee; }
+
+/* ===== АДАПТИВНОСТЬ ===== */
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .kpi-grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .kpi-grid-3 { grid-template-columns: 1fr 1fr; }
+  .cabinet-tab { padding: 12px 16px; font-size: 12px; }
+  .main-content { padding: 14px; }
+}
+@media (max-width: 480px) {
+  .kpi-grid-4, .kpi-grid-3 { grid-template-columns: 1fr; }
+}
+
+/* ===== BREADCRUMB ===== */
+.breadcrumb {
+  font-size: 12px;
+  color: #bbb;
+  font-weight: 600;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.breadcrumb-sep { color: #ddd; }
+.breadcrumb-current { color: var(--kari-purple); font-weight: 800; }
+
+  /* ===== НОВЫЙ ЛОГОТИП SVG ===== */
+  .kari-logo-wrap { display: flex; align-items: center; gap: 10px; }
+  .kari-text { font-size: 26px; font-weight: 900; font-style: italic; color: #A01F72; letter-spacing: 1px; font-family: 'Nunito', sans-serif; }
+  .kari-subtext { font-size: 10px; color: #A01F72; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; display: block; margin-top: -4px; }
+
+  /* ===== БЕЛАЯ ШАПКА И МЕНЮ ===== */
+  .page-header, .site-header, .app-header {
+    background: #ffffff !important;
+    border-bottom: 3px solid #A01F72 !important;
+    color: #333333 !important;
+    border-bottom: 3px solid #A01F72;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+  }
+  .page-header *, .site-header *, .app-header * {
+    color: #333333 !important;
+  }
+  /* Исключения: кнопки и бейджи сохраняют свой цвет */
+  .page-header .btn-print, .site-header .btn-print, .app-header .btn-print,
+  .badge-status, .nav-num, .tab-badge {
+    color: #ffffff !important;
+  }
+  .header-avatar { color: #ffffff !important; }
+
+</style>
+</head>
+<body>
+
+<!-- ===== ПЕРЕКЛЮЧАТЕЛЬ КАБИНЕТОВ ===== -->
+<div class="cabinet-switcher">
+  <button class="cabinet-tab active" onclick="switchCabinet('region')">
+    🏢 Кабинет директора региона
+    <span class="tab-badge">47 магазинов</span>
+  </button>
+  <button class="cabinet-tab" onclick="switchCabinet('division')">
+    🏪 Кабинет директора подразделения
+    <span class="tab-badge">3 магазина</span>
+  </button>
+</div>
+
+<!-- ================================================================ -->
+<!-- КАБИНЕТ 1: ДИРЕКТОР РЕГИОНА -->
+<!-- ================================================================ -->
+<div class="cabinet active" id="cabinet-region">
+
+  <!-- Шапка -->
+  <header class="app-header">
+    <div class="kari-logo-wrap">
+  <svg xmlns="http://www.w3.org/2000/svg" height="44" viewBox="0 0 728.5 221.5" style="display:block"><g transform="translate(-56.5 -186.5)"><path transform="matrix(1,0,0,-1,167.381,186.9256)" d="M0 0V0C-60.585 0-109.775-48.659-110.678-109.017-101.105-89.662-88.255-77.239-76.191-67.482-58.14-52.881-36.41-45.828-16.28-44.574 5.777-43.201 23.053-47.846 37.189-59.05 42.293-63.095 46.38-67.877 49.613-73.02 55.602-82.543 58.375-93.663 57.368-105.985 55.198-132.527 33.39-153.87 6.804-155.519-24.699-157.473-50.859-132.506-50.859-101.431-50.859-87.238-45.395-74.325-36.465-64.663-46.559-67.782-56.643-72.841-65.837-80.278-74.971-87.666-85.145-97.851-93.512-111.315-102.647-126.015-106.433-143.045-106.537-160.35V-221.399H0C61.15-221.399 110.721-171.838 110.721-110.7V-110.699C110.721-49.561 61.15 0 0 0" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,484.762,262.1775)" d="M0 0H-51.44L-106.801-52.162V41.158H-144.053V-144.054H-106.801V-91.887L-51.433-144.054H3.854L-76.443-72.024Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,0,595.276)" d="M744.002 189.045H781.255V314.95503H744.002Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,550.4052,371.5924)" d="M0 0C-20.818 0-37.694 16.739-37.694 37.388-37.694 58.037-20.818 74.776 0 74.776 20.818 74.776 37.694 58.037 37.694 37.388 37.694 16.739 20.818 0 0 0M37.738 101.384C26.659 107.826 13.769 111.534 0 111.534-41.285 111.534-74.753 78.338-74.753 37.388-74.753-3.562-41.285-36.758 0-36.758 13.769-36.758 26.659-33.05 37.738-26.609V-34.639H74.99V109.415H37.738Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,762.6282,267.7195)" d="M0 0C12.459 0 22.559 10.1 22.559 22.559 22.559 28.064 20.582 33.104 17.306 37.02 15.132 39.862 12.219 42.197 8.653 43.858-2.579 49.086-18.377 47.019-33.605 38.323-49.001 29.531-61.329 13.083-68.67-6.989V5.542H-105.923V-138.512H-68.67V-37.268C-65.411-6.761-50.524 20.852-30.241 32.433-25.463 35.163-20.667 37.153-16.051 38.402-20.072 34.327-22.559 28.736-22.559 22.559-22.559 10.1-12.459 0 0 0" fill="#a91d7a"/></g></svg>
+  <span class="kari-subtext">самозанятые</span>
+</div>
+    <div class="header-title">
+      <span>Кабинет директора региона</span> | Москва и МО
+    </div>
+    <div class="header-right">
+      <button class="btn-header btn-print" onclick="window.print()">🖨 Печать</button>
+      <div class="header-avatar">АП</div>
+      <span class="header-user-name">Андрей Петров</span>
+      <button class="btn-header btn-logout">Выйти</button>
+    </div>
+  </header>
+
+  <!-- Layout -->
+  <div class="app-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <nav class="sidebar-menu">
+        <a class="menu-item" href="#" onclick="showSection(this,'sec-r-dashboard','cabinet-region');return false"><span class="menu-icon">📊</span>Дашборд</a>
+        <a class="menu-item" href="#" onclick="showSection(this,'sec-r-stores','cabinet-region');return false"><span class="menu-icon">🏪</span>Магазины</a>
+        <a class="menu-item" href="#" onclick="showSection(this,'sec-r-users','cabinet-region');return false"><span class="menu-icon">👥</span>Исполнители</a>
+        <a class="menu-item" href="#" onclick="showSection(this,'sec-r-tasks','cabinet-region');return false"><span class="menu-icon">📋</span>Задания</a>
+        <a class="menu-item active" href="#" onclick="showSection(this,'sec-r-budget','cabinet-region');return false"><span class="menu-icon">💰</span>Бюджет и лимиты</a>
+        <a class="menu-item" href="#" onclick="showSection(this,'sec-r-payments','cabinet-region');return false"><span class="menu-icon">💳</span>Выплаты</a>
+        <a class="menu-item" href="#" onclick="showSection(this,'sec-r-docs','cabinet-region');return false"><span class="menu-icon">📄</span>Документы</a>
+        <a class="menu-item" href="#" onclick="showSection(this,'sec-r-analytics','cabinet-region');return false"><span class="menu-icon">📈</span>Аналитика</a>
+        <a class="menu-item" href="#" onclick="showSection(this,'sec-r-settings','cabinet-region');return false"><span class="menu-icon">⚙️</span>Настройки</a>
+      </nav>
+      <div class="sidebar-user">
+        <div class="sidebar-user-role">Текущий пользователь</div>
+        <div class="sidebar-user-info">
+          <span>Андрей Петров</span>
+          <small>Директор региона</small>
+          <small style="color:#A01F72;margin-top:1px;">Москва и МО</small>
+        </div>
+        <div class="sidebar-stat">
+          <span class="sidebar-stat-label">Магазинов</span>
+          <span class="sidebar-stat-value">47</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Основной контент -->
+    <main class="main-content">
+
+      <div class="breadcrumb">
+        Главная <span class="breadcrumb-sep">›</span>
+        <span class="breadcrumb-current">Бюджет и лимиты</span>
+      </div>
+
+      <!-- KPI карточки -->
+      <div class="sec active" id="sec-r-budget">
+      <div class="kpi-grid kpi-grid-4">
+        <div class="kpi-card purple">
+          <div class="kpi-label">Бюджет региона (февраль)</div>
+          <div class="kpi-value">1 250 000 ₽</div>
+          <div class="kpi-sub">Установлен HRD</div>
+        </div>
+        <div class="kpi-card blue">
+          <div class="kpi-label">Израсходовано</div>
+          <div class="kpi-value">487 300 ₽</div>
+          <div class="kpi-sub">39% от бюджета</div>
+          <div class="progress-wrap">
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill green" style="width:39%"></div>
+            </div>
+            <div class="progress-pct">39% использовано</div>
+          </div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-label">Доступно к распределению</div>
+          <div class="kpi-value">762 700 ₽</div>
+          <div class="kpi-sub">По магазинам</div>
+        </div>
+        <div class="kpi-card orange">
+          <div class="kpi-label">Магазинов без лимита</div>
+          <div class="kpi-value">8</div>
+          <div class="kpi-sub">⚠ Нужно установить лимит</div>
+        </div>
+      </div>
+
+      <!-- Управление лимитами -->
+      <div class="content-block">
+        <div class="content-block-header">
+          <div>
+            <div class="content-block-title">Бюджетные лимиты магазинов — Февраль 2025</div>
+          </div>
+          <div class="section-actions">
+            <button class="btn btn-secondary btn-sm">📋 Скопировать с прошлого месяца</button>
+            <button class="btn btn-primary btn-sm" onclick="saveAllLimits()">💾 Сохранить все изменения</button>
+            <button class="btn btn-outline btn-sm" onclick="exportToExcel('limits-table','Лимиты_магазинов','Бюджетные лимиты')" style="border-color:#217346;color:#217346;" title="Выгрузить в Excel с форматированием">
+              📊 Excel
+            </button>
+          </div>
+        </div>
+
+        <!-- Фильтры -->
+        <div class="filters-row">
+          <input class="filter-input" type="text" placeholder="🔍 Поиск по магазину..." oninput="filterTable(this.value)">
+          <select class="filter-select" onchange="filterByDivision(this.value)">
+            <option value="">Все подразделения</option>
+            <option value="1">Подразделение 1</option>
+            <option value="2">Подразделение 2</option>
+            <option value="3">Подразделение 3</option>
+          </select>
+          <button class="btn btn-outline btn-sm" onclick="openModal('modal-bulk')">⚡ Массовая установка лимита</button>
+        </div>
+
+        <!-- Таблица -->
+        <div style="overflow-x:auto;">
+          <table class="data-table" id="limits-table">
+            <thead>
+              <tr>
+                <th>Магазин</th>
+                <th>Подразделение</th>
+                <th>Директор магазина</th>
+                <th>Лимит на месяц (₽)</th>
+                <th>Израсходовано</th>
+                <th>Остаток</th>
+                <th>Статус</th>
+                <th>Действия</th>
+              </tr>
+            </thead>
+            <tbody id="limits-tbody">
+              <!-- Строка 1 -->
+              <tr data-div="1" data-name="арбат">
+                <td><strong>KARI Арбат</strong></td>
+                <td>Подр. 1</td>
+                <td>Смирнова И.В.</td>
+                <td><input class="limit-input" type="text" value="45 000" onchange="markChanged(this)"></td>
+                <td>12 300 ₽</td>
+                <td>32 700 ₽</td>
+                <td><span class="badge badge-success">✓ В норме</span></td>
+                <td><button class="btn btn-sm btn-secondary">Детали</button></td>
+              </tr>
+              <!-- Строка 2 — критично -->
+              <tr data-div="1" data-name="тверская" class="row-critical">
+                <td><strong>KARI Тверская</strong></td>
+                <td>Подр. 1</td>
+                <td>Козлов А.П.</td>
+                <td><input class="limit-input" type="text" value="60 000" onchange="markChanged(this)"></td>
+                <td>58 100 ₽</td>
+                <td>1 900 ₽</td>
+                <td><span class="badge badge-danger">🔴 Критично</span></td>
+                <td><button class="btn btn-sm btn-secondary">Детали</button></td>
+              </tr>
+              <!-- Строка 3 -->
+              <tr data-div="1" data-name="пушкинская">
+                <td><strong>KARI Пушкинская</strong></td>
+                <td>Подр. 1</td>
+                <td>Миронова С.К.</td>
+                <td><input class="limit-input" type="text" value="35 000" onchange="markChanged(this)"></td>
+                <td>8 500 ₽</td>
+                <td>26 500 ₽</td>
+                <td><span class="badge badge-success">✓ В норме</span></td>
+                <td><button class="btn btn-sm btn-secondary">Детали</button></td>
+              </tr>
+              <!-- Строка 4 -->
+              <tr data-div="2" data-name="таганская">
+                <td><strong>KARI Таганская</strong></td>
+                <td>Подр. 2</td>
+                <td>Федоров Д.В.</td>
+                <td><input class="limit-input" type="text" value="50 000" onchange="markChanged(this)"></td>
+                <td>31 200 ₽</td>
+                <td>18 800 ₽</td>
+                <td><span class="badge badge-warning">⚠ Внимание</span></td>
+                <td><button class="btn btn-sm btn-secondary">Детали</button></td>
+              </tr>
+              <!-- Строка 5 -->
+              <tr data-div="2" data-name="савёловская">
+                <td><strong>KARI Савёловская</strong></td>
+                <td>Подр. 2</td>
+                <td>Новикова Л.А.</td>
+                <td><input class="limit-input" type="text" value="40 000" onchange="markChanged(this)"></td>
+                <td>3 100 ₽</td>
+                <td>36 900 ₽</td>
+                <td><span class="badge badge-success">✓ В норме</span></td>
+                <td><button class="btn btn-sm btn-secondary">Детали</button></td>
+              </tr>
+              <!-- Строка 6 — не задан -->
+              <tr data-div="2" data-name="марьина роща">
+                <td><strong>KARI Марьина Роща</strong></td>
+                <td>Подр. 2</td>
+                <td>Белов С.Н.</td>
+                <td><input class="limit-input" type="text" value="" placeholder="Не задан" onchange="markChanged(this)"></td>
+                <td style="color:#ccc;">—</td>
+                <td style="color:#ccc;">—</td>
+                <td><span class="badge badge-orange">○ Не задан</span></td>
+                <td><button class="btn btn-sm btn-primary">Задать</button></td>
+              </tr>
+              <!-- Строка 7 -->
+              <tr data-div="3" data-name="коломенская">
+                <td><strong>KARI Коломенская</strong></td>
+                <td>Подр. 3</td>
+                <td>Орлова Т.И.</td>
+                <td><input class="limit-input" type="text" value="55 000" onchange="markChanged(this)"></td>
+                <td>44 700 ₽</td>
+                <td>10 300 ₽</td>
+                <td><span class="badge badge-warning">⚠ Внимание</span></td>
+                <td><button class="btn btn-sm btn-secondary">Детали</button></td>
+              </tr>
+              <!-- Строка 8 — не задан -->
+              <tr data-div="3" data-name="щёлковская">
+                <td><strong>KARI Щёлковская</strong></td>
+                <td>Подр. 3</td>
+                <td>Захаров В.Е.</td>
+                <td><input class="limit-input" type="text" value="" placeholder="Не задан" onchange="markChanged(this)"></td>
+                <td style="color:#ccc;">—</td>
+                <td style="color:#ccc;">—</td>
+                <td><span class="badge badge-orange">○ Не задан</span></td>
+                <td><button class="btn btn-sm btn-primary">Задать</button></td>
+              </tr>
+              <!-- Строка 9 -->
+              <tr data-div="3" data-name="домодедово">
+                <td><strong>KARI Домодедово</strong></td>
+                <td>Подр. 3</td>
+                <td>Павлова М.С.</td>
+                <td><input class="limit-input" type="text" value="30 000" onchange="markChanged(this)"></td>
+                <td>5 400 ₽</td>
+                <td>24 600 ₽</td>
+                <td><span class="badge badge-success">✓ В норме</span></td>
+                <td><button class="btn btn-sm btn-secondary">Детали</button></td>
+              </tr>
+              <!-- Строка 10 — не задан -->
+              <tr data-div="3" data-name="мытищи">
+                <td><strong>KARI Мытищи</strong></td>
+                <td>Подр. 3</td>
+                <td>Куликов О.Р.</td>
+                <td><input class="limit-input" type="text" value="" placeholder="Не задан" onchange="markChanged(this)"></td>
+                <td style="color:#ccc;">—</td>
+                <td style="color:#ccc;">—</td>
+                <td><span class="badge badge-orange">○ Не задан</span></td>
+                <td><button class="btn btn-sm btn-primary">Задать</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-footer">
+          <span>Показано 10 из 47 магазинов</span>
+          <div class="pagination">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">4</button>
+            <button class="page-btn">5</button>
+            <button class="page-btn">›</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- История изменений -->
+      <div class="content-block">
+        <div class="content-block-header">
+          <div class="content-block-title">📋 История изменений лимитов</div>
+          <button class="btn btn-outline btn-sm" onclick="exportToExcel(null,'История_лимитов','История изменений')" style="border-color:#217346;color:#217346;" title="Выгрузить в Excel">
+            📊 Excel
+          </button>
+        </div>
+        <table class="history-table" id="history-table">
+          <tr>
+            <td>KARI Арбат</td>
+            <td>Лимит изменён: 40 000 → 45 000 ₽</td>
+            <td>Андрей Петров</td>
+            <td><span class="history-time">15 фев 14:23</span></td>
+          </tr>
+          <tr>
+            <td>KARI Тверская</td>
+            <td>Лимит установлен: 60 000 ₽</td>
+            <td>Андрей Петров</td>
+            <td><span class="history-time">14 фев 09:15</span></td>
+          </tr>
+          <tr>
+            <td>Массовая установка (8 магазинов)</td>
+            <td>Лимит установлен: 35 000 ₽ каждому</td>
+            <td>Андрей Петров</td>
+            <td><span class="history-time">1 фев 08:00</span></td>
+          </tr>
+        </table>
+      </div>
+
+      </div><!-- /sec-r-budget -->
+
+      <!-- ===== ЗАГЛУШКИ РАЗДЕЛОВ (регион) ===== -->
+      <!-- ===== ДАШБОРД (регион) ===== -->
+      <div class="sec" id="sec-r-dashboard">
+        <div class="breadcrumb">Главная <span class="breadcrumb-sep">›</span> <span class="breadcrumb-current">Дашборд</span></div>
+        <div class="section-header">
+          <div><div class="section-title">Дашборд региона</div><div class="section-subtitle">Иркутский регион · Март 2026 · 100 магазинов · 3 подразделения</div></div>
+        </div>
+        <!-- Сигналы/тревоги -->
+        <div style="background:#fff8f0;border:1.5px solid #FF9800;border-radius:10px;padding:14px 18px;margin-bottom:18px;display:flex;align-items:flex-start;gap:14px">
+          <span style="font-size:22px;margin-top:2px">⚠️</span>
+          <div>
+            <div style="font-weight:800;color:#E65100;margin-bottom:4px">2 сигнала требуют внимания</div>
+            <div style="color:#555;font-size:13px;line-height:1.7">
+              🔴 <strong>KARI Тверская (Подр. 1)</strong> — бюджет исчерпан на 97%, лимит 60 000 ₽ &nbsp;|&nbsp;
+              🔴 <strong>Борисов И.П.</strong> — потерял статус самозанятого, блокировка выплат
+            </div>
+          </div>
+        </div>
+        <div class="kpi-grid kpi-grid-4">
+          <div class="kpi-card purple"><div class="kpi-label">Бюджет региона</div><div class="kpi-value">1 200 000 ₽</div><div class="kpi-sub">Q1 2026 · квартал</div></div>
+          <div class="kpi-card blue"><div class="kpi-label">Израсходовано</div><div class="kpi-value">487 300 ₽</div><div class="kpi-sub">41% от бюджета</div><div class="progress-wrap"><div class="progress-bar-bg"><div class="progress-bar-fill yellow" style="width:41%"></div></div><div class="progress-pct">41% использовано</div></div></div>
+          <div class="kpi-card green"><div class="kpi-label">Самозанятых</div><div class="kpi-value">487</div><div class="kpi-sub">из 500 плановых</div></div>
+          <div class="kpi-card orange"><div class="kpi-label">Активных заданий</div><div class="kpi-value">73</div><div class="kpi-sub">18 на проверке</div></div>
+        </div>
+        <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px">
+          <div class="kpi-card" style="background:#f0fdf4;border:none"><div class="kpi-label">Выплачено в марте</div><div class="kpi-value" style="color:#166534">214 650 ₽</div><div class="kpi-sub">98 транзакций</div></div>
+          <div class="kpi-card" style="background:#fff0f0;border:none"><div class="kpi-label">Критичных магазинов</div><div class="kpi-value" style="color:#e53935">3</div><div class="kpi-sub">Бюджет &gt; 85%</div></div>
+          <div class="kpi-card" style="background:#fffff0;border:none"><div class="kpi-label">ФНС нарушения</div><div class="kpi-value" style="color:#b45309">2</div><div class="kpi-sub">Статус потерян</div></div>
+          <div class="kpi-card" style="background:#f0f9ff;border:none"><div class="kpi-label">Чеков за март</div><div class="kpi-value" style="color:#0369a1">98</div><div class="kpi-sub">1 аннулирован</div></div>
+        </div>
+        <div class="content-block">
+          <div class="content-block-header"><div class="content-block-title">Подразделения — сводка</div></div>
+          <table class="data-table">
+            <thead><tr><th>Подразделение</th><th>Директор</th><th>Магазинов</th><th>Исполнителей</th><th>Лимит</th><th>Израсходовано</th><th>% Использования</th><th>Сигналы</th></tr></thead>
+            <tbody>
+              <tr class="row-critical"><td><strong>Подр. 1 — Москва Центр</strong></td><td>Фомин Д.А.</td><td>3</td><td>12</td><td>140 000 ₽</td><td style="font-weight:800;color:#e53935">136 900 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:98%;background:#e53935"></div></div><span class="table-progress-pct" style="color:#e53935">98%</span></div></td><td><span class="badge badge-danger">● 2 критично</span></td></tr>
+              <tr><td><strong>Подр. 2 — Москва Запад</strong></td><td>Ковалёва Т.С.</td><td>4</td><td>18</td><td>200 000 ₽</td><td>91 200 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:46%;background:#4CAF50"></div></div><span class="table-progress-pct">46%</span></div></td><td><span class="badge badge-success">✓ Норма</span></td></tr>
+              <tr><td><strong>Подр. 3 — Москва Север</strong></td><td>Зайцев П.О.</td><td>3</td><td>14</td><td>160 000 ₽</td><td>72 400 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:45%;background:#4CAF50"></div></div><span class="table-progress-pct">45%</span></div></td><td><span class="badge badge-success">✓ Норма</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="content-block">
+          <div class="content-block-header"><div class="content-block-title">Последние задания по региону</div><button class="btn btn-outline btn-sm" onclick="showSection(document.querySelector('#cabinet-region .menu-item:nth-child(4)'),'sec-r-tasks','cabinet-region');return false">Все задания →</button></div>
+          <table class="data-table">
+            <thead><tr><th>Задание</th><th>Подразделение</th><th>Магазин</th><th>Исполнитель</th><th>Сумма</th><th>Статус</th></tr></thead>
+            <tbody>
+              <tr><td>Мерчандайзинг (весна)</td><td>Подр. 1</td><td>KARI Тверская</td><td>Петрова М.С.</td><td>3 200 ₽</td><td><span class="badge badge-warning">На проверке</span></td></tr>
+              <tr><td>Инвентаризация склада</td><td>Подр. 2</td><td>KARI Кутузовская</td><td>Лебедев И.Р.</td><td>5 000 ₽</td><td><span class="badge badge-info">В работе</span></td></tr>
+              <tr><td>Уборка торгового зала</td><td>Подр. 3</td><td>KARI Медведково</td><td>Крылов В.А.</td><td>1 500 ₽</td><td><span class="badge badge-success">Завершено</span></td></tr>
+              <tr><td>Разгрузка (50 коробок)</td><td>Подр. 1</td><td>KARI Арбат</td><td>Козлова Н.Р.</td><td>4 200 ₽</td><td><span class="badge badge-success">Завершено</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== МАГАЗИНЫ (регион) ===== -->
+      <div class="sec" id="sec-r-stores">
+        <div class="breadcrumb">Главная <span class="breadcrumb-sep">›</span> <span class="breadcrumb-current">Магазины</span></div>
+        <div class="section-header">
+          <div><div class="section-title">Магазины региона</div><div class="section-subtitle">Иркутский регион · 10 магазинов · 3 подразделения</div></div>
+          <button class="btn btn-outline btn-sm" style="border-color:#217346;color:#217346" onclick="exportToExcel('stores-region-table','Магазины_региона','Магазины')">📊 Excel</button>
+        </div>
+        <div class="content-block">
+          <div class="filters-row">
+            <input class="filter-input" placeholder="🔍 Поиск по магазину, директору..." style="max-width:280px">
+            <select class="filter-select"><option>Все подразделения</option><option>Подр. 1 — Москва Центр</option><option>Подр. 2 — Москва Запад</option><option>Подр. 3 — Москва Север</option></select>
+            <select class="filter-select"><option>Все статусы</option><option>В норме</option><option>Внимание (>70%)</option><option>Критично (>85%)</option></select>
+          </div>
+          <table class="data-table" id="stores-region-table">
+            <thead><tr><th>Магазин</th><th>Подразделение</th><th>Директор магазина</th><th>Исполнит.</th><th>Акт. заданий</th><th>Лимит</th><th>Израсходовано</th><th>% лимита</th><th>Статус</th></tr></thead>
+            <tbody>
+              <tr class="row-critical"><td><strong>KARI Тверская</strong></td><td>Подр. 1</td><td>Козлов А.П.</td><td>5</td><td>4</td><td>60 000 ₽</td><td style="font-weight:800;color:#e53935">58 100 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:97%;background:#e53935"></div></div><span class="table-progress-pct" style="color:#e53935">97%</span></div></td><td><span class="badge badge-danger">● Критично</span></td></tr>
+              <tr class="row-warning"><td><strong>KARI Кутузовская</strong></td><td>Подр. 2</td><td>Никитин В.О.</td><td>6</td><td>5</td><td>55 000 ₽</td><td>46 200 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:84%;background:#FF9800"></div></div><span class="table-progress-pct" style="color:#E65100">84%</span></div></td><td><span class="badge badge-warning">⚠ Внимание</span></td></tr>
+              <tr><td><strong>KARI Арбат</strong></td><td>Подр. 1</td><td>Смирнова И.В.</td><td>4</td><td>2</td><td>45 000 ₽</td><td>12 300 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:27%;background:#4CAF50"></div></div><span class="table-progress-pct">27%</span></div></td><td><span class="badge badge-success">✓ Норма</span></td></tr>
+              <tr><td><strong>KARI Пушкинская</strong></td><td>Подр. 1</td><td>Миронова С.К.</td><td>3</td><td>2</td><td>35 000 ₽</td><td>8 500 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:24%;background:#4CAF50"></div></div><span class="table-progress-pct">24%</span></div></td><td><span class="badge badge-success">✓ Норма</span></td></tr>
+              <tr><td><strong>KARI Фили</strong></td><td>Подр. 2</td><td>Громов С.Д.</td><td>5</td><td>3</td><td>50 000 ₽</td><td>28 400 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:57%;background:#4CAF50"></div></div><span class="table-progress-pct">57%</span></div></td><td><span class="badge badge-success">✓ Норма</span></td></tr>
+              <tr><td><strong>KARI Сходненская</strong></td><td>Подр. 2</td><td>Яковлева О.В.</td><td>4</td><td>2</td><td>45 000 ₽</td><td>16 600 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:37%;background:#4CAF50"></div></div><span class="table-progress-pct">37%</span></div></td><td><span class="badge badge-success">✓ Норма</span></td></tr>
+              <tr><td><strong>KARI Медведково</strong></td><td>Подр. 3</td><td>Тихонов Р.А.</td><td>5</td><td>4</td><td>55 000 ₽</td><td>31 200 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:57%;background:#4CAF50"></div></div><span class="table-progress-pct">57%</span></div></td><td><span class="badge badge-success">✓ Норма</span></td></tr>
+              <tr><td><strong>KARI Алтуфьево</strong></td><td>Подр. 3</td><td>Антонов К.С.</td><td>4</td><td>1</td><td>45 000 ₽</td><td>22 800 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:51%;background:#4CAF50"></div></div><span class="table-progress-pct">51%</span></div></td><td><span class="badge badge-success">✓ Норма</span></td></tr>
+              <tr><td><strong>KARI Бибирево</strong></td><td>Подр. 3</td><td>Фёдорова Л.Н.</td><td>3</td><td>2</td><td>40 000 ₽</td><td>18 400 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:46%;background:#4CAF50"></div></div><span class="table-progress-pct">46%</span></div></td><td><span class="badge badge-success">✓ Норма</span></td></tr>
+              <tr class="row-warning"><td><strong>KARI Строгино</strong></td><td>Подр. 2</td><td>Беляев А.В.</td><td>3</td><td>3</td><td>50 000 ₽</td><td>38 600 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:77%;background:#FF9800"></div></div><span class="table-progress-pct" style="color:#E65100">77%</span></div></td><td><span class="badge badge-warning">⚠ Внимание</span></td></tr>
+            </tbody>
+          </table>
+          <div class="table-footer"><span>Показано 10 из 100 магазинов региона</span><div class="pagination"><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn">…</button><button class="page-btn">10</button><button class="page-btn">›</button></div></div>
+        </div>
+      </div>
+
+      <!-- ===== ИСПОЛНИТЕЛИ (регион) ===== -->
+      <div class="sec" id="sec-r-users">
+        <div class="breadcrumb">Главная <span class="breadcrumb-sep">›</span> <span class="breadcrumb-current">Исполнители</span></div>
+        <div class="section-header">
+          <div><div class="section-title">Исполнители региона</div><div class="section-subtitle">487 самозанятых · 480 активных · 2 нарушения ФНС · 5 у лимита дохода</div></div>
+          <button class="btn btn-outline btn-sm" style="border-color:#217346;color:#217346" onclick="exportToExcel('users-region-table','Исполнители_региона','Исполнители')">📊 Excel</button>
+        </div>
+        <div class="kpi-grid kpi-grid-4">
+          <div class="kpi-card purple"><div class="kpi-label">Всего исполнителей</div><div class="kpi-value">487</div><div class="kpi-sub">По региону</div></div>
+          <div class="kpi-card green"><div class="kpi-label">Статус ФНС OK</div><div class="kpi-value">483</div><div class="kpi-sub">Действующие самозанятые</div></div>
+          <div class="kpi-card danger" style="background:#fff0f0"><div class="kpi-label">Нарушения ФНС</div><div class="kpi-value" style="color:#e53935">2</div><div class="kpi-sub">Требуют блокировки</div></div>
+          <div class="kpi-card orange"><div class="kpi-label">У лимита дохода</div><div class="kpi-value">5</div><div class="kpi-sub">Более 80% от 2,4 млн</div></div>
+        </div>
+        <div class="content-block">
+          <div class="filters-row">
+            <input class="filter-input" placeholder="🔍 Поиск по ФИО, телефону, ИНН..." style="max-width:300px">
+            <select class="filter-select"><option>Все подразделения</option><option>Подр. 1</option><option>Подр. 2</option><option>Подр. 3</option></select>
+            <select class="filter-select"><option>Все статусы ФНС</option><option>Самозанятый</option><option>Не самозанятый</option></select>
+            <select class="filter-select"><option>Все лимиты</option><option>Критично (&gt;80%)</option><option>Внимание (&gt;60%)</option><option>Норма</option></select>
+          </div>
+          <table class="data-table" id="users-region-table">
+            <thead><tr><th>ФИО</th><th>Телефон</th><th>ИНН</th><th>Подр-е</th><th>Магазин</th><th>Статус ФНС</th><th>Доход за год</th><th>% лимита</th><th>Действия</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Иванов Алексей И.</strong></td><td>+7 926 100-01-01</td><td>381300000101</td><td>Подр. 1</td><td>KARI Арбат</td><td><span class="badge badge-success">✓ Самозанятый</span></td><td>345 000 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:14%;background:#4CAF50"></div></div><span class="table-progress-pct">14%</span></div></td><td><button class="btn btn-sm btn-secondary">История</button></td></tr>
+              <tr><td><strong>Петрова Мария С.</strong></td><td>+7 926 100-01-02</td><td>381300000102</td><td>Подр. 1</td><td>KARI Тверская</td><td><span class="badge badge-success">✓ Самозанятый</span></td><td>1 820 000 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:76%;background:#FF9800"></div></div><span class="table-progress-pct" style="color:#E65100">76%</span></div></td><td><button class="btn btn-sm btn-secondary">История</button></td></tr>
+              <tr class="row-critical"><td><strong>Борисов Игорь П.</strong></td><td>+7 926 100-01-05</td><td>381300000105</td><td>Подр. 1</td><td>KARI Тверская</td><td><span class="badge badge-danger">✗ Не самозанятый</span></td><td>92 000 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:4%;background:#e53935"></div></div><span class="table-progress-pct">4%</span></div></td><td><button class="btn btn-sm btn-danger">Заблокировать</button></td></tr>
+              <tr><td><strong>Лебедев Иван Р.</strong></td><td>+7 926 200-02-01</td><td>381300000201</td><td>Подр. 2</td><td>KARI Кутузовская</td><td><span class="badge badge-success">✓ Самозанятый</span></td><td>680 000 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:28%;background:#4CAF50"></div></div><span class="table-progress-pct">28%</span></div></td><td><button class="btn btn-sm btn-secondary">История</button></td></tr>
+              <tr class="row-warning"><td><strong>Соколова Диана О.</strong></td><td>+7 926 200-02-03</td><td>381300000203</td><td>Подр. 2</td><td>KARI Фили</td><td><span class="badge badge-success">✓ Самозанятый</span></td><td>2 100 000 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:88%;background:#e53935"></div></div><span class="table-progress-pct" style="color:#e53935">88%</span></div></td><td><button class="btn btn-sm btn-secondary">История</button></td></tr>
+              <tr class="row-critical"><td><strong>Власов Дмитрий К.</strong></td><td>+7 926 300-03-07</td><td>381300000307</td><td>Подр. 3</td><td>KARI Медведково</td><td><span class="badge badge-danger">✗ Не самозанятый</span></td><td>430 000 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:18%;background:#4CAF50"></div></div><span class="table-progress-pct">18%</span></div></td><td><button class="btn btn-sm btn-danger">Заблокировать</button></td></tr>
+              <tr><td><strong>Крылов Виталий А.</strong></td><td>+7 926 300-03-01</td><td>381300000301</td><td>Подр. 3</td><td>KARI Медведково</td><td><span class="badge badge-success">✓ Самозанятый</span></td><td>510 000 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:21%;background:#4CAF50"></div></div><span class="table-progress-pct">21%</span></div></td><td><button class="btn btn-sm btn-secondary">История</button></td></tr>
+            </tbody>
+          </table>
+          <div class="table-footer"><span>Показано 7 из 487 исполнителей</span><div class="pagination"><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn">…</button><button class="page-btn">70</button><button class="page-btn">›</button></div></div>
+        </div>
+      </div>
+
+      <!-- ===== ЗАДАНИЯ (регион) ===== -->
+      <div class="sec" id="sec-r-tasks">
+        <div class="breadcrumb">Главная <span class="breadcrumb-sep">›</span> <span class="breadcrumb-current">Задания</span></div>
+        <div class="section-header">
+          <div><div class="section-title">Задания по региону</div><div class="section-subtitle">Март 2026 · 247 заданий · 100 магазинов</div></div>
+          <button class="btn btn-outline btn-sm" style="border-color:#217346;color:#217346" onclick="exportToExcel('tasks-region-table','Задания_региона','Задания')">📊 Excel</button>
+        </div>
+        <div class="kpi-grid kpi-grid-4">
+          <div class="kpi-card blue"><div class="kpi-label">Всего заданий</div><div class="kpi-value">247</div><div class="kpi-sub">В марте 2026</div></div>
+          <div class="kpi-card orange"><div class="kpi-label">В работе</div><div class="kpi-value">73</div><div class="kpi-sub">Активных прямо сейчас</div></div>
+          <div class="kpi-card purple"><div class="kpi-label">На проверке</div><div class="kpi-value">18</div><div class="kpi-sub">Ожидают приёмки</div></div>
+          <div class="kpi-card green"><div class="kpi-label">Завершено</div><div class="kpi-value">142</div><div class="kpi-sub">Оплачено: 214 650 ₽</div></div>
+        </div>
+        <div class="content-block">
+          <div class="filters-row">
+            <input class="filter-input" placeholder="🔍 Поиск по названию, исполнителю..." style="max-width:280px">
+            <select class="filter-select"><option>Все статусы</option><option>Открыто</option><option>В работе</option><option>На проверке</option><option>Завершено</option><option>Отменено</option></select>
+            <select class="filter-select"><option>Все подразделения</option><option>Подр. 1</option><option>Подр. 2</option><option>Подр. 3</option></select>
+            <select class="filter-select"><option>Все типы</option><option>Мерчандайзинг</option><option>Уборка</option><option>Промоутер</option><option>Инвентаризация</option><option>Разгрузка</option></select>
+          </div>
+          <table class="data-table" id="tasks-region-table">
+            <thead><tr><th>Задание</th><th>Тип</th><th>Подр-е</th><th>Магазин</th><th>Исполнитель</th><th>Дедлайн</th><th>Сумма</th><th>Статус</th></tr></thead>
+            <tbody>
+              <tr class="row-warning"><td><strong>Выкладка весенней коллекции</strong></td><td><span style="font-size:11px;background:#fef9ec;color:#92400e;padding:2px 8px;border-radius:4px;font-weight:600">Мерчандайзинг</span></td><td>Подр. 1</td><td>KARI Тверская</td><td>Петрова М.С.</td><td>05.03.2026</td><td style="font-weight:800">3 200 ₽</td><td><span class="badge badge-warning">На проверке</span></td></tr>
+              <tr><td><strong>Инвентаризация склада</strong></td><td><span style="font-size:11px;background:#f0fdf4;color:#166534;padding:2px 8px;border-radius:4px;font-weight:600">Инвентаризация</span></td><td>Подр. 2</td><td>KARI Кутузовская</td><td>Лебедев И.Р.</td><td>07.03.2026</td><td style="font-weight:800">5 000 ₽</td><td><span class="badge badge-info">В работе</span></td></tr>
+              <tr><td><strong>Уборка торгового зала</strong></td><td><span style="font-size:11px;background:#f0f9ff;color:#0369a1;padding:2px 8px;border-radius:4px;font-weight:600">Уборка</span></td><td>Подр. 3</td><td>KARI Медведково</td><td>Крылов В.А.</td><td>06.03.2026</td><td style="font-weight:800">1 500 ₽</td><td><span class="badge badge-success">Завершено</span></td></tr>
+              <tr><td><strong>Промо-акция «Весна 2026»</strong></td><td><span style="font-size:11px;background:#eff6ff;color:#1d4ed8;padding:2px 8px;border-radius:4px;font-weight:600">Промоутер</span></td><td>Подр. 2</td><td>KARI Фили</td><td style="color:#999">— не назначен</td><td>10.03.2026</td><td style="font-weight:800">2 500 ₽</td><td><span class="badge" style="background:#eff6ff;color:#1d4ed8">Открыто</span></td></tr>
+              <tr><td><strong>Разгрузка товара (50 коробок)</strong></td><td><span style="font-size:11px;background:#fdf4ff;color:#7e22ce;padding:2px 8px;border-radius:4px;font-weight:600">Разгрузка</span></td><td>Подр. 1</td><td>KARI Арбат</td><td>Козлова Н.Р.</td><td>02.03.2026</td><td style="font-weight:800">4 200 ₽</td><td><span class="badge badge-success">Завершено</span></td></tr>
+              <tr class="row-warning"><td><strong>Оформление витрины</strong></td><td><span style="font-size:11px;background:#fef9ec;color:#92400e;padding:2px 8px;border-radius:4px;font-weight:600">Мерчандайзинг</span></td><td>Подр. 1</td><td>KARI Тверская</td><td>Борисов И.П.</td><td>04.03.2026</td><td style="font-weight:800">2 100 ₽</td><td><span class="badge badge-warning">На проверке</span></td></tr>
+              <tr><td><strong>Уборка складских помещений</strong></td><td><span style="font-size:11px;background:#f0f9ff;color:#0369a1;padding:2px 8px;border-radius:4px;font-weight:600">Уборка</span></td><td>Подр. 3</td><td>KARI Алтуфьево</td><td>Лисицына Е.В.</td><td>08.03.2026</td><td style="font-weight:800">1 800 ₽</td><td><span class="badge badge-info">В работе</span></td></tr>
+              <tr><td><strong>Приёмка весенней коллекции</strong></td><td><span style="font-size:11px;background:#fdf4ff;color:#7e22ce;padding:2px 8px;border-radius:4px;font-weight:600">Разгрузка</span></td><td>Подр. 2</td><td>KARI Строгино</td><td>Медведев О.А.</td><td>09.03.2026</td><td style="font-weight:800">3 800 ₽</td><td><span class="badge badge-info">В работе</span></td></tr>
+            </tbody>
+          </table>
+          <div class="table-footer"><span>Показано 8 из 247 заданий</span><div class="pagination"><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn">…</button><button class="page-btn">31</button><button class="page-btn">›</button></div></div>
+        </div>
+      </div>
+
+      <!-- ===== ВЫПЛАТЫ (регион) ===== -->
+      <div class="sec" id="sec-r-payments">
+        <div class="breadcrumb">Главная <span class="breadcrumb-sep">›</span> <span class="breadcrumb-current">Выплаты</span></div>
+        <div class="section-header">
+          <div><div class="section-title">Выплаты по региону</div><div class="section-subtitle">Март 2026 · Иркутский регион · Совкомбанк</div></div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-outline btn-sm" style="border-color:#217346;color:#217346">📥 Загрузить реестр Excel</button>
+            <button class="btn btn-outline btn-sm" style="border-color:#217346;color:#217346" onclick="exportToExcel('payments-region-table','Выплаты_региона','Выплаты')">📊 Выгрузить Excel</button>
+          </div>
+        </div>
+        <div class="kpi-grid kpi-grid-4">
+          <div class="kpi-card purple"><div class="kpi-label">Выплачено в марте</div><div class="kpi-value">214 650 ₽</div><div class="kpi-sub">98 транзакций</div></div>
+          <div class="kpi-card green"><div class="kpi-label">Успешно</div><div class="kpi-value">96</div><div class="kpi-sub">Доставлено исполнителям</div></div>
+          <div class="kpi-card orange"><div class="kpi-label">В обработке</div><div class="kpi-value">2</div><div class="kpi-sub">Ожидают подтверждения</div></div>
+          <div class="kpi-card blue"><div class="kpi-label">Реестров Excel</div><div class="kpi-value">3</div><div class="kpi-sub">Загружено в марте</div></div>
+        </div>
+        <!-- Последний реестр -->
+        <div style="background:#f0fdf4;border:1.5px solid #4CAF50;border-radius:10px;padding:14px 18px;margin-bottom:18px">
+          <div style="font-weight:800;color:#166534;margin-bottom:8px">📊 Последний реестр: реестр_март_03.03.2026.xlsx</div>
+          <div style="display:flex;gap:32px;font-size:13px;color:#555">
+            <span>📋 Строк: <strong>42</strong></span>
+            <span>💰 Сумма: <strong>89 400 ₽</strong></span>
+            <span>✅ Обработано: <strong>42 / 42</strong></span>
+            <span>📅 Загружен: <strong>03.03.2026 09:15</strong></span>
+            <span>👤 Загрузил: <strong>Фомин Д.А. (Бухгалтерия)</strong></span>
+          </div>
+        </div>
+        <div class="content-block">
+          <div class="filters-row">
+            <input class="filter-input" placeholder="🔍 Поиск по исполнителю, ИНН..." style="max-width:280px">
+            <select class="filter-select"><option>Все статусы</option><option>Успешно</option><option>В обработке</option><option>Ошибка</option></select>
+            <select class="filter-select"><option>Все подразделения</option><option>Подр. 1</option><option>Подр. 2</option><option>Подр. 3</option></select>
+            <select class="filter-select"><option>Март 2026</option><option>Февраль 2026</option><option>Январь 2026</option></select>
+          </div>
+          <table class="data-table" id="payments-region-table">
+            <thead><tr><th>Исполнитель</th><th>ИНН</th><th>Подр-е</th><th>Магазин</th><th>Задание</th><th>Сумма</th><th>Дата</th><th>Банк</th><th>Чек ФНС</th><th>Статус</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Иванов А.И.</strong></td><td>381300000101</td><td>Подр. 1</td><td>KARI Арбат</td><td>Уборка зала</td><td style="font-weight:800">1 800 ₽</td><td>03.03.2026</td><td>Сбербанк</td><td><span class="badge badge-success">✓</span></td><td><span class="badge badge-success">Успешно</span></td></tr>
+              <tr><td><strong>Лебедев И.Р.</strong></td><td>381300000201</td><td>Подр. 2</td><td>KARI Кутузовская</td><td>Инвентаризация</td><td style="font-weight:800">5 000 ₽</td><td>03.03.2026</td><td>Тинькофф</td><td><span class="badge badge-success">✓</span></td><td><span class="badge badge-success">Успешно</span></td></tr>
+              <tr><td><strong>Крылов В.А.</strong></td><td>381300000301</td><td>Подр. 3</td><td>KARI Медведково</td><td>Уборка зала</td><td style="font-weight:800">1 500 ₽</td><td>02.03.2026</td><td>ВТБ</td><td><span class="badge badge-success">✓</span></td><td><span class="badge badge-success">Успешно</span></td></tr>
+              <tr><td><strong>Козлова Н.Р.</strong></td><td>381300000104</td><td>Подр. 1</td><td>KARI Арбат</td><td>Разгрузка</td><td style="font-weight:800">4 200 ₽</td><td>02.03.2026</td><td>Альфа-Банк</td><td><span class="badge badge-success">✓</span></td><td><span class="badge badge-success">Успешно</span></td></tr>
+              <tr><td><strong>Соколова Д.О.</strong></td><td>381300000203</td><td>Подр. 2</td><td>KARI Фили</td><td>Мерчандайзинг</td><td style="font-weight:800">3 600 ₽</td><td>01.03.2026</td><td>Сбербанк</td><td><span class="badge badge-success">✓</span></td><td><span class="badge badge-success">Успешно</span></td></tr>
+              <tr><td><strong>Медведев О.А.</strong></td><td>381300000208</td><td>Подр. 2</td><td>KARI Строгино</td><td>Приёмка товара</td><td style="font-weight:800">3 800 ₽</td><td>28.02.2026</td><td>Тинькофф</td><td><span class="badge badge-warning">⏳</span></td><td><span class="badge badge-warning">В обработке</span></td></tr>
+            </tbody>
+          </table>
+          <div class="table-footer"><span>Показано 6 из 98 выплат · Итого: 19 900 ₽</span><div class="pagination"><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn">…</button><button class="page-btn">17</button><button class="page-btn">›</button></div></div>
+        </div>
+      </div>
+
+      <!-- ===== ДОКУМЕНТЫ (регион) ===== -->
+      <div class="sec" id="sec-r-docs">
+        <div class="breadcrumb">Главная <span class="breadcrumb-sep">›</span> <span class="breadcrumb-current">Документы</span></div>
+        <div class="section-header">
+          <div><div class="section-title">Документы региона</div><div class="section-subtitle">Договоры ГПХ и акты выполненных работ · 487 исполнителей</div></div>
+          <button class="btn btn-outline btn-sm" style="border-color:#217346;color:#217346" onclick="exportToExcel('docs-region-table','Документы_региона','Документы')">📊 Excel</button>
+        </div>
+        <div class="kpi-grid kpi-grid-4">
+          <div class="kpi-card purple"><div class="kpi-label">Договоров ГПХ</div><div class="kpi-value">487</div><div class="kpi-sub">Все подписаны</div></div>
+          <div class="kpi-card green"><div class="kpi-label">Актов за март</div><div class="kpi-value">142</div><div class="kpi-sub">Подписано ПЭП (SMS)</div></div>
+          <div class="kpi-card orange"><div class="kpi-label">На подписании</div><div class="kpi-value">18</div><div class="kpi-sub">Ожидают SMS-кода</div></div>
+          <div class="kpi-card blue"><div class="kpi-label">Всего документов</div><div class="kpi-value">1 628</div><div class="kpi-sub">С начала работы</div></div>
+        </div>
+        <div class="content-block">
+          <div class="filters-row">
+            <input class="filter-input" placeholder="🔍 Поиск по ФИО, номеру документа..." style="max-width:280px">
+            <select class="filter-select"><option>Все типы</option><option>Договор ГПХ</option><option>Акт выполненных работ</option></select>
+            <select class="filter-select"><option>Все статусы</option><option>Подписан</option><option>На подписании</option><option>Создан</option></select>
+            <select class="filter-select"><option>Все подразделения</option><option>Подр. 1</option><option>Подр. 2</option><option>Подр. 3</option></select>
+          </div>
+          <table class="data-table" id="docs-region-table">
+            <thead><tr><th>Документ</th><th>Тип</th><th>Исполнитель</th><th>Подр-е</th><th>Магазин</th><th>Дата</th><th>Сумма</th><th>Статус</th><th>Действия</th></tr></thead>
+            <tbody>
+              <tr><td><strong>АВР №2026-031-001</strong></td><td><span style="font-size:11px;background:#f0fdf4;color:#166534;padding:2px 8px;border-radius:4px;font-weight:600">Акт</span></td><td>Иванов А.И.</td><td>Подр. 1</td><td>KARI Арбат</td><td>03.03.2026</td><td style="font-weight:800">1 800 ₽</td><td><span class="badge badge-success">✓ Подписан</span></td><td><button class="btn btn-sm btn-secondary">PDF</button></td></tr>
+              <tr><td><strong>АВР №2026-031-007</strong></td><td><span style="font-size:11px;background:#f0fdf4;color:#166534;padding:2px 8px;border-radius:4px;font-weight:600">Акт</span></td><td>Лебедев И.Р.</td><td>Подр. 2</td><td>KARI Кутузовская</td><td>03.03.2026</td><td style="font-weight:800">5 000 ₽</td><td><span class="badge badge-success">✓ Подписан</span></td><td><button class="btn btn-sm btn-secondary">PDF</button></td></tr>
+              <tr><td><strong>АВР №2026-031-012</strong></td><td><span style="font-size:11px;background:#f0fdf4;color:#166534;padding:2px 8px;border-radius:4px;font-weight:600">Акт</span></td><td>Петрова М.С.</td><td>Подр. 1</td><td>KARI Тверская</td><td>02.03.2026</td><td style="font-weight:800">3 200 ₽</td><td><span class="badge badge-warning">⏳ На подписании</span></td><td><button class="btn btn-sm btn-primary">Напомнить</button></td></tr>
+              <tr><td><strong>ДГП №2026-001-001</strong></td><td><span style="font-size:11px;background:#eff6ff;color:#1d4ed8;padding:2px 8px;border-radius:4px;font-weight:600">Договор</span></td><td>Иванов А.И.</td><td>Подр. 1</td><td>KARI Арбат</td><td>15.01.2026</td><td style="color:#999">—</td><td><span class="badge badge-success">✓ Подписан</span></td><td><button class="btn btn-sm btn-secondary">PDF</button></td></tr>
+              <tr><td><strong>АВР №2026-031-019</strong></td><td><span style="font-size:11px;background:#f0fdf4;color:#166534;padding:2px 8px;border-radius:4px;font-weight:600">Акт</span></td><td>Крылов В.А.</td><td>Подр. 3</td><td>KARI Медведково</td><td>02.03.2026</td><td style="font-weight:800">1 500 ₽</td><td><span class="badge badge-success">✓ Подписан</span></td><td><button class="btn btn-sm btn-secondary">PDF</button></td></tr>
+              <tr><td><strong>АВР №2026-031-025</strong></td><td><span style="font-size:11px;background:#f0fdf4;color:#166534;padding:2px 8px;border-radius:4px;font-weight:600">Акт</span></td><td>Соколова Д.О.</td><td>Подр. 2</td><td>KARI Фили</td><td>01.03.2026</td><td style="font-weight:800">3 600 ₽</td><td><span class="badge badge-warning">⏳ На подписании</span></td><td><button class="btn btn-sm btn-primary">Напомнить</button></td></tr>
+            </tbody>
+          </table>
+          <div class="table-footer"><span>Показано 6 из 1 628 документов</span><div class="pagination"><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn">…</button><button class="page-btn">272</button><button class="page-btn">›</button></div></div>
+        </div>
+      </div>
+
+      <!-- ===== АНАЛИТИКА (регион) ===== -->
+      <div class="sec" id="sec-r-analytics">
+        <div class="breadcrumb">Главная <span class="breadcrumb-sep">›</span> <span class="breadcrumb-current">Аналитика</span></div>
+        <div class="section-header">
+          <div><div class="section-title">Аналитика региона</div><div class="section-subtitle">Иркутский регион · Q1 2026 · Динамика расходов и нагрузки</div></div>
+        </div>
+        <!-- Динамика расходов по месяцам (CSS-чарт) -->
+        <div class="content-block">
+          <div class="content-block-header"><div class="content-block-title">📈 Динамика расходов (Q1 2026, тыс. ₽)</div></div>
+          <div style="display:flex;align-items:flex-end;gap:18px;height:180px;padding:12px 8px 0;border-bottom:2px solid #eee;margin-bottom:12px">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div style="font-weight:800;font-size:13px;color:#242D4A">182,4</div>
+              <div style="width:100%;background:#A01F72;border-radius:6px 6px 0 0;height:112px;position:relative"><span style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);color:white;font-size:11px;font-weight:800">Янв</span></div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div style="font-weight:800;font-size:13px;color:#242D4A">196,7</div>
+              <div style="width:100%;background:#A01F72;border-radius:6px 6px 0 0;height:128px;position:relative"><span style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);color:white;font-size:11px;font-weight:800">Фев</span></div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div style="font-weight:800;font-size:13px;color:#A01F72">214,6</div>
+              <div style="width:100%;background:#A01F72;border-radius:6px 6px 0 0;height:140px;opacity:0.85;position:relative;border:2px dashed #A01F72"><span style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);color:white;font-size:11px;font-weight:800">Мар*</span></div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div style="font-weight:800;font-size:13px;color:#bbb">план</div>
+              <div style="width:100%;background:#ddd;border-radius:6px 6px 0 0;height:155px;position:relative"><span style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);color:#999;font-size:11px;font-weight:800">Апр</span></div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:#999;text-align:right;padding:4px 8px">* Март — данные на 05.03.2026 (неполный месяц)</div>
+        </div>
+        <!-- Топ магазинов по расходам -->
+        <div class="content-block">
+          <div class="content-block-header"><div class="content-block-title">🏆 Топ-5 магазинов по расходам (март 2026)</div></div>
+          <div style="display:flex;flex-direction:column;gap:10px;padding:4px 0">
+            <div style="display:flex;align-items:center;gap:12px">
+              <div style="width:28px;height:28px;background:#A01F72;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:12px;flex-shrink:0">1</div>
+              <div style="flex:1"><div style="font-weight:700;font-size:13px">KARI Тверская</div><div style="font-size:11px;color:#999">Подр. 1 · Директор: Козлов А.П.</div></div>
+              <div style="width:200px"><div class="table-progress-bar" style="height:8px"><div class="table-progress-fill" style="width:97%;background:#e53935;height:8px"></div></div></div>
+              <div style="font-weight:800;width:90px;text-align:right">58 100 ₽</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <div style="width:28px;height:28px;background:#c04090;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:12px;flex-shrink:0">2</div>
+              <div style="flex:1"><div style="font-weight:700;font-size:13px">KARI Кутузовская</div><div style="font-size:11px;color:#999">Подр. 2 · Директор: Никитин В.О.</div></div>
+              <div style="width:200px"><div class="table-progress-bar" style="height:8px"><div class="table-progress-fill" style="width:84%;background:#FF9800;height:8px"></div></div></div>
+              <div style="font-weight:800;width:90px;text-align:right">46 200 ₽</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <div style="width:28px;height:28px;background:#d06090;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:12px;flex-shrink:0">3</div>
+              <div style="flex:1"><div style="font-weight:700;font-size:13px">KARI Строгино</div><div style="font-size:11px;color:#999">Подр. 2 · Директор: Беляев А.В.</div></div>
+              <div style="width:200px"><div class="table-progress-bar" style="height:8px"><div class="table-progress-fill" style="width:77%;background:#FF9800;height:8px"></div></div></div>
+              <div style="font-weight:800;width:90px;text-align:right">38 600 ₽</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <div style="width:28px;height:28px;background:#e0a0c0;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:12px;flex-shrink:0">4</div>
+              <div style="flex:1"><div style="font-weight:700;font-size:13px">KARI Медведково</div><div style="font-size:11px;color:#999">Подр. 3 · Директор: Тихонов Р.А.</div></div>
+              <div style="width:200px"><div class="table-progress-bar" style="height:8px"><div class="table-progress-fill" style="width:57%;background:#4CAF50;height:8px"></div></div></div>
+              <div style="font-weight:800;width:90px;text-align:right">31 200 ₽</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <div style="width:28px;height:28px;background:#eeccd8;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#A01F72;font-weight:800;font-size:12px;flex-shrink:0">5</div>
+              <div style="flex:1"><div style="font-weight:700;font-size:13px">KARI Фили</div><div style="font-size:11px;color:#999">Подр. 2 · Директор: Громов С.Д.</div></div>
+              <div style="width:200px"><div class="table-progress-bar" style="height:8px"><div class="table-progress-fill" style="width:57%;background:#4CAF50;height:8px"></div></div></div>
+              <div style="font-weight:800;width:90px;text-align:right">28 400 ₽</div>
+            </div>
+          </div>
+        </div>
+        <!-- Типы заданий -->
+        <div class="content-block">
+          <div class="content-block-header"><div class="content-block-title">🔧 Распределение заданий по типу (март 2026)</div></div>
+          <div style="display:flex;gap:16px;flex-wrap:wrap">
+            <div style="flex:1;min-width:140px;background:#fef9ec;border-radius:10px;padding:14px;text-align:center">
+              <div style="font-size:28px;font-weight:900;color:#92400e">82</div>
+              <div style="font-size:12px;font-weight:700;color:#92400e;margin-top:4px">Мерчандайзинг</div>
+              <div style="font-size:11px;color:#999">33%</div>
+            </div>
+            <div style="flex:1;min-width:140px;background:#f0f9ff;border-radius:10px;padding:14px;text-align:center">
+              <div style="font-size:28px;font-weight:900;color:#0369a1">68</div>
+              <div style="font-size:12px;font-weight:700;color:#0369a1;margin-top:4px">Уборка</div>
+              <div style="font-size:11px;color:#999">28%</div>
+            </div>
+            <div style="flex:1;min-width:140px;background:#fdf4ff;border-radius:10px;padding:14px;text-align:center">
+              <div style="font-size:28px;font-weight:900;color:#7e22ce">54</div>
+              <div style="font-size:12px;font-weight:700;color:#7e22ce;margin-top:4px">Разгрузка</div>
+              <div style="font-size:11px;color:#999">22%</div>
+            </div>
+            <div style="flex:1;min-width:140px;background:#eff6ff;border-radius:10px;padding:14px;text-align:center">
+              <div style="font-size:28px;font-weight:900;color:#1d4ed8">25</div>
+              <div style="font-size:12px;font-weight:700;color:#1d4ed8;margin-top:4px">Промоутер</div>
+              <div style="font-size:11px;color:#999">10%</div>
+            </div>
+            <div style="flex:1;min-width:140px;background:#f0fdf4;border-radius:10px;padding:14px;text-align:center">
+              <div style="font-size:28px;font-weight:900;color:#166534">18</div>
+              <div style="font-size:12px;font-weight:700;color:#166534;margin-top:4px">Инвентаризация</div>
+              <div style="font-size:11px;color:#999">7%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== НАСТРОЙКИ (регион) ===== -->
+      <div class="sec" id="sec-r-settings">
+        <div class="breadcrumb">Главная <span class="breadcrumb-sep">›</span> <span class="breadcrumb-current">Настройки</span></div>
+        <div class="section-header">
+          <div><div class="section-title">Настройки региона</div><div class="section-subtitle">Управление пользователями, делегирование прав, уведомления</div></div>
+        </div>
+        <!-- Управление пользователями -->
+        <div class="content-block">
+          <div class="content-block-header">
+            <div class="content-block-title">👥 Пользователи системы</div>
+            <button class="btn btn-primary btn-sm">＋ Добавить пользователя</button>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>ФИО</th><th>Роль</th><th>Телефон</th><th>Подразделение / Магазин</th><th>Статус</th><th>Последний вход</th><th>Действия</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Петров Юрий Иванович</strong></td><td><span style="font-size:11px;background:#fdf0f9;color:#A01F72;padding:2px 8px;border-radius:4px;font-weight:700">Директор региона</span></td><td>+7 914 001-00-01</td><td style="color:#999">— весь регион</td><td><span class="badge badge-success">Активен</span></td><td>05.03.2026 08:42</td><td><button class="btn btn-sm btn-secondary">Изменить</button></td></tr>
+              <tr><td><strong>Фомин Дмитрий Андреевич</strong></td><td><span style="font-size:11px;background:#eff6ff;color:#1d4ed8;padding:2px 8px;border-radius:4px;font-weight:700">Дир. подразделения</span></td><td>+7 914 002-00-01</td><td>Подр. 1 — Москва Центр</td><td><span class="badge badge-success">Активен</span></td><td>05.03.2026 07:15</td><td><button class="btn btn-sm btn-secondary">Изменить</button></td></tr>
+              <tr><td><strong>Ковалёва Татьяна Сергеевна</strong></td><td><span style="font-size:11px;background:#eff6ff;color:#1d4ed8;padding:2px 8px;border-radius:4px;font-weight:700">Дир. подразделения</span></td><td>+7 914 002-00-02</td><td>Подр. 2 — Москва Запад</td><td><span class="badge badge-success">Активен</span></td><td>04.03.2026 16:30</td><td><button class="btn btn-sm btn-secondary">Изменить</button></td></tr>
+              <tr><td><strong>Фомина Алёна Михайловна</strong></td><td><span style="font-size:11px;background:#f0fdf4;color:#166534;padding:2px 8px;border-radius:4px;font-weight:700">HRD / Бухгалтерия</span></td><td>+7 914 005-00-01</td><td style="color:#999">— весь регион</td><td><span class="badge badge-success">Активен</span></td><td>05.03.2026 09:10</td><td><button class="btn btn-sm btn-secondary">Изменить</button></td></tr>
+              <tr><td><strong>Козлов Андрей Павлович</strong></td><td><span style="font-size:11px;background:#fef9ec;color:#92400e;padding:2px 8px;border-radius:4px;font-weight:700">Дир. магазина</span></td><td>+7 914 003-01-01</td><td>KARI Тверская</td><td><span class="badge badge-success">Активен</span></td><td>05.03.2026 08:55</td><td><button class="btn btn-sm btn-secondary">Изменить</button></td></tr>
+            </tbody>
+          </table>
+          <div class="table-footer"><span>Показано 5 из 14 пользователей региона</span></div>
+        </div>
+        <!-- Делегирование прав -->
+        <div class="content-block">
+          <div class="content-block-header"><div class="content-block-title">🔑 Делегирование прав</div></div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="background:#f8f9fa;border-radius:8px;padding:14px;display:flex;align-items:center;justify-content:space-between">
+              <div>
+                <div style="font-weight:700;font-size:14px">Утверждение выплат до 10 000 ₽</div>
+                <div style="font-size:12px;color:#999;margin-top:3px">Делегировано: Фомин Д.А. (Подр. 1), Ковалёва Т.С. (Подр. 2), Зайцев П.О. (Подр. 3)</div>
+              </div>
+              <span class="badge badge-success">✓ Активно</span>
+            </div>
+            <div style="background:#f8f9fa;border-radius:8px;padding:14px;display:flex;align-items:center;justify-content:space-between">
+              <div>
+                <div style="font-weight:700;font-size:14px">Создание заданий</div>
+                <div style="font-size:12px;color:#999;margin-top:3px">Делегировано: все директора магазинов (10 чел.)</div>
+              </div>
+              <span class="badge badge-success">✓ Активно</span>
+            </div>
+            <div style="background:#f8f9fa;border-radius:8px;padding:14px;display:flex;align-items:center;justify-content:space-between">
+              <div>
+                <div style="font-weight:700;font-size:14px">Блокировка исполнителей</div>
+                <div style="font-size:12px;color:#999;margin-top:3px">Только директор региона (Петров Ю.И.) — права не делегированы</div>
+              </div>
+              <span class="badge" style="background:#eff6ff;color:#1d4ed8">Только регион</span>
+            </div>
+          </div>
+        </div>
+        <!-- Уведомления -->
+        <div class="content-block">
+          <div class="content-block-header"><div class="content-block-title">🔔 Настройки уведомлений</div></div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f0f0">
+              <div><div style="font-weight:600">Бюджет магазина &gt; 80%</div><div style="font-size:12px;color:#999">Push + Email · ежедневно</div></div>
+              <div style="width:40px;height:22px;background:#A01F72;border-radius:11px;position:relative;cursor:pointer"><div style="width:18px;height:18px;background:white;border-radius:50%;position:absolute;right:2px;top:2px"></div></div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f0f0">
+              <div><div style="font-weight:600">Потеря статуса ФНС</div><div style="font-size:12px;color:#999">Push + SMS · сразу</div></div>
+              <div style="width:40px;height:22px;background:#A01F72;border-radius:11px;position:relative;cursor:pointer"><div style="width:18px;height:18px;background:white;border-radius:50%;position:absolute;right:2px;top:2px"></div></div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f0f0">
+              <div><div style="font-weight:600">Задание на проверке &gt; 24 часа</div><div style="font-size:12px;color:#999">Email · раз в час</div></div>
+              <div style="width:40px;height:22px;background:#A01F72;border-radius:11px;position:relative;cursor:pointer"><div style="width:18px;height:18px;background:white;border-radius:50%;position:absolute;right:2px;top:2px"></div></div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0">
+              <div><div style="font-weight:600">Аннулирование чека ФНС</div><div style="font-size:12px;color:#999">Push + Email · сразу</div></div>
+              <div style="width:40px;height:22px;background:#A01F72;border-radius:11px;position:relative;cursor:pointer"><div style="width:18px;height:18px;background:white;border-radius:50%;position:absolute;right:2px;top:2px"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div><!-- /app-layout -->
+</div><!-- /cabinet-region -->
+
+
+<!-- ================================================================ -->
+<!-- КАБИНЕТ 2: ДИРЕКТОР ПОДРАЗДЕЛЕНИЯ -->
+<!-- ================================================================ -->
+<div class="cabinet" id="cabinet-division">
+
+  <!-- Шапка -->
+  <header class="app-header">
+    <div class="kari-logo-wrap">
+  <svg xmlns="http://www.w3.org/2000/svg" height="44" viewBox="0 0 728.5 221.5" style="display:block"><g transform="translate(-56.5 -186.5)"><path transform="matrix(1,0,0,-1,167.381,186.9256)" d="M0 0V0C-60.585 0-109.775-48.659-110.678-109.017-101.105-89.662-88.255-77.239-76.191-67.482-58.14-52.881-36.41-45.828-16.28-44.574 5.777-43.201 23.053-47.846 37.189-59.05 42.293-63.095 46.38-67.877 49.613-73.02 55.602-82.543 58.375-93.663 57.368-105.985 55.198-132.527 33.39-153.87 6.804-155.519-24.699-157.473-50.859-132.506-50.859-101.431-50.859-87.238-45.395-74.325-36.465-64.663-46.559-67.782-56.643-72.841-65.837-80.278-74.971-87.666-85.145-97.851-93.512-111.315-102.647-126.015-106.433-143.045-106.537-160.35V-221.399H0C61.15-221.399 110.721-171.838 110.721-110.7V-110.699C110.721-49.561 61.15 0 0 0" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,484.762,262.1775)" d="M0 0H-51.44L-106.801-52.162V41.158H-144.053V-144.054H-106.801V-91.887L-51.433-144.054H3.854L-76.443-72.024Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,0,595.276)" d="M744.002 189.045H781.255V314.95503H744.002Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,550.4052,371.5924)" d="M0 0C-20.818 0-37.694 16.739-37.694 37.388-37.694 58.037-20.818 74.776 0 74.776 20.818 74.776 37.694 58.037 37.694 37.388 37.694 16.739 20.818 0 0 0M37.738 101.384C26.659 107.826 13.769 111.534 0 111.534-41.285 111.534-74.753 78.338-74.753 37.388-74.753-3.562-41.285-36.758 0-36.758 13.769-36.758 26.659-33.05 37.738-26.609V-34.639H74.99V109.415H37.738Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,762.6282,267.7195)" d="M0 0C12.459 0 22.559 10.1 22.559 22.559 22.559 28.064 20.582 33.104 17.306 37.02 15.132 39.862 12.219 42.197 8.653 43.858-2.579 49.086-18.377 47.019-33.605 38.323-49.001 29.531-61.329 13.083-68.67-6.989V5.542H-105.923V-138.512H-68.67V-37.268C-65.411-6.761-50.524 20.852-30.241 32.433-25.463 35.163-20.667 37.153-16.051 38.402-20.072 34.327-22.559 28.736-22.559 22.559-22.559 10.1-12.459 0 0 0" fill="#a91d7a"/></g></svg>
+  <span class="kari-subtext">самозанятые</span>
+</div>
+    <div class="header-title">
+      <span>Кабинет директора подразделения</span> | Подразделение 1, Москва
+    </div>
+    <div class="header-right">
+      <button class="btn-header btn-print" onclick="window.print()">🖨 Печать</button>
+      <div class="header-avatar">МК</div>
+      <span class="header-user-name">Михаил Крылов</span>
+      <button class="btn-header btn-logout">Выйти</button>
+    </div>
+  </header>
+
+  <!-- Layout -->
+  <div class="app-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <nav class="sidebar-menu">
+        <a class="menu-item" href="#" onclick="showSection(this,'sec-d-dashboard','cabinet-division');return false"><span class="menu-icon">📊</span>Дашборд</a>
+        <a class="menu-item" href="#" onclick="showSection(this,'sec-d-stores','cabinet-division');return false"><span class="menu-icon">🏪</span>Мои магазины</a>
+        <a class="menu-item" href="#" onclick="showSection(this,'sec-d-users','cabinet-division');return false"><span class="menu-icon">👥</span>Исполнители</a>
+        <a class="menu-item" href="#" onclick="showSection(this,'sec-d-tasks','cabinet-division');return false"><span class="menu-icon">📋</span>Задания</a>
+        <a class="menu-item active" href="#" onclick="showSection(this,'sec-d-budget','cabinet-division');return false"><span class="menu-icon">💰</span>Бюджет и лимиты</a>
+        <a class="menu-item" href="#" onclick="showSection(this,'sec-d-payments','cabinet-division');return false"><span class="menu-icon">💳</span>Выплаты</a>
+        <a class="menu-item" href="#" onclick="showSection(this,'sec-d-docs','cabinet-division');return false"><span class="menu-icon">📄</span>Документы</a>
+      </nav>
+      <div class="sidebar-user">
+        <div class="sidebar-user-role">Текущий пользователь</div>
+        <div class="sidebar-user-info">
+          <span>Михаил Крылов</span>
+          <small>Директор подразделения</small>
+          <small style="color:#A01F72;margin-top:1px;">Подр. 1 — Центр</small>
+        </div>
+        <div class="sidebar-stat">
+          <span class="sidebar-stat-label">Магазинов</span>
+          <span class="sidebar-stat-value">3</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Основной контент -->
+    <main class="main-content">
+
+      <div class="breadcrumb">
+        Главная <span class="breadcrumb-sep">›</span>
+        <span class="breadcrumb-current">Бюджет и лимиты</span>
+      </div>
+
+      <!-- KPI карточки -->
+      <div class="sec active" id="sec-d-budget">
+      <div class="kpi-grid kpi-grid-3">
+        <div class="kpi-card purple">
+          <div class="kpi-label">Бюджет подразделения</div>
+          <div class="kpi-value">140 000 ₽</div>
+          <div class="kpi-sub">Установлен директором региона</div>
+        </div>
+        <div class="kpi-card blue">
+          <div class="kpi-label">Израсходовано</div>
+          <div class="kpi-value">78 900 ₽</div>
+          <div class="kpi-sub">56% от бюджета</div>
+          <div class="progress-wrap">
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill yellow" style="width:56%"></div>
+            </div>
+            <div class="progress-pct">56% использовано</div>
+          </div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-label">Остаток</div>
+          <div class="kpi-value">61 100 ₽</div>
+          <div class="kpi-sub">До конца февраля</div>
+        </div>
+      </div>
+
+      <!-- Таблица магазинов подразделения -->
+      <div class="content-block">
+        <div class="content-block-header">
+          <div>
+            <div class="content-block-title">Бюджеты магазинов — Февраль 2025</div>
+            <div style="font-size:12px;color:#aaa;margin-top:4px;font-weight:600;">
+              Лимиты устанавливаются директором региона. Вы можете просматривать расходы.
+            </div>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="exportToExcel('subdiv-table','Бюджеты_магазинов','Бюджеты подразделения')" style="border-color:#217346;color:#217346;" title="Выгрузить в Excel">
+            📊 Excel
+          </button>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table class="data-table" id="subdiv-table">
+            <thead>
+              <tr>
+                <th>Магазин</th>
+                <th>Директор</th>
+                <th>Лимит (₽)</th>
+                <th>Израсходовано</th>
+                <th>Остаток</th>
+                <th>% использования</th>
+                <th>Статус</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Арбат — норма -->
+              <tr>
+                <td><strong>KARI Арбат</strong></td>
+                <td>Смирнова И.В.</td>
+                <td style="font-weight:800;">45 000 ₽</td>
+                <td>12 300 ₽</td>
+                <td>32 700 ₽</td>
+                <td>
+                  <div class="table-progress">
+                    <div class="table-progress-bar">
+                      <div class="table-progress-fill" style="width:27%;background:#4CAF50;"></div>
+                    </div>
+                    <div class="table-progress-pct">27%</div>
+                  </div>
+                </td>
+                <td><span class="badge badge-success">✓ В норме</span></td>
+              </tr>
+              <!-- Тверская — критично -->
+              <tr class="row-critical">
+                <td><strong>KARI Тверская</strong></td>
+                <td>Козлов А.П.</td>
+                <td style="font-weight:800;">60 000 ₽</td>
+                <td>58 100 ₽</td>
+                <td style="color:var(--kari-danger);font-weight:800;">1 900 ₽</td>
+                <td>
+                  <div class="table-progress">
+                    <div class="table-progress-bar">
+                      <div class="table-progress-fill" style="width:97%;background:#e53935;"></div>
+                    </div>
+                    <div class="table-progress-pct" style="color:#e53935;">97%</div>
+                  </div>
+                </td>
+                <td><span class="badge badge-danger">🔴 Критично</span></td>
+              </tr>
+              <!-- Пушкинская — норма -->
+              <tr>
+                <td><strong>KARI Пушкинская</strong></td>
+                <td>Миронова С.К.</td>
+                <td style="font-weight:800;">35 000 ₽</td>
+                <td>8 500 ₽</td>
+                <td>26 500 ₽</td>
+                <td>
+                  <div class="table-progress">
+                    <div class="table-progress-bar">
+                      <div class="table-progress-fill" style="width:24%;background:#4CAF50;"></div>
+                    </div>
+                    <div class="table-progress-pct">24%</div>
+                  </div>
+                </td>
+                <td><span class="badge badge-success">✓ В норме</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="padding:14px 20px;">
+          <div class="alert alert-warning">
+            <span class="alert-icon">⚠️</span>
+            <div>
+              <strong>KARI Тверская</strong> — остаток бюджета менее 5 000 ₽. Рекомендуем приостановить создание новых заданий или запросить увеличение лимита у директора региона.
+              <div style="margin-top:10px;">
+                <button class="btn btn-primary btn-sm" onclick="openModal('modal-request')">📩 Запросить увеличение лимита</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Блок активных заданий -->
+      <div class="content-block">
+        <div class="content-block-header">
+          <div class="content-block-title">📋 Активные задания — расходы за февраль</div>
+          <button class="btn btn-outline btn-sm" onclick="exportToExcel('tasks-table','Активные_задания','Задания')" style="border-color:#217346;color:#217346;" title="Выгрузить в Excel">
+            📊 Excel
+          </button>
+        </div>
+        <table class="data-table" id="tasks-table">
+          <thead>
+            <tr>
+              <th>Тип задания</th>
+              <th>Магазин</th>
+              <th>Исполнитель</th>
+              <th>Дата</th>
+              <th>Сумма</th>
+              <th>Статус</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Мерчандайзинг</td>
+              <td>KARI Арбат</td>
+              <td>Иванов И.С.</td>
+              <td>25 фев</td>
+              <td style="font-weight:800;">2 650 ₽</td>
+              <td><span class="badge badge-success">Оплачено</span></td>
+            </tr>
+            <tr>
+              <td>Промоутер</td>
+              <td>KARI Тверская</td>
+              <td>Сидорова А.М.</td>
+              <td>24 фев</td>
+              <td style="font-weight:800;">3 816 ₽</td>
+              <td><span class="badge badge-success">Оплачено</span></td>
+            </tr>
+            <tr>
+              <td>Уборка</td>
+              <td>KARI Тверская</td>
+              <td>Новиков С.Д.</td>
+              <td>23 фев</td>
+              <td style="font-weight:800;">1 908 ₽</td>
+              <td><span class="badge badge-success">Оплачено</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="table-footer">
+          <span>Показано 3 из 18 заданий за февраль</span>
+          <div class="pagination">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">›</button>
+          </div>
+        </div>
+      </div>
+
+      </div><!-- /sec-d-budget -->
+
+      <!-- ===== ЗАГЛУШКИ РАЗДЕЛОВ (подразделение) ===== -->
+      <div class="sec" id="sec-d-dashboard">
+        <div class="breadcrumb">Главная <span class="breadcrumb-sep">›</span> <span class="breadcrumb-current">Дашборд</span></div>
+        <div class="kpi-grid kpi-grid-4">
+          <div class="kpi-card purple"><div class="kpi-label">Бюджет подразделения</div><div class="kpi-value">140 000 ₽</div><div class="kpi-sub">Установлен директором региона</div></div>
+          <div class="kpi-card blue"><div class="kpi-label">Израсходовано</div><div class="kpi-value">78 900 ₽</div><div class="kpi-sub">56% от бюджета</div><div class="progress-wrap"><div class="progress-bar-bg"><div class="progress-bar-fill yellow" style="width:56%"></div></div><div class="progress-pct">56% использовано</div></div></div>
+          <div class="kpi-card green"><div class="kpi-label">Остаток</div><div class="kpi-value">61 100 ₽</div><div class="kpi-sub">До конца квартала</div></div>
+          <div class="kpi-card orange"><div class="kpi-label">Активных заданий</div><div class="kpi-value">8</div><div class="kpi-sub">12 исполнителей в работе</div></div>
+        </div>
+        <div class="content-block">
+          <div class="content-block-header"><div class="content-block-title">Статус магазинов подразделения</div></div>
+          <table class="data-table">
+            <thead><tr><th>Магазин</th><th>Директор</th><th>Лимит</th><th>Израсходовано</th><th>Остаток</th><th>% Использования</th><th>Статус</th></tr></thead>
+            <tbody>
+              <tr><td><strong>KARI Арбат</strong></td><td>Смирнова И.В.</td><td>45 000 ₽</td><td>12 300 ₽</td><td>32 700 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:27%;background:#4CAF50"></div></div><span class="table-progress-pct">27%</span></div></td><td><span class="badge badge-success">✓ В норме</span></td></tr>
+              <tr class="row-critical"><td><strong>KARI Тверская</strong></td><td>Козлов А.П.</td><td>60 000 ₽</td><td>58 100 ₽</td><td style="color:#e53935;font-weight:800">1 900 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:97%;background:#e53935"></div></div><span class="table-progress-pct" style="color:#e53935">97%</span></div></td><td><span class="badge badge-danger">● Критично</span></td></tr>
+              <tr><td><strong>KARI Пушкинская</strong></td><td>Миронова С.К.</td><td>35 000 ₽</td><td>8 500 ₽</td><td>26 500 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:24%;background:#4CAF50"></div></div><span class="table-progress-pct">24%</span></div></td><td><span class="badge badge-success">✓ В норме</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="content-block">
+          <div class="content-block-header"><div class="content-block-title">Последние задания</div><button class="btn btn-outline btn-sm" onclick="showSection(document.querySelector('#cabinet-division .menu-item:nth-child(4)'),'sec-d-tasks','cabinet-division');return false">Все задания →</button></div>
+          <table class="data-table">
+            <thead><tr><th>Задание</th><th>Магазин</th><th>Исполнитель</th><th>Сумма</th><th>Статус</th><th>Дедлайн</th></tr></thead>
+            <tbody>
+              <tr><td>Уборка торгового зала</td><td>KARI Арбат</td><td>Иванов А.И.</td><td>1 800 ₽</td><td><span class="badge badge-info">В работе</span></td><td>06.03.2026</td></tr>
+              <tr><td>Выкладка весенней коллекции</td><td>KARI Тверская</td><td>Петрова М.С.</td><td>3 200 ₽</td><td><span class="badge badge-warning">На проверке</span></td><td>05.03.2026</td></tr>
+              <tr><td>Инвентаризация склада</td><td>KARI Пушкинская</td><td>Сидоров К.В.</td><td>4 500 ₽</td><td><span class="badge badge-success">Завершено</span></td><td>03.03.2026</td></tr>
+              <tr><td>Разгрузка товара (30 коробок)</td><td>KARI Арбат</td><td>Козлова Н.Р.</td><td>2 800 ₽</td><td><span class="badge badge-success">Завершено</span></td><td>02.03.2026</td></tr>
+              <tr><td>Промо-акция «Весна 2026»</td><td>KARI Тверская</td><td>—</td><td>2 000 ₽</td><td><span class="badge" style="background:#eff6ff;color:#1d4ed8">Открыто</span></td><td>08.03.2026</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="sec" id="sec-d-stores">
+        <div class="breadcrumb">Главная <span class="breadcrumb-sep">›</span> <span class="breadcrumb-current">Мои магазины</span></div>
+        <div class="section-header"><div><div class="section-title">Мои магазины</div><div class="section-subtitle">Подразделение 1 — Москва Центр · 3 магазина</div></div></div>
+        <div class="content-block">
+          <div class="filters-row"><input class="filter-input" placeholder="🔍 Поиск по магазину..." style="max-width:260px"><select class="filter-select"><option>Все статусы</option><option>В норме</option><option>Внимание</option><option>Критично</option></select></div>
+          <table class="data-table">
+            <thead><tr><th>Магазин</th><th>Директор</th><th>Телефон</th><th>Исполнителей</th><th>Актив. заданий</th><th>Лимит</th><th>Израсходовано</th><th>% лимита</th><th>Статус</th></tr></thead>
+            <tbody>
+              <tr><td><strong>KARI Арбат</strong><br><small style="color:#999">ТЦ «На Арбате», 3 этаж</small></td><td>Смирнова И.В.</td><td>+7 495 000-11-22</td><td>4</td><td>2</td><td>45 000 ₽</td><td>12 300 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:27%;background:#4CAF50"></div></div><span class="table-progress-pct">27%</span></div></td><td><span class="badge badge-success">✓ В норме</span></td></tr>
+              <tr class="row-critical"><td><strong>KARI Тверская</strong><br><small style="color:#999">ул. Тверская, 15</small></td><td>Козлов А.П.</td><td>+7 495 000-33-44</td><td>5</td><td>4</td><td>60 000 ₽</td><td>58 100 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:97%;background:#e53935"></div></div><span class="table-progress-pct" style="color:#e53935">97%</span></div></td><td><span class="badge badge-danger">● Критично</span></td></tr>
+              <tr><td><strong>KARI Пушкинская</strong><br><small style="color:#999">ТЦ «Атриум», 1 этаж</small></td><td>Миронова С.К.</td><td>+7 495 000-55-66</td><td>3</td><td>2</td><td>35 000 ₽</td><td>8 500 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:24%;background:#4CAF50"></div></div><span class="table-progress-pct">24%</span></div></td><td><span class="badge badge-success">✓ В норме</span></td></tr>
+            </tbody>
+          </table>
+          <div class="table-footer"><span>Показано 3 из 3 магазинов</span></div>
+        </div>
+      </div>
+      <div class="sec" id="sec-d-users">
+        <div class="breadcrumb">Главная <span class="breadcrumb-sep">›</span> <span class="breadcrumb-current">Исполнители</span></div>
+        <div class="section-header"><div><div class="section-title">Исполнители подразделения</div><div class="section-subtitle">12 самозанятых · 10 активных · 1 на блокировке · 1 без статуса ФНС</div></div></div>
+        <div class="content-block">
+          <div class="filters-row"><input class="filter-input" placeholder="🔍 Поиск по ФИО, телефону, ИНН..." style="max-width:300px"><select class="filter-select"><option>Все статусы ФНС</option><option>Самозанятый</option><option>Не самозанятый</option><option>Заблокирован</option></select><select class="filter-select"><option>Все магазины</option><option>KARI Арбат</option><option>KARI Тверская</option><option>KARI Пушкинская</option></select></div>
+          <table class="data-table">
+            <thead><tr><th>ФИО</th><th>Телефон</th><th>ИНН</th><th>Магазин</th><th>Статус ФНС</th><th>Доход за год</th><th>% от лимита</th><th>Банк</th><th>Действия</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Иванов Алексей Иванович</strong></td><td>+7 926 100-01-01</td><td>381300000101</td><td>KARI Арбат</td><td><span class="badge badge-success">✓ Самозанятый</span></td><td>345 000 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:14%;background:#4CAF50"></div></div><span class="table-progress-pct">14%</span></div></td><td>Сбербанк</td><td><button class="btn btn-sm btn-secondary">История</button></td></tr>
+              <tr><td><strong>Петрова Мария Сергеевна</strong></td><td>+7 926 100-01-02</td><td>381300000102</td><td>KARI Тверская</td><td><span class="badge badge-success">✓ Самозанятый</span></td><td>1 820 000 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:76%;background:#FF9800"></div></div><span class="table-progress-pct" style="color:#E65100">76%</span></div></td><td>Тинькофф</td><td><button class="btn btn-sm btn-secondary">История</button></td></tr>
+              <tr><td><strong>Сидоров Константин Вадимович</strong></td><td>+7 926 100-01-03</td><td>381300000103</td><td>KARI Пушкинская</td><td><span class="badge badge-success">✓ Самозанятый</span></td><td>510 000 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:21%;background:#4CAF50"></div></div><span class="table-progress-pct">21%</span></div></td><td>ВТБ</td><td><button class="btn btn-sm btn-secondary">История</button></td></tr>
+              <tr><td><strong>Козлова Наталья Романовна</strong></td><td>+7 926 100-01-04</td><td>381300000104</td><td>KARI Арбат</td><td><span class="badge badge-success">✓ Самозанятый</span></td><td>780 000 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:33%;background:#4CAF50"></div></div><span class="table-progress-pct">33%</span></div></td><td>Альфа-Банк</td><td><button class="btn btn-sm btn-secondary">История</button></td></tr>
+              <tr class="row-critical"><td><strong>Борисов Игорь Петрович</strong></td><td>+7 926 100-01-05</td><td>381300000105</td><td>KARI Тверская</td><td><span class="badge badge-danger">✗ Не самозанятый</span></td><td>92 000 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:4%;background:#e53935"></div></div><span class="table-progress-pct">4%</span></div></td><td>Сбербанк</td><td><button class="btn btn-sm btn-danger">Заблокировать</button></td></tr>
+              <tr><td><strong>Орлова Светлана Ивановна</strong></td><td>+7 926 100-01-06</td><td>381300000106</td><td>KARI Пушкинская</td><td><span class="badge badge-success">✓ Самозанятый</span></td><td>225 000 ₽</td><td><div class="table-progress"><div class="table-progress-bar"><div class="table-progress-fill" style="width:9%;background:#4CAF50"></div></div><span class="table-progress-pct">9%</span></div></td><td>Тинькофф</td><td><button class="btn btn-sm btn-secondary">История</button></td></tr>
+            </tbody>
+          </table>
+          <div class="table-footer"><span>Показано 6 из 12 исполнителей</span><div class="pagination"><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">›</button></div></div>
+        </div>
+      </div>
+      <!-- ===== ЗАДАНИЯ (подразделение) ===== -->
+      <div class="sec" id="sec-d-tasks">
+        <div class="breadcrumb">Главная <span class="breadcrumb-sep">›</span> <span class="breadcrumb-current">Задания</span></div>
+        <div class="section-header">
+          <div><div class="section-title">Задания подразделения</div><div class="section-subtitle">Март 2026 · 18 заданий по 3 магазинам</div></div>
+          <button class="btn btn-primary" style="gap:6px">＋ Создать задание</button>
+        </div>
+        <div class="kpi-grid kpi-grid-4">
+          <div class="kpi-card blue"><div class="kpi-label">Всего заданий</div><div class="kpi-value">18</div><div class="kpi-sub">В марте 2026</div></div>
+          <div class="kpi-card orange"><div class="kpi-label">В работе</div><div class="kpi-value">5</div><div class="kpi-sub">Активных прямо сейчас</div></div>
+          <div class="kpi-card purple"><div class="kpi-label">На проверке</div><div class="kpi-value">3</div><div class="kpi-sub">Ожидают приёмки</div></div>
+          <div class="kpi-card green"><div class="kpi-label">Завершено</div><div class="kpi-value">8</div><div class="kpi-sub">Оплачено: 32 450 ₽</div></div>
+        </div>
+        <div class="content-block">
+          <div class="filters-row">
+            <input class="filter-input" placeholder="🔍 Поиск по названию, исполнителю..." style="max-width:280px">
+            <select class="filter-select"><option>Все статусы</option><option>Открыто</option><option>В работе</option><option>На проверке</option><option>Завершено</option><option>Отменено</option></select>
+            <select class="filter-select"><option>Все магазины</option><option>KARI Арбат</option><option>KARI Тверская</option><option>KARI Пушкинская</option></select>
+            <select class="filter-select"><option>Все типы</option><option>Мерчандайзинг</option><option>Уборка</option><option>Промоутер</option><option>Инвентаризация</option><option>Разгрузка</option></select>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr><th>Задание</th><th>Тип</th><th>Магазин</th><th>Исполнитель</th><th>Дедлайн</th><th>Сумма</th><th>Статус</th><th>Действия</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Уборка торгового зала</strong></td><td><span style="font-size:11px;background:#f0f9ff;color:#0369a1;padding:2px 8px;border-radius:4px;font-weight:600">Уборка</span></td><td>KARI Арбат</td><td>Иванов А.И.</td><td>06.03.2026</td><td style="font-weight:800">1 800 ₽</td><td><span class="badge badge-info">В работе</span></td><td><button class="btn btn-sm btn-secondary">Просмотр</button></td></tr>
+              <tr class="row-warning"><td><strong>Выкладка весенней коллекции</strong></td><td><span style="font-size:11px;background:#fef9ec;color:#92400e;padding:2px 8px;border-radius:4px;font-weight:600">Мерчандайзинг</span></td><td>KARI Тверская</td><td>Петрова М.С.</td><td>05.03.2026</td><td style="font-weight:800">3 200 ₽</td><td><span class="badge badge-warning">На проверке</span></td><td><button class="btn btn-sm btn-primary">Принять</button></td></tr>
+              <tr><td><strong>Инвентаризация склада</strong></td><td><span style="font-size:11px;background:#f0fdf4;color:#166534;padding:2px 8px;border-radius:4px;font-weight:600">Инвентаризация</span></td><td>KARI Пушкинская</td><td>Сидоров К.В.</td><td>03.03.2026</td><td style="font-weight:800">4 500 ₽</td><td><span class="badge badge-success">Завершено</span></td><td><button class="btn btn-sm btn-secondary">Акт</button></td></tr>
+              <tr><td><strong>Разгрузка товара (30 коробок)</strong></td><td><span style="font-size:11px;background:#fdf4ff;color:#7e22ce;padding:2px 8px;border-radius:4px;font-weight:600">Разгрузка</span></td><td>KARI Арбат</td><td>Козлова Н.Р.</td><td>02.03.2026</td><td style="font-weight:800">2 800 ₽</td><td><span class="badge badge-success">Завершено</span></td><td><button class="btn btn-sm btn-secondary">Акт</button></td></tr>
+              <tr><td><strong>Промо-акция «Весна 2026»</strong></td><td><span style="font-size:11px;background:#eff6ff;color:#1d4ed8;padding:2px 8px;border-radius:4px;font-weight:600">Промоутер</span></td><td>KARI Тверская</td><td style="color:#999">— не назначен</td><td>08.03.2026</td><td style="font-weight:800">2 000 ₽</td><td><span class="badge" style="background:#eff6ff;color:#1d4ed8">Открыто</span></td><td><button class="btn btn-sm btn-secondary">Назначить</button></td></tr>
+              <tr><td><strong>Уборка примерочных</strong></td><td><span style="font-size:11px;background:#f0f9ff;color:#0369a1;padding:2px 8px;border-radius:4px;font-weight:600">Уборка</span></td><td>KARI Арбат</td><td>Орлова С.И.</td><td>07.03.2026</td><td style="font-weight:800">900 ₽</td><td><span class="badge badge-info">В работе</span></td><td><button class="btn btn-sm btn-secondary">Просмотр</button></td></tr>
+              <tr><td><strong>Приёмка новой коллекции</strong></td><td><span style="font-size:11px;background:#fdf4ff;color:#7e22ce;padding:2px 8px;border-radius:4px;font-weight:600">Разгрузка</span></td><td>KARI Пушкинская</td><td style="color:#999">— не назначен</td><td>10.03.2026</td><td style="font-weight:800">3 500 ₽</td><td><span class="badge" style="background:#eff6ff;color:#1d4ed8">Открыто</span></td><td><button class="btn btn-sm btn-secondary">Назначить</button></td></tr>
+              <tr class="row-warning"><td><strong>Оформление витрины</strong></td><td><span style="font-size:11px;background:#fef9ec;color:#92400e;padding:2px 8px;border-radius:4px;font-weight:600">Мерчандайзинг</span></td><td>KARI Тверская</td><td>Борисов И.П.</td><td>04.03.2026</td><td style="font-weight:800">2 100 ₽</td><td><span class="badge badge-warning">На проверке</span></td><td><button class="btn btn-sm btn-primary">Принять</button></td></tr>
+            </tbody>
+          </table>
+          <div class="table-footer">
+            <span>Показано 8 из 18 заданий</span>
+            <div class="pagination"><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn">›</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== ВЫПЛАТЫ (подразделение) ===== -->
+      <div class="sec" id="sec-d-payments">
+        <div class="breadcrumb">Главная <span class="breadcrumb-sep">›</span> <span class="breadcrumb-current">Выплаты</span></div>
+        <div class="section-header">
+          <div><div class="section-title">Выплаты исполнителям</div><div class="section-subtitle">Март 2026 · Подразделение 1 — Москва Центр</div></div>
+        </div>
+        <div class="kpi-grid kpi-grid-4">
+          <div class="kpi-card purple"><div class="kpi-label">Выплачено в марте</div><div class="kpi-value">78 900 ₽</div><div class="kpi-sub">19 транзакций</div></div>
+          <div class="kpi-card green"><div class="kpi-label">Успешно</div><div class="kpi-value">18</div><div class="kpi-sub">Доставлено исполнителям</div></div>
+          <div class="kpi-card orange"><div class="kpi-label">В обработке</div><div class="kpi-value">1</div><div class="kpi-sub">Ожидает подтверждения</div></div>
+          <div class="kpi-card blue"><div class="kpi-label">Ср. выплата</div><div class="kpi-value">4 153 ₽</div><div class="kpi-sub">За март 2026</div></div>
+        </div>
+        <div class="content-block">
+          <div class="filters-row">
+            <input class="filter-input" placeholder="🔍 Поиск по исполнителю..." style="max-width:260px">
+            <select class="filter-select"><option>Все статусы</option><option>Успешно</option><option>В обработке</option><option>Ошибка</option></select>
+            <select class="filter-select"><option>Март 2026</option><option>Февраль 2026</option><option>Январь 2026</option></select>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr><th>Исполнитель</th><th>Магазин</th><th>Задание</th><th>Сумма</th><th>Дата выплаты</th><th>Банк</th><th>Чек ФНС</th><th>Статус</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Иванов Алексей И.</strong></td><td>KARI Арбат</td><td>Уборка торгового зала</td><td style="font-weight:800">1 800 ₽</td><td>03.03.2026</td><td>Сбербанк</td><td><span class="badge badge-success">✓ Выдан</span></td><td><span class="badge badge-success">Успешно</span></td></tr>
+              <tr><td><strong>Петрова Мария С.</strong></td><td>KARI Тверская</td><td>Выкладка коллекции</td><td style="font-weight:800">3 200 ₽</td><td>02.03.2026</td><td>Тинькофф</td><td><span class="badge badge-success">✓ Выдан</span></td><td><span class="badge badge-success">Успешно</span></td></tr>
+              <tr><td><strong>Сидоров Константин В.</strong></td><td>KARI Пушкинская</td><td>Инвентаризация склада</td><td style="font-weight:800">4 500 ₽</td><td>02.03.2026</td><td>ВТБ</td><td><span class="badge badge-success">✓ Выдан</span></td><td><span class="badge badge-success">Успешно</span></td></tr>
+              <tr><td><strong>Козлова Наталья Р.</strong></td><td>KARI Арбат</td><td>Разгрузка товара</td><td style="font-weight:800">2 800 ₽</td><td>01.03.2026</td><td>Альфа-Банк</td><td><span class="badge badge-success">✓ Выдан</span></td><td><span class="badge badge-success">Успешно</span></td></tr>
+              <tr><td><strong>Орлова Светлана И.</strong></td><td>KARI Пушкинская</td><td>Уборка примерочных</td><td style="font-weight:800">900 ₽</td><td>01.03.2026</td><td>Тинькофф</td><td><span class="badge badge-success">✓ Выдан</span></td><td><span class="badge badge-success">Успешно</span></td></tr>
+              <tr><td><strong>Борисов Игорь П.</strong></td><td>KARI Тверская</td><td>Оформление витрины</td><td style="font-weight:800">2 100 ₽</td><td>28.02.2026</td><td>Сбербанк</td><td><span class="badge badge-warning">⏳ Ожидает</span></td><td><span class="badge badge-warning">В обработке</span></td></tr>
+            </tbody>
+          </table>
+          <div class="table-footer">
+            <span>Показано 6 из 19 выплат · Итого: 15 300 ₽</span>
+            <div class="pagination"><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn">4</button><button class="page-btn">›</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== ДОКУМЕНТЫ (подразделение) ===== -->
+      <div class="sec" id="sec-d-docs">
+        <div class="breadcrumb">Главная <span class="breadcrumb-sep">›</span> <span class="breadcrumb-current">Документы</span></div>
+        <div class="section-header">
+          <div><div class="section-title">Документы подразделения</div><div class="section-subtitle">Договоры ГПХ и акты выполненных работ · 12 исполнителей</div></div>
+        </div>
+        <div class="kpi-grid kpi-grid-4">
+          <div class="kpi-card purple"><div class="kpi-label">Договоров ГПХ</div><div class="kpi-value">12</div><div class="kpi-sub">Все подписаны</div></div>
+          <div class="kpi-card green"><div class="kpi-label">Актов за март</div><div class="kpi-value">8</div><div class="kpi-sub">Подписано ПЭП (SMS)</div></div>
+          <div class="kpi-card orange"><div class="kpi-label">На подписании</div><div class="kpi-value">2</div><div class="kpi-sub">Ожидают SMS-кода</div></div>
+          <div class="kpi-card blue"><div class="kpi-label">Всего документов</div><div class="kpi-value">48</div><div class="kpi-sub">С начала работы</div></div>
+        </div>
+        <div class="content-block">
+          <div class="filters-row">
+            <input class="filter-input" placeholder="🔍 Поиск по ФИО, номеру..." style="max-width:260px">
+            <select class="filter-select"><option>Все типы</option><option>Договор ГПХ</option><option>Акт выполненных работ</option></select>
+            <select class="filter-select"><option>Все статусы</option><option>Подписан</option><option>На подписании</option><option>Создан</option></select>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr><th>Документ</th><th>Тип</th><th>Исполнитель</th><th>Магазин</th><th>Дата создания</th><th>Сумма</th><th>Статус</th><th>Действия</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>АВР №2026-031-001</strong></td><td><span style="font-size:11px;background:#f0fdf4;color:#166534;padding:2px 8px;border-radius:4px;font-weight:600">Акт</span></td><td>Иванов А.И.</td><td>KARI Арбат</td><td>03.03.2026</td><td style="font-weight:800">1 800 ₽</td><td><span class="badge badge-success">✓ Подписан</span></td><td><button class="btn btn-sm btn-secondary">PDF</button></td></tr>
+              <tr><td><strong>АВР №2026-031-002</strong></td><td><span style="font-size:11px;background:#f0fdf4;color:#166534;padding:2px 8px;border-radius:4px;font-weight:600">Акт</span></td><td>Петрова М.С.</td><td>KARI Тверская</td><td>02.03.2026</td><td style="font-weight:800">3 200 ₽</td><td><span class="badge badge-warning">⏳ На подписании</span></td><td><button class="btn btn-sm btn-primary">Напомнить</button></td></tr>
+              <tr><td><strong>АВР №2026-031-003</strong></td><td><span style="font-size:11px;background:#f0fdf4;color:#166534;padding:2px 8px;border-radius:4px;font-weight:600">Акт</span></td><td>Сидоров К.В.</td><td>KARI Пушкинская</td><td>02.03.2026</td><td style="font-weight:800">4 500 ₽</td><td><span class="badge badge-success">✓ Подписан</span></td><td><button class="btn btn-sm btn-secondary">PDF</button></td></tr>
+              <tr><td><strong>ДГП №2026-001-005</strong></td><td><span style="font-size:11px;background:#eff6ff;color:#1d4ed8;padding:2px 8px;border-radius:4px;font-weight:600">Договор</span></td><td>Иванов А.И.</td><td>KARI Арбат</td><td>15.01.2026</td><td style="color:#999">—</td><td><span class="badge badge-success">✓ Подписан</span></td><td><button class="btn btn-sm btn-secondary">PDF</button></td></tr>
+              <tr><td><strong>ДГП №2026-001-006</strong></td><td><span style="font-size:11px;background:#eff6ff;color:#1d4ed8;padding:2px 8px;border-radius:4px;font-weight:600">Договор</span></td><td>Петрова М.С.</td><td>KARI Тверская</td><td>15.01.2026</td><td style="color:#999">—</td><td><span class="badge badge-success">✓ Подписан</span></td><td><button class="btn btn-sm btn-secondary">PDF</button></td></tr>
+              <tr><td><strong>АВР №2026-031-004</strong></td><td><span style="font-size:11px;background:#f0fdf4;color:#166534;padding:2px 8px;border-radius:4px;font-weight:600">Акт</span></td><td>Козлова Н.Р.</td><td>KARI Арбат</td><td>01.03.2026</td><td style="font-weight:800">2 800 ₽</td><td><span class="badge badge-warning">⏳ На подписании</span></td><td><button class="btn btn-sm btn-primary">Напомнить</button></td></tr>
+            </tbody>
+          </table>
+          <div class="table-footer">
+            <span>Показано 6 из 48 документов</span>
+            <div class="pagination"><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn">…</button><button class="page-btn">8</button><button class="page-btn">›</button></div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div><!-- /app-layout -->
+</div><!-- /cabinet-division -->
+
+
+<!-- ================================================================ -->
+<!-- МОДАЛЬНОЕ ОКНО 1: МАССОВАЯ УСТАНОВКА ЛИМИТА -->
+<!-- ================================================================ -->
+<div class="modal-overlay" id="modal-bulk" onclick="closeOnOverlay(event, 'modal-bulk')">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">⚡ Массовая установка лимита</div>
+      <button class="modal-close" onclick="closeModal('modal-bulk')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Выберите подразделения</label>
+        <div class="checkbox-group">
+          <label class="checkbox-item"><input type="checkbox" id="div-all" onchange="checkAll(this)"> Все подразделения</label>
+          <label class="checkbox-item"><input type="checkbox" class="div-check"> Подразделение 1 (Центр)</label>
+          <label class="checkbox-item"><input type="checkbox" class="div-check"> Подразделение 2 (Запад)</label>
+          <label class="checkbox-item"><input type="checkbox" class="div-check"> Подразделение 3 (Восток)</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Лимит на месяц для выбранных магазинов</label>
+        <input class="form-control" type="text" placeholder="Введите сумму, например: 40 000" id="bulk-amount">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Режим установки</label>
+        <div class="radio-group">
+          <label class="radio-item"><input type="radio" name="bulk-mode" value="replace" checked> Заменить существующие</label>
+          <label class="radio-item"><input type="radio" name="bulk-mode" value="empty"> Только незаданные</label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-bulk')">Отмена</button>
+      <button class="btn btn-primary" onclick="applyBulkLimit()">⚡ Применить</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ================================================================ -->
+<!-- МОДАЛЬНОЕ ОКНО 2: ЗАПРОС УВЕЛИЧЕНИЯ ЛИМИТА -->
+<!-- ================================================================ -->
+<div class="modal-overlay" id="modal-request" onclick="closeOnOverlay(event, 'modal-request')">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">📩 Запрос на увеличение лимита — KARI Тверская</div>
+      <button class="modal-close" onclick="closeModal('modal-request')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Текущий лимит</label>
+        <div class="form-static">60 000 ₽</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Израсходовано / Остаток</label>
+        <div class="form-static" style="color:#e53935;">58 100 ₽ израсходовано &nbsp;|&nbsp; Остаток: 1 900 ₽</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Запрашиваемый лимит (₽)</label>
+        <input class="form-control" type="text" placeholder="Введите желаемую сумму, например: 80 000" id="req-amount">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Обоснование запроса</label>
+        <textarea class="form-control" id="req-reason" placeholder="Укажите причину необходимости увеличения лимита..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-request')">Отмена</button>
+      <button class="btn btn-primary" onclick="sendRequest()">📩 Отправить запрос директору региона</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ================================================================ -->
+<!-- JAVASCRIPT -->
+<!-- ================================================================ -->
+<script>
+// ===== ПЕРЕКЛЮЧЕНИЕ РАЗДЕЛОВ В МЕНЮ =====
+function showSection(menuItem, secId, cabinetId) {
+  const cabinet = document.getElementById(cabinetId);
+
+  // Обновить активный пункт меню
+  cabinet.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+  menuItem.classList.add('active');
+
+  // Показать нужный раздел
+  cabinet.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  const sec = document.getElementById(secId);
+  if (sec) sec.classList.add('active');
+
+  // Обновить хлебные крошки
+  const crumb = cabinet.querySelector('.breadcrumb-current');
+  if (crumb) crumb.textContent = menuItem.textContent.trim();
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===== ПЕРЕКЛЮЧЕНИЕ КАБИНЕТОВ =====
+function switchCabinet(type) {
+  // Скрыть все кабинеты
+  document.querySelectorAll('.cabinet').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.cabinet-tab').forEach(t => t.classList.remove('active'));
+
+  // Показать нужный
+  document.getElementById('cabinet-' + type).classList.add('active');
+
+  // Активировать вкладку
+  const tabs = document.querySelectorAll('.cabinet-tab');
+  if (type === 'region') tabs[0].classList.add('active');
+  else tabs[1].classList.add('active');
+
+  // Скроллим вверх
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===== ПОМЕТИТЬ СТРОКУ КАК ИЗМЕНЁННУЮ =====
+function markChanged(input) {
+  input.classList.add('changed');
+  const row = input.closest('tr');
+  row.classList.add('row-changed');
+  // Убираем row-critical подсветку при редактировании — сохраняем для критичных
+  // (оставляем исходный класс)
+}
+
+// ===== СОХРАНИТЬ ВСЕ ЛИМИТЫ =====
+function saveAllLimits() {
+  // Убираем пометки несохранённых изменений
+  document.querySelectorAll('.limit-input.changed').forEach(inp => {
+    inp.classList.remove('changed');
+  });
+  document.querySelectorAll('tr.row-changed').forEach(row => {
+    row.classList.remove('row-changed');
+  });
+
+  // Добавляем запись в историю
+  const now = new Date();
+  const timeStr = now.getDate() + ' фев ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+  const historyTable = document.querySelector('.history-table');
+  const newRow = historyTable.insertRow(0);
+  newRow.innerHTML = `
+    <td>Несколько магазинов</td>
+    <td>Лимиты сохранены (массовое обновление)</td>
+    <td>Андрей Петров</td>
+    <td><span class="history-time">${timeStr}</span></td>
+  `;
+
+  showToast('Лимиты сохранены успешно!', 'success');
+}
+
+// ===== ФИЛЬТР ПО НАЗВАНИЮ =====
+function filterTable(query) {
+  const rows = document.querySelectorAll('#limits-tbody tr');
+  const q = query.toLowerCase().trim();
+  rows.forEach(row => {
+    const name = row.getAttribute('data-name') || '';
+    row.style.display = name.includes(q) ? '' : 'none';
+  });
+}
+
+// ===== ФИЛЬТР ПО ПОДРАЗДЕЛЕНИЮ =====
+function filterByDivision(val) {
+  const rows = document.querySelectorAll('#limits-tbody tr');
+  rows.forEach(row => {
+    const div = row.getAttribute('data-div') || '';
+    row.style.display = (!val || div === val) ? '' : 'none';
+  });
+}
+
+// ===== ЧЕКБОКС "ВСЕ ПОДРАЗДЕЛЕНИЯ" =====
+function checkAll(masterCheckbox) {
+  document.querySelectorAll('.div-check').forEach(cb => {
+    cb.checked = masterCheckbox.checked;
+  });
+}
+
+// ===== ПРИМЕНИТЬ МАССОВЫЙ ЛИМИТ =====
+function applyBulkLimit() {
+  const amount = document.getElementById('bulk-amount').value.trim();
+  if (!amount) {
+    showToast('Введите сумму лимита', 'error');
+    return;
+  }
+  const modeEl = document.querySelector('input[name="bulk-mode"]:checked');
+  const mode = modeEl ? modeEl.value : 'replace';
+
+  // Получаем выбранные подразделения
+  const selected = [];
+  document.querySelectorAll('.div-check:checked').forEach((cb, i) => {
+    selected.push(String(i + 1));
+  });
+  const allChecked = document.getElementById('div-all').checked;
+
+  // Применяем к строкам таблицы
+  document.querySelectorAll('#limits-tbody tr').forEach(row => {
+    const div = row.getAttribute('data-div');
+    if (allChecked || selected.includes(div)) {
+      const input = row.querySelector('.limit-input');
+      if (input) {
+        if (mode === 'replace' || (mode === 'empty' && !input.value)) {
+          input.value = amount;
+          input.classList.add('changed');
+          row.classList.add('row-changed');
+        }
+      }
+    }
+  });
+
+  closeModal('modal-bulk');
+  showToast('Лимит ' + amount + ' ₽ установлен для выбранных магазинов', 'success');
+}
+
+// ===== ОТПРАВИТЬ ЗАПРОС =====
+function sendRequest() {
+  const amount = document.getElementById('req-amount').value.trim();
+  const reason = document.getElementById('req-reason').value.trim();
+  if (!amount || !reason) {
+    showToast('Заполните все поля', 'error');
+    return;
+  }
+  closeModal('modal-request');
+  showToast('Запрос на увеличение лимита до ' + amount + ' ₽ отправлен директору региона', 'success');
+}
+
+// ===== МОДАЛЬНЫЕ ОКНА =====
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeOnOverlay(event, id) {
+  if (event.target === event.currentTarget) closeModal(id);
+}
+// Закрытие по Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+    document.body.style.overflow = '';
+  }
+});
+
+// ===== TOAST-УВЕДОМЛЕНИЕ =====
+function showToast(message, type) {
+  // Удалить старые уведомления
+  document.querySelectorAll('.toast-notify').forEach(t => t.remove());
+
+  const toast = document.createElement('div');
+  toast.className = 'toast-notify';
+  toast.textContent = message;
+  Object.assign(toast.style, {
+    position: 'fixed',
+    bottom: '28px',
+    right: '28px',
+    padding: '14px 22px',
+    borderRadius: '10px',
+    fontFamily: "'Nunito', sans-serif",
+    fontSize: '14px',
+    fontWeight: '700',
+    color: '#fff',
+    zIndex: '99999',
+    boxShadow: '0 4px 20px rgba(0,0,0,0.18)',
+    maxWidth: '380px',
+    lineHeight: '1.4',
+    background: type === 'success' ? '#4CAF50' : type === 'error' ? '#e53935' : '#1976D2',
+    animation: 'fadeInUp 0.3s ease',
+  });
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3500);
+}
+
+// ===== ДИНАМИЧЕСКОЕ ОБНОВЛЕНИЕ ПРОГРЕССА (при изменении лимита) =====
+document.querySelectorAll('.limit-input').forEach(input => {
+  input.addEventListener('input', function() {
+    this.classList.add('changed');
+    this.closest('tr').classList.add('row-changed');
+  });
+});
+
+// ===== EXCEL-ВЫГРУЗКА ТАБЛИЦ С ФОРМАТИРОВАНИЕМ =====
+// Определяем цвет ячейки по CSS-классу строки или статус-бейджу
+function getRowStatusColor(row) {
+  const badge = row.querySelector('.status-badge, .tag');
+  if (!badge) return null;
+  const text = badge.textContent.trim().toLowerCase();
+  const cls = badge.className.toLowerCase();
+  if (cls.includes('danger') || cls.includes('red') || text.includes('критично') || text.includes('превышен')) {
+    return { fgColor: { rgb: 'FFEBEE' } }; // светло-красный
+  }
+  if (cls.includes('warning') || cls.includes('orange') || cls.includes('warn') || text.includes('внимание')) {
+    return { fgColor: { rgb: 'FFF8E1' } }; // светло-жёлтый
+  }
+  if (cls.includes('success') || cls.includes('green') || text.includes('норма') || text.includes('активен')) {
+    return { fgColor: { rgb: 'E8F5E9' } }; // светло-зелёный
+  }
+  return null;
+}
+
+// Определяем цвет через inline style (progress bar цвет)
+function getProgressColor(row) {
+  const bar = row.querySelector('.progress-fill, [style*="background"]');
+  if (bar) {
+    const style = bar.getAttribute('style') || '';
+    if (style.includes('#e53935') || style.includes('danger') || style.includes('red')) {
+      return { fgColor: { rgb: 'FFCDD2' } };
+    }
+    if (style.includes('#FF9800') || style.includes('warning') || style.includes('orange')) {
+      return { fgColor: { rgb: 'FFE0B2' } };
+    }
+    if (style.includes('#4CAF50') || style.includes('success') || style.includes('green')) {
+      return { fgColor: { rgb: 'C8E6C9' } };
+    }
+  }
+  return null;
+}
+
+/**
+ * Главная функция экспорта таблицы в Excel
+ * @param {string} tableId — id таблицы или null для ближайшей к кнопке
+ * @param {string} filename — имя файла без расширения
+ * @param {string} sheetName — название листа в Excel
+ */
+function exportToExcel(tableId, filename, sheetName) {
+  // Находим таблицу
+  const table = tableId
+    ? document.getElementById(tableId)
+    : document.querySelector('.data-table, .history-table');
+
+  if (!table) {
+    showNotification('Таблица не найдена', 'error');
+    return;
+  }
+
+  const wb = XLSX.utils.book_new();
+  const wsData = [];
+  const cellStyles = {}; // стили для ячеек
+
+  // === ЗАГОЛОВОК отчёта ===
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('ru-RU', {day:'2-digit', month:'2-digit', year:'numeric'});
+  const timeStr = now.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'});
+  wsData.push([`KARI Самозанятые — ${sheetName || 'Отчёт'}`, '', '', `Дата выгрузки: ${dateStr} ${timeStr}`]);
+  wsData.push([]); // пустая строка
+
+  let rowIndex = 2; // 0-based, уже 2 строки добавили
+
+  // === ШАПКА таблицы ===
+  const headers = [];
+  table.querySelectorAll('thead th').forEach(th => {
+    const text = th.textContent.trim();
+    // Исключаем колонку "Действия" из экспорта
+    if (text !== 'Действия') headers.push(text);
+  });
+  wsData.push(headers);
+
+  // Стилизуем шапку — KARI пурпурный фон
+  headers.forEach((_, colIndex) => {
+    const cellAddr = XLSX.utils.encode_cell({r: rowIndex, c: colIndex});
+    cellStyles[cellAddr] = {
+      fill: { fgColor: { rgb: 'A01F72' } },
+      font: { color: { rgb: 'FFFFFF' }, bold: true, sz: 11 },
+      alignment: { horizontal: 'center', vertical: 'center', wrapText: true },
+      border: {
+        top: { style: 'thin', color: { rgb: '7a1750' } },
+        bottom: { style: 'thin', color: { rgb: '7a1750' } },
+        left: { style: 'thin', color: { rgb: '7a1750' } },
+        right: { style: 'thin', color: { rgb: '7a1750' } }
+      }
+    };
+  });
+  rowIndex++;
+
+  // === СТРОКИ данных ===
+  table.querySelectorAll('tbody tr').forEach(row => {
+    const cells = row.querySelectorAll('td');
+    if (cells.length === 0) return;
+
+    const rowData = [];
+    let hasActionCol = false;
+
+    // Определяем нужно ли пропустить последнюю колонку (Действия)
+    const headerCells = table.querySelectorAll('thead th');
+    headerCells.forEach((th, i) => {
+      if (th.textContent.trim() === 'Действия') hasActionCol = true;
+    });
+
+    const cellsToProcess = hasActionCol ? cells.length - 1 : cells.length;
+
+    for (let i = 0; i < cellsToProcess; i++) {
+      const cell = cells[i];
+      // Извлекаем чистый текст (без кнопок и input-ов)
+      let text = '';
+
+      // Если есть input (редактируемый лимит) — берём его значение
+      const input = cell.querySelector('input');
+      if (input) {
+        text = input.value || input.placeholder || '';
+      } else {
+        // Берём текст бейджа если есть, иначе весь текст
+        const badge = cell.querySelector('.status-badge, .tag');
+        text = badge ? badge.textContent.trim() : cell.textContent.trim();
+      }
+
+      // Убираем лишние пробелы
+      text = text.replace(/\s+/g, ' ').trim();
+
+      // Числовые значения преобразуем в числа
+      const numericText = text.replace(/[₽\s,]/g, '');
+      const numVal = parseFloat(numericText);
+      rowData.push(!isNaN(numVal) && numericText.length > 0 ? numVal : text);
+    }
+
+    wsData.push(rowData);
+
+    // Определяем цвет строки по статусу
+    const statusColor = getRowStatusColor(row) || getProgressColor(row);
+
+    if (statusColor) {
+      for (let c = 0; c < rowData.length; c++) {
+        const cellAddr = XLSX.utils.encode_cell({r: rowIndex, c});
+        cellStyles[cellAddr] = {
+          fill: statusColor,
+          font: { sz: 10 },
+          border: {
+            top: { style: 'thin', color: { rgb: 'E0E0E0' } },
+            bottom: { style: 'thin', color: { rgb: 'E0E0E0' } },
+            left: { style: 'thin', color: { rgb: 'E0E0E0' } },
+            right: { style: 'thin', color: { rgb: 'E0E0E0' } }
+          },
+          alignment: { vertical: 'center', wrapText: true }
+        };
+      }
+    } else {
+      // Чередование строк — серый/белый
+      const altColor = rowIndex % 2 === 0 ? 'F9F9F9' : 'FFFFFF';
+      for (let c = 0; c < rowData.length; c++) {
+        const cellAddr = XLSX.utils.encode_cell({r: rowIndex, c});
+        cellStyles[cellAddr] = {
+          fill: { fgColor: { rgb: altColor } },
+          font: { sz: 10 },
+          border: {
+            top: { style: 'thin', color: { rgb: 'E0E0E0' } },
+            bottom: { style: 'thin', color: { rgb: 'E0E0E0' } },
+            left: { style: 'thin', color: { rgb: 'E0E0E0' } },
+            right: { style: 'thin', color: { rgb: 'E0E0E0' } }
+          },
+          alignment: { vertical: 'center', wrapText: true }
+        };
+      }
+    }
+
+    rowIndex++;
+  });
+
+  // === Создаём лист и применяем стили ===
+  const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+  // Применяем стили ячеек
+  Object.keys(cellStyles).forEach(addr => {
+    if (!ws[addr]) ws[addr] = { v: '', t: 's' };
+    ws[addr].s = cellStyles[addr];
+  });
+
+  // Стиль заголовка отчёта (строка 1)
+  const titleCell = XLSX.utils.encode_cell({r: 0, c: 0});
+  if (!ws[titleCell]) ws[titleCell] = { v: '', t: 's' };
+  ws[titleCell].s = {
+    font: { bold: true, sz: 13, color: { rgb: 'A01F72' } },
+    alignment: { horizontal: 'left' }
+  };
+
+  // Ширина колонок — авто (примерно)
+  const colWidths = headers.map(h => ({ wch: Math.max(h.length + 4, 15) }));
+  ws['!cols'] = colWidths;
+
+  // Высота строки заголовка таблицы
+  ws['!rows'] = Array(rowIndex).fill({ hpt: 22 });
+  ws['!rows'][0] = { hpt: 28 };
+  ws['!rows'][2] = { hpt: 26 };
+
+  // Диапазон данных
+  ws['!ref'] = XLSX.utils.encode_range({r: 0, c: 0}, {r: rowIndex - 1, c: headers.length - 1});
+
+  // Объединяем ячейки заголовка отчёта
+  ws['!merges'] = [
+    { s: {r:0, c:0}, e: {r:0, c: Math.max(headers.length - 2, 1)} }
+  ];
+
+  XLSX.utils.book_append_sheet(wb, ws, sheetName || 'Данные');
+
+  // Сохраняем файл
+  const finalFilename = `KARI_${filename || 'export'}_${dateStr.replace(/\./g,'-')}.xlsx`;
+  XLSX.writeFile(wb, finalFilename, { bookType: 'xlsx', type: 'binary', cellStyles: true });
+
+  showNotification(`✅ Файл "${finalFilename}" выгружен`, 'success');
+}
+</script>
+
+<style>
+/* ===== КНОПКА EXCEL-ВЫГРУЗКИ ===== */
+.btn-excel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1.5px solid #217346;
+  color: #217346;
+  background: #fff;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Nunito', sans-serif;
+  letter-spacing: 0.3px;
+}
+.btn-excel:hover {
+  background: #217346;
+  color: #fff;
+}
+.content-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ===== СЕКЦИИ МЕНЮ ===== */
+.sec { display: none; }
+.sec.active { display: block; }
+.sec-placeholder {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 80px 24px; text-align: center;
+}
+.sec-placeholder .ph-icon { font-size: 52px; display: block; margin-bottom: 16px; }
+.sec-placeholder h3 { font-size: 20px; font-weight: 800; color: #242D4A; margin: 0 0 10px; }
+.sec-placeholder p { font-size: 14px; color: #999; line-height: 1.7; margin: 0; }
+
+/* Toast анимация */
+@keyframes fadeInUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+/* Печать */
+@media print {
+  .cabinet-switcher, .sidebar, .btn, .filters-row { display: none !important; }
+  .app-layout { display: block; }
+  .main-content { padding: 0; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   МОБИЛЬНАЯ АДАПТАЦИЯ — добавлено 11.03.2026
+   Адаптировано для экранов смартфонов (< 768px)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Таблицы — горизонтальный скролл на всех устройствах */
+table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+/* Изображения — масштабирование */
+img { max-width: 100% !important; height: auto !important; }
+@media (max-width: 900px) {
+  /* Сетки 4-5 колонок → 2 колонки */
+  .kpi-grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 768px) {
+  /* Все многоколоночные сетки → 1 колонка */
+  .kpi-grid-4 { grid-template-columns: 1fr !important; }
+  .kpi-grid-3 { grid-template-columns: 1fr !important; }
+
+  /* Боковое меню — скрываем, убираем отступ */
+  .sidebar { display: none !important; }
+  .main-content { margin-left: 0 !important; padding: 16px !important; }
+  .site-header { position: relative !important; }
+
+  /* Отступы шапки */
+  .header, .page-header { padding: 20px 16px !important; }
+  .header-top { flex-wrap: wrap !important; gap: 8px !important; }
+  .header-meta, .header-actions, .header-badges { flex-wrap: wrap !important; gap: 8px !important; }
+
+  /* Основной контент */
+  .main, .content, .container { padding: 16px !important; }
+
+  /* Типографика */
+  h1 { font-size: 22px !important; }
+  h2 { font-size: 18px !important; }
+  h3 { font-size: 15px !important; }
+
+  /* Горизонтальные ряды — перенос */
+  .header-pills, .filter-tabs, .nav-tabs, .tabs-row,
+  .section-tabs, .tab-bar { flex-wrap: wrap !important; }
+  .step { flex-direction: column !important; }
+
+  /* Кодовые блоки */
+  pre, code {
+    overflow-x: auto !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 13px !important; }
+  .badge, .tag, .pill, .status-badge { font-size: 11px !important; padding: 3px 8px !important; }
+  h1, .header h1, .logo-area h1 { font-size: 19px !important; }
+  .btn-print, .btn-export { display: none !important; }
+}
+</style>
+
+</body>
+</html>

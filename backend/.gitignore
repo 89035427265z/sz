@@ -1,0 +1,24 @@
+# Секретные настройки — НИКОГДА не добавлять в git!
+.env
+firebase-credentials.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Логи
+*.log
+logs/
+
+# Временные файлы
+*.tmp
+uploads/

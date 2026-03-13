@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KARI.Самозанятые — Презентация проекта</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --kari: #A01F72;
+    --kari-dark: #7d1759;
+    --dark: #242D4A;
+    --text: #333;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --green: #16a34a;
+    --blue: #2563eb;
+    --radius: 16px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Nunito', sans-serif; background: #f5f5f7; color: var(--text); }
+
+  /* ─── СЛАЙДЫ ─── */
+  .slide {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 80px;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+  }
+
+  /* ─── СЛАЙД 1: ТИТУЛЬНЫЙ ─── */
+  .slide-cover {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a2238 60%, #2d1040 100%);
+    color: #fff;
+    align-items: center;
+    text-align: center;
+  }
+  .slide-cover::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: rgba(160,31,114,0.15);
+  }
+  .slide-cover::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -80px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(160,31,114,0.1);
+  }
+  .logo-badge {
+    display: inline-block;
+    background: var(--kari);
+    color: #fff;
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    padding: 12px 32px;
+    border-radius: 12px;
+    margin-bottom: 32px;
+    position: relative;
+    z-index: 1;
+  }
+  .cover-title {
+    font-size: 56px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+  }
+  .cover-title span { color: var(--kari); }
+  .cover-sub {
+    font-size: 22px;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 48px;
+    position: relative;
+    z-index: 1;
+  }
+  .cover-meta {
+    display: flex;
+    gap: 40px;
+    position: relative;
+    z-index: 1;
+  }
+  .cover-meta-item { text-align: center; }
+  .cover-meta-item .num { font-size: 36px; font-weight: 900; color: var(--kari); }
+  .cover-meta-item .lbl { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+  .cover-date {
+    margin-top: 48px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ─── ШАПКА СЛАЙДА ─── */
+  .slide-header {
+    margin-bottom: 40px;
+  }
+  .slide-num {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--kari);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .slide-title {
+    font-size: 38px;
+    font-weight: 900;
+    color: var(--dark);
+    line-height: 1.1;
+  }
+  .slide-title span { color: var(--kari); }
+  .slide-sub {
+    font-size: 16px;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+
+  /* ─── СЛАЙД: БЕЛЫЙ ─── */
+  .slide-white { background: #fff; }
+
+  /* ─── СЛАЙД: СВЕТЛЫЙ ─── */
+  .slide-light { background: #f5f5f7; }
+
+  /* ─── СЛАЙД: ТЁМНЫЙ АКЦЕНТ ─── */
+  .slide-dark {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a2238 100%);
+    color: #fff;
+  }
+  .slide-dark .slide-title { color: #fff; }
+  .slide-dark .slide-num { color: rgba(255,255,255,0.5); }
+  .slide-dark .slide-sub { color: rgba(255,255,255,0.6); }
+
+  /* ─── СЕТКИ ─── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+  /* ─── КАРТОЧКИ ─── */
+  .card {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .card-dark {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+  .card-kari {
+    background: linear-gradient(135deg, var(--kari) 0%, #c2246b 100%);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+
+  /* ─── МЕТРИКИ (большие числа) ─── */
+  .metric { text-align: center; }
+  .metric .num {
+    font-size: 52px;
+    font-weight: 900;
+    color: var(--kari);
+    line-height: 1;
+    display: block;
+  }
+  .metric .num-dark { color: #fff; }
+  .metric .unit { font-size: 20px; font-weight: 700; }
+  .metric .lbl {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 8px;
+    line-height: 1.4;
+  }
+  .metric .lbl-dark { color: rgba(255,255,255,0.6); }
+
+  /* ─── ПРОБЛЕМА / РЕШЕНИЕ ─── */
+  .problem-vs {
+    display: grid;
+    grid-template-columns: 1fr 60px 1fr;
+    gap: 0;
+    align-items: center;
+  }
+  .problem-box {
+    background: #fff5f5;
+    border: 2px solid #fca5a5;
+    border-radius: var(--radius);
+    padding: 28px;
+  }
+  .solution-box {
+    background: #f0fdf4;
+    border: 2px solid #86efac;
+    border-radius: var(--radius);
+    padding: 28px;
+  }
+  .vs-circle {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--kari);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+  }
+  .box-title {
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+  .box-title.red { color: #dc2626; }
+  .box-title.green { color: var(--green); }
+  .problem-list, .solution-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .problem-list li::before { content: '✗ '; color: #dc2626; font-weight: 700; }
+  .solution-list li::before { content: '✓ '; color: var(--green); font-weight: 700; }
+  .problem-list li, .solution-list li { font-size: 15px; line-height: 1.4; }
+
+  /* ─── МОДУЛИ ─── */
+  .module-row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .module-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px 20px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+  }
+  .module-icon { font-size: 28px; width: 40px; text-align: center; flex-shrink: 0; }
+  .module-name { font-size: 15px; font-weight: 700; color: var(--dark); }
+  .module-desc { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .module-badge {
+    margin-left: auto;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .badge-done { background: #dcfce7; color: var(--green); }
+  .badge-pilot { background: #dbeafe; color: var(--blue); }
+
+  /* ─── РОЛИ ─── */
+  .roles-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .role-card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+  }
+  .role-icon { font-size: 36px; margin-bottom: 12px; }
+  .role-name { font-size: 14px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+  .role-list { list-style: none; }
+  .role-list li { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+
+  /* ─── ТЕХНОЛОГИИ ─── */
+  .tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .tech-chip {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .tech-chip.highlight {
+    background: var(--kari);
+    border-color: var(--kari);
+  }
+
+  /* ─── ТАЙМЛАЙН ─── */
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 24px;
+    top: 20px;
+    bottom: 20px;
+    width: 2px;
+    background: var(--border);
+  }
+  .tl-item {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 0 0 24px 0;
+    position: relative;
+  }
+  .tl-dot {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .tl-dot.done { background: #dcfce7; }
+  .tl-dot.active { background: var(--kari); color: #fff; }
+  .tl-dot.next { background: #f3f4f6; }
+  .tl-body { padding-top: 8px; }
+  .tl-title { font-size: 16px; font-weight: 800; color: var(--dark); }
+  .tl-date { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .tl-status {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-top: 4px;
+  }
+  .status-done { background: #dcfce7; color: var(--green); }
+  .status-active { background: #fef3c7; color: #d97706; }
+  .status-next { background: #f3f4f6; color: #6b7280; }
+
+  /* ─── ФИНАНСЫ ─── */
+  .finance-comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .finance-card {
+    border-radius: var(--radius);
+    padding: 28px;
+  }
+  .finance-card.old { background: #fff5f5; border: 2px solid #fca5a5; }
+  .finance-card.new { background: #f0fdf4; border: 2px solid #86efac; }
+  .finance-title { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; }
+  .finance-title.red { color: #dc2626; }
+  .finance-title.green { color: var(--green); }
+  .finance-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .finance-row:last-child { border-bottom: none; }
+  .finance-row .label { font-size: 14px; color: var(--muted); }
+  .finance-row .value { font-size: 16px; font-weight: 800; color: var(--dark); }
+  .finance-total { margin-top: 16px; text-align: center; }
+  .finance-total .big { font-size: 40px; font-weight: 900; }
+  .finance-total .big.red { color: #dc2626; }
+  .finance-total .big.green { color: var(--green); }
+  .finance-total .sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+  /* ─── РИСКИ/ЗАКОН ─── */
+  .law-card {
+    background: #fef3c7;
+    border: 2px solid #fcd34d;
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  .law-icon { font-size: 28px; flex-shrink: 0; }
+  .law-title { font-size: 15px; font-weight: 800; color: #92400e; margin-bottom: 4px; }
+  .law-text  { font-size: 14px; color: #78350f; line-height: 1.5; }
+  .law-resolved {
+    background: #f0fdf4;
+    border-color: #86efac;
+  }
+  .law-resolved .law-title { color: #14532d; }
+  .law-resolved .law-text  { color: #166534; }
+
+  /* ─── КНОПКИ В КОНЦЕ ─── */
+  .cta-row {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 40px;
+  }
+  .cta-btn {
+    padding: 16px 40px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 800;
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .cta-primary { background: var(--kari); color: #fff; }
+  .cta-secondary {
+    background: rgba(255,255,255,0.1);
+    border: 2px solid rgba(255,255,255,0.3);
+    color: #fff;
+  }
+
+  /* ─── FOOTER ─── */
+  .slide-footer {
+    position: absolute;
+    bottom: 24px;
+    left: 80px;
+    right: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-logo { font-size: 13px; font-weight: 800; color: rgba(255,255,255,0.2); letter-spacing: 2px; }
+  .footer-page { font-size: 12px; color: rgba(255,255,255,0.3); }
+  .slide-white .footer-logo,
+  .slide-light .footer-logo { color: rgba(0,0,0,0.15); }
+  .slide-white .footer-page,
+  .slide-light .footer-page { color: rgba(0,0,0,0.2); }
+
+  /* ─── НАВИГАЦИЯ ─── */
+  .nav-dots {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 100;
+  }
+  .nav-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.2);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .nav-dot:hover { background: var(--kari); transform: scale(1.4); }
+
+  @media print {
+    .nav-dots { display: none; }
+    .slide { page-break-after: always; break-after: page; }
+    body { background: #fff; }
+  }
+
+/* ═══════════════════════════════════════════════════════════
+   МОБИЛЬНАЯ АДАПТАЦИЯ — добавлено 11.03.2026
+   Адаптировано для экранов смартфонов (< 768px)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Таблицы — горизонтальный скролл на всех устройствах */
+table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+/* Изображения — масштабирование */
+img { max-width: 100% !important; height: auto !important; }
+@media (max-width: 900px) {
+  /* Сетки 4-5 колонок → 2 колонки */
+  .grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
+  .roles-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 768px) {
+  /* Все многоколоночные сетки → 1 колонка */
+  .grid-4 { grid-template-columns: 1fr !important; }
+  .roles-grid { grid-template-columns: 1fr !important; }
+
+  /* Боковое меню — скрываем, убираем отступ */
+  .sidebar { display: none !important; }
+  .main-content { margin-left: 0 !important; padding: 16px !important; }
+  .site-header { position: relative !important; }
+
+  /* Отступы шапки */
+  .header, .page-header { padding: 20px 16px !important; }
+  .header-top { flex-wrap: wrap !important; gap: 8px !important; }
+  .header-meta, .header-actions, .header-badges { flex-wrap: wrap !important; gap: 8px !important; }
+
+  /* Основной контент */
+  .main, .content, .container { padding: 16px !important; }
+
+  /* Типографика */
+  h1 { font-size: 22px !important; }
+  h2 { font-size: 18px !important; }
+  h3 { font-size: 15px !important; }
+
+  /* Горизонтальные ряды — перенос */
+  .header-pills, .filter-tabs, .nav-tabs, .tabs-row,
+  .section-tabs, .tab-bar { flex-wrap: wrap !important; }
+  .step { flex-direction: column !important; }
+
+  /* Кодовые блоки */
+  pre, code {
+    overflow-x: auto !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 13px !important; }
+  .badge, .tag, .pill, .status-badge { font-size: 11px !important; padding: 3px 8px !important; }
+  h1, .header h1, .logo-area h1 { font-size: 19px !important; }
+  .btn-print, .btn-export { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- СЛАЙД 1: ОБЛОЖКА -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="slide slide-cover">
+  <div class="logo-badge">KARI</div>
+  <h1 class="cover-title">
+    Платформа<br><span>«Самозанятые»</span>
+  </h1>
+  <p class="cover-sub">Цифровая замена Наймикс · Собственная разработка · Март 2026</p>
+
+  <div class="cover-meta">
+    <div class="cover-meta-item">
+      <div class="num">100</div>
+      <div class="lbl">магазинов<br>в пилоте</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="num">500</div>
+      <div class="lbl">самозанятых<br>исполнителей</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="num">2</div>
+      <div class="lbl">региона<br>Иркутск + Юг</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="num">40%</div>
+      <div class="lbl">экономия<br>затрат</div>
+    </div>
+  </div>
+  <div class="cover-date">Подготовил: Юрий, Директор региона · Апрель 2026</div>
+
+  <div class="slide-footer">
+    <span class="footer-logo">KARI · САМОЗАНЯТЫЕ</span>
+    <span class="footer-page">1 / 10</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- СЛАЙД 2: ПРОБЛЕМА И РЕШЕНИЕ -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="slide slide-light">
+  <div class="slide-header">
+    <div class="slide-num">Слайд 02</div>
+    <h2 class="slide-title">Почему мы создали <span>эту платформу</span></h2>
+    <p class="slide-sub">Реальные проблемы с Наймикс — и как мы их решили</p>
+  </div>
+
+  <div class="problem-vs">
+    <div class="problem-box">
+      <div class="box-title red">❌ Было — Наймикс</div>
+      <ul class="problem-list">
+        <li>Комиссия 8–12% с каждой выплаты</li>
+        <li>Нет контроля — чёрный ящик для KARI</li>
+        <li>Не отслеживаем бывших сотрудников</li>
+        <li>Зависим от чужого сервиса</li>
+        <li>Невозможно продать другим ритейлерам</li>
+        <li>Нет интеграции с нашими системами</li>
+        <li>Медленная выплата — 3–5 дней</li>
+      </ul>
+    </div>
+    <div class="vs-circle">VS</div>
+    <div class="solution-box">
+      <div class="box-title green">✅ Стало — KARI.Самозанятые</div>
+      <ul class="solution-list">
+        <li>Комиссия 0% — всё в KARI</li>
+        <li>Полная прозрачность: каждый рубль под контролем</li>
+        <li>Стоп-лист бывших сотрудников (422-ФЗ)</li>
+        <li>Наш продукт, наши данные</li>
+        <li>B2B потенциал — продажа другим ритейлерам</li>
+        <li>Интеграция с ФНС, Совкомбанком, ЭДО</li>
+        <li>Мгновенная выплата после приёмки</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="footer-logo">KARI · САМОЗАНЯТЫЕ</span>
+    <span class="footer-page">2 / 10</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- СЛАЙД 3: ЧТО ПОСТРОИЛИ -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="slide slide-white">
+  <div class="slide-header">
+    <div class="slide-num">Слайд 03</div>
+    <h2 class="slide-title">Что мы <span>построили</span></h2>
+    <p class="slide-sub">13 модулей · Все готовы к пилоту</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="module-row">
+      <div class="module-item">
+        <span class="module-icon">🔐</span>
+        <div>
+          <div class="module-name">Авторизация и онбординг</div>
+          <div class="module-desc">SMS-вход, проверка ИНН в ФНС, договор ГПХ через ПЭП</div>
+        </div>
+        <span class="module-badge badge-done">✅ Готов</span>
+      </div>
+      <div class="module-item">
+        <span class="module-icon">📋</span>
+        <div>
+          <div class="module-name">Биржа заданий</div>
+          <div class="module-desc">Геофильтр, статусы, фото-отчёт с GPS-меткой</div>
+        </div>
+        <span class="module-badge badge-done">✅ Готов</span>
+      </div>
+      <div class="module-item">
+        <span class="module-icon">💰</span>
+        <div>
+          <div class="module-name">Выплаты через Совкомбанк</div>
+          <div class="module-desc">Одиночные и массовые по Excel-реестру (1 000 строк)</div>
+        </div>
+        <span class="module-badge badge-done">✅ Готов</span>
+      </div>
+      <div class="module-item">
+        <span class="module-icon">🏛️</span>
+        <div>
+          <div class="module-name">Интеграция с ФНС</div>
+          <div class="module-desc">Статус самозанятого, чеки, контроль аннулирования ежедневно</div>
+        </div>
+        <span class="module-badge badge-done">✅ Готов</span>
+      </div>
+      <div class="module-item">
+        <span class="module-icon">📄</span>
+        <div>
+          <div class="module-name">ЭДО: договоры и акты</div>
+          <div class="module-desc">Автогенерация PDF, подпись ПЭП через SMS</div>
+        </div>
+        <span class="module-badge badge-done">✅ Готов</span>
+      </div>
+      <div class="module-item">
+        <span class="module-icon">📸</span>
+        <div>
+          <div class="module-name">Фото-отчёт</div>
+          <div class="module-desc">1–3 фото (мин 1280×720), GPS, хранение 3 года в MinIO</div>
+        </div>
+        <span class="module-badge badge-done">✅ Готов</span>
+      </div>
+    </div>
+    <div class="module-row">
+      <div class="module-item">
+        <span class="module-icon">🚫</span>
+        <div>
+          <div class="module-name">Стоп-лист (422-ФЗ)</div>
+          <div class="module-desc">Защита от штрафов ФНС, авто-проверка по ИНН, Excel-импорт</div>
+        </div>
+        <span class="module-badge badge-done">✅ Готов</span>
+      </div>
+      <div class="module-item">
+        <span class="module-icon">📊</span>
+        <div>
+          <div class="module-name">Веб-кабинеты директоров</div>
+          <div class="module-desc">4 роли: регион, подразделение, магазин, HRD</div>
+        </div>
+        <span class="module-badge badge-done">✅ Готов</span>
+      </div>
+      <div class="module-item">
+        <span class="module-icon">📱</span>
+        <div>
+          <div class="module-name">Мобильное приложение</div>
+          <div class="module-desc">React Native / Expo: биржа, кошелёк, профиль, уведомления</div>
+        </div>
+        <span class="module-badge badge-done">✅ Готов</span>
+      </div>
+      <div class="module-item">
+        <span class="module-icon">🔔</span>
+        <div>
+          <div class="module-name">Push-уведомления</div>
+          <div class="module-desc">Expo Push API: новые задания, выплаты, статусы</div>
+        </div>
+        <span class="module-badge badge-done">✅ Готов</span>
+      </div>
+      <div class="module-item">
+        <span class="module-icon">⚙️</span>
+        <div>
+          <div class="module-name">Фоновые задачи (Celery)</div>
+          <div class="module-desc">Выплаты, проверка ФНС, стоп-лист — автоматически каждую ночь</div>
+        </div>
+        <span class="module-badge badge-done">✅ Готов</span>
+      </div>
+      <div class="module-item">
+        <span class="module-icon">💼</span>
+        <div>
+          <div class="module-name">Бюджетные лимиты</div>
+          <div class="module-desc">По регионам и подразделениям, делегирование прав</div>
+        </div>
+        <span class="module-badge badge-done">✅ Готов</span>
+      </div>
+      <div class="module-item">
+        <span class="module-icon">🌡️</span>
+        <div>
+          <div class="module-name">Нагрузочное тестирование</div>
+          <div class="module-desc">Locust: 500 исполнителей + 100 директоров, цель P95 &lt; 500 мс</div>
+        </div>
+        <span class="module-badge badge-pilot">🔄 Тест</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="footer-logo">KARI · САМОЗАНЯТЫЕ</span>
+    <span class="footer-page">3 / 10</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- СЛАЙД 4: РОЛИ В СИСТЕМЕ -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="slide slide-dark">
+  <div class="slide-header">
+    <div class="slide-num">Слайд 04</div>
+    <h2 class="slide-title">Кто работает <span>в системе</span></h2>
+    <p class="slide-sub">4 роли — каждая со своим кабинетом и правами</p>
+  </div>
+
+  <div class="roles-grid">
+    <div class="role-card">
+      <div class="role-icon">🎯</div>
+      <div class="role-name">Директор региона</div>
+      <ul class="role-list">
+        <li>Полный доступ</li>
+        <li>Бюджеты по регионам</li>
+        <li>Делегирование прав</li>
+        <li>Стоп-лист</li>
+        <li>Сигналы тревоги</li>
+      </ul>
+    </div>
+    <div class="role-card">
+      <div class="role-icon">🏢</div>
+      <div class="role-name">Директор подразделения</div>
+      <ul class="role-list">
+        <li>Задания по магазинам</li>
+        <li>Бюджет подразделения</li>
+        <li>Исполнители</li>
+        <li>Аналитика drilldown</li>
+      </ul>
+    </div>
+    <div class="role-card">
+      <div class="role-icon">🏪</div>
+      <div class="role-name">Директор магазина</div>
+      <ul class="role-list">
+        <li>Создание заданий</li>
+        <li>Приёмка работ</li>
+        <li>Фото-отчёт</li>
+        <li>SMS-уведомления</li>
+      </ul>
+    </div>
+    <div class="role-card" style="border: 1px solid rgba(160,31,114,0.6);">
+      <div class="role-icon">📱</div>
+      <div class="role-name">Исполнитель</div>
+      <ul class="role-list">
+        <li>Мобильное приложение</li>
+        <li>Биржа заданий</li>
+        <li>Кошелёк и выплаты</li>
+        <li>Договоры и акты</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="margin-top: 32px; background: rgba(255,255,255,0.06); border-radius: 12px; padding: 20px 24px; display: flex; gap: 40px; justify-content: center;">
+    <div style="text-align: center;">
+      <div style="font-size: 28px; font-weight: 900; color: var(--kari);">100</div>
+      <div style="font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px;">Директоров магазинов<br>в пилоте</div>
+    </div>
+    <div style="text-align: center;">
+      <div style="font-size: 28px; font-weight: 900; color: var(--kari);">500</div>
+      <div style="font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px;">Самозанятых<br>исполнителей</div>
+    </div>
+    <div style="text-align: center;">
+      <div style="font-size: 28px; font-weight: 900; color: var(--kari);">2</div>
+      <div style="font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px;">Региона в пилоте<br>Иркутск + Юг</div>
+    </div>
+    <div style="text-align: center;">
+      <div style="font-size: 28px; font-weight: 900; color: var(--kari);">4</div>
+      <div style="font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px;">HRD и бухгалтеры<br>в системе</div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="footer-logo">KARI · САМОЗАНЯТЫЕ</span>
+    <span class="footer-page">4 / 10</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- СЛАЙД 5: ТЕХНОЛОГИИ -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="slide slide-white">
+  <div class="slide-header">
+    <div class="slide-num">Слайд 05</div>
+    <h2 class="slide-title">Технологический <span>стек</span></h2>
+    <p class="slide-sub">Современные открытые технологии — без лицензионных платежей</p>
+  </div>
+
+  <div class="grid-2" style="gap: 32px; align-items: start;">
+    <div>
+      <div style="font-size: 12px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;">Бэкенд (сервер)</div>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div class="card" style="padding: 16px; display: flex; gap: 12px; align-items: center;">
+          <span style="font-size: 24px;">🐍</span>
+          <div><div style="font-weight: 800; color: var(--dark);">Python / FastAPI</div><div style="font-size: 12px; color: var(--muted);">36 файлов API, async, высокая скорость</div></div>
+        </div>
+        <div class="card" style="padding: 16px; display: flex; gap: 12px; align-items: center;">
+          <span style="font-size: 24px;">🐘</span>
+          <div><div style="font-weight: 800; color: var(--dark);">PostgreSQL + Redis</div><div style="font-size: 12px; color: var(--muted);">База данных + кэш + очереди задач</div></div>
+        </div>
+        <div class="card" style="padding: 16px; display: flex; gap: 12px; align-items: center;">
+          <span style="font-size: 24px;">⚙️</span>
+          <div><div style="font-weight: 800; color: var(--dark);">Celery + RabbitMQ</div><div style="font-size: 12px; color: var(--muted);">Фоновые задачи: выплаты, ФНС, стоп-лист</div></div>
+        </div>
+        <div class="card" style="padding: 16px; display: flex; gap: 12px; align-items: center;">
+          <span style="font-size: 24px;">🗄️</span>
+          <div><div style="font-weight: 800; color: var(--dark);">MinIO</div><div style="font-size: 12px; color: var(--muted);">Хранение фото-отчётов, 3 года, S3-совместимый</div></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size: 12px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;">Фронтенд и мобайл</div>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div class="card" style="padding: 16px; display: flex; gap: 12px; align-items: center;">
+          <span style="font-size: 24px;">⚛️</span>
+          <div><div style="font-weight: 800; color: var(--dark);">React.js + Vite</div><div style="font-size: 12px; color: var(--muted);">4 веб-кабинета для директоров и HRD</div></div>
+        </div>
+        <div class="card" style="padding: 16px; display: flex; gap: 12px; align-items: center;">
+          <span style="font-size: 24px;">📱</span>
+          <div><div style="font-weight: 800; color: var(--dark);">React Native / Expo</div><div style="font-size: 12px; color: var(--muted);">iOS + Android из одного кода</div></div>
+        </div>
+        <div class="card" style="padding: 16px; display: flex; gap: 12px; align-items: center;">
+          <span style="font-size: 24px;">🏛️</span>
+          <div><div style="font-weight: 800; color: var(--dark);">API ФНС «Мой налог»</div><div style="font-size: 12px; color: var(--muted);">Статус самозанятого + чеки автоматически</div></div>
+        </div>
+        <div class="card" style="padding: 16px; display: flex; gap: 12px; align-items: center;">
+          <span style="font-size: 24px;">🏦</span>
+          <div><div style="font-weight: 800; color: var(--dark);">Совкомбанк API</div><div style="font-size: 12px; color: var(--muted);">Выплаты на карты, реестры до 1 000 строк</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="footer-logo">KARI · САМОЗАНЯТЫЕ</span>
+    <span class="footer-page">5 / 10</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- СЛАЙД 6: ЗАЩИТА ОТ ШТРАФОВ ФНС (СТОП-ЛИСТ) -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="slide slide-light">
+  <div class="slide-header">
+    <div class="slide-num">Слайд 06</div>
+    <h2 class="slide-title">Защита от штрафов <span>ФНС</span></h2>
+    <p class="slide-sub">Стоп-лист по 422-ФЗ — ключевой юридический модуль</p>
+  </div>
+
+  <div class="grid-2" style="gap: 24px;">
+    <div>
+      <div class="law-card">
+        <div class="law-icon">⚠️</div>
+        <div>
+          <div class="law-title">Риск без стоп-листа</div>
+          <div class="law-text">422-ФЗ ст.6 п.2 пп.8: если самозанятый работал у вас по трудовому договору менее 2 лет назад — KARI получает штраф от ФНС. Контракт с таким исполнителем переквалифицируется в трудовые отношения.</div>
+        </div>
+      </div>
+      <div class="law-card law-resolved">
+        <div class="law-icon">✅</div>
+        <div>
+          <div class="law-title">Как мы решили</div>
+          <div class="law-text">При попытке взять задание система автоматически проверяет ИНН по стоп-листу. Если найден — задание не выдаётся. Исполнитель получает уведомление с причиной и альтернативами.</div>
+        </div>
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <div class="card">
+        <div style="font-size: 13px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;">Как работает стоп-лист</div>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div style="display: flex; gap: 12px; align-items: flex-start;">
+            <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--kari); color: #fff; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">1</div>
+            <div style="font-size: 14px; color: var(--text); line-height: 1.4;">HRD загружает список бывших сотрудников через Excel-импорт</div>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: flex-start;">
+            <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--kari); color: #fff; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">2</div>
+            <div style="font-size: 14px; color: var(--text); line-height: 1.4;">Система автоматически считает: заблокирован до <em>дата увольнения + 2 года</em></div>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: flex-start;">
+            <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--kari); color: #fff; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-Content: center; flex-shrink: 0;">3</div>
+            <div style="font-size: 14px; color: var(--text); line-height: 1.4;">При нажатии «Взять задание» — мгновенная проверка ИНН</div>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: flex-start;">
+            <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--kari); color: #fff; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">4</div>
+            <div style="font-size: 14px; color: var(--text); line-height: 1.4;">Блокировка снимается автоматически ночью через 2 года</div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="background: linear-gradient(135deg, #1a2238, #242D4A); color: #fff;">
+        <div style="font-size: 13px; font-weight: 800; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Причины блокировки</div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <span style="font-size: 18px;">👤</span>
+            <div style="font-size: 13px; color: rgba(255,255,255,0.8);">Бывший сотрудник KARI (&lt; 2 лет)</div>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <span style="font-size: 18px;">🏛️</span>
+            <div style="font-size: 13px; color: rgba(255,255,255,0.8);">Штраф ФНС по этому ИНН</div>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <span style="font-size: 18px;">✋</span>
+            <div style="font-size: 13px; color: rgba(255,255,255,0.8);">Ручная блокировка HR-службой</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="footer-logo">KARI · САМОЗАНЯТЫЕ</span>
+    <span class="footer-page">6 / 10</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- СЛАЙД 7: ЭКОНОМИКА -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="slide slide-white">
+  <div class="slide-header">
+    <div class="slide-num">Слайд 07</div>
+    <h2 class="slide-title">Экономика <span>проекта</span></h2>
+    <p class="slide-sub">Сравнение затрат: Наймикс vs собственная платформа</p>
+  </div>
+
+  <div class="finance-comparison">
+    <div class="finance-card old">
+      <div class="finance-title red">❌ Наймикс (текущие расходы)</div>
+      <div class="finance-row">
+        <span class="label">Комиссия сервиса</span>
+        <span class="value">8–12% с выплаты</span>
+      </div>
+      <div class="finance-row">
+        <span class="label">500 исполнителей × 5 000 ₽/мес</span>
+        <span class="value">2 500 000 ₽/мес</span>
+      </div>
+      <div class="finance-row">
+        <span class="label">Комиссия Наймикс (10%)</span>
+        <span class="value">250 000 ₽/мес</span>
+      </div>
+      <div class="finance-row">
+        <span class="label">Зависимость от сервиса</span>
+        <span class="value">Риск блокировки</span>
+      </div>
+      <div class="finance-total">
+        <div class="big red">3 000 000 ₽</div>
+        <div class="sub">в год только на комиссию Наймикс</div>
+      </div>
+    </div>
+
+    <div class="finance-card new">
+      <div class="finance-title green">✅ KARI.Самозанятые (после запуска)</div>
+      <div class="finance-row">
+        <span class="label">Комиссия сервиса</span>
+        <span class="value" style="color: var(--green);">0 ₽</span>
+      </div>
+      <div class="finance-row">
+        <span class="label">Содержание сервера (VPS)</span>
+        <span class="value">15 000 ₽/мес</span>
+      </div>
+      <div class="finance-row">
+        <span class="label">IT-поддержка (штат KARI)</span>
+        <span class="value">Уже в бюджете</span>
+      </div>
+      <div class="finance-row">
+        <span class="label">Разработка (Юрий + Claude AI)</span>
+        <span class="value">0 ₽</span>
+      </div>
+      <div class="finance-total">
+        <div class="big green">180 000 ₽</div>
+        <div class="sub">в год (сервер + сопровождение)</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 24px; background: linear-gradient(135deg, var(--kari), #c2246b); border-radius: 16px; padding: 24px 32px; display: flex; justify-content: space-between; align-items: center; color: #fff;">
+    <div>
+      <div style="font-size: 13px; opacity: 0.8; font-weight: 700;">ЭКОНОМИЯ В ГОД</div>
+      <div style="font-size: 48px; font-weight: 900; line-height: 1;">2 820 000 ₽</div>
+    </div>
+    <div style="text-align: right;">
+      <div style="font-size: 13px; opacity: 0.8; font-weight: 700;">ПОСЛЕ МАСШТАБИРОВАНИЯ (5 000 исп.)</div>
+      <div style="font-size: 48px; font-weight: 900; line-height: 1;">~28 000 000 ₽/год</div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="footer-logo">KARI · САМОЗАНЯТЫЕ</span>
+    <span class="footer-page">7 / 10</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- СЛАЙД 8: ПЛАН ПИЛОТА -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="slide slide-light">
+  <div class="slide-header">
+    <div class="slide-num">Слайд 08</div>
+    <h2 class="slide-title">Дорожная карта <span>пилота</span></h2>
+    <p class="slide-sub">От разработки до масштабирования на всю сеть</p>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot done">✅</div>
+      <div class="tl-body">
+        <div class="tl-title">Спринты 1–5: Разработка всей платформы</div>
+        <div class="tl-date">Март — Май 2026</div>
+        <span class="tl-status status-done">Выполнено</span>
+        <div style="font-size: 13px; color: var(--muted); margin-top: 6px;">Backend, Frontend, Mobile, ФНС, Выплаты, ЭДО, Стоп-лист, Push</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot done">✅</div>
+      <div class="tl-body">
+        <div class="tl-title">Спринт 6: Тестирование и подготовка к пилоту</div>
+        <div class="tl-date">Июнь 2026</div>
+        <span class="tl-status status-done">Выполнено</span>
+        <div style="font-size: 13px; color: var(--muted); margin-top: 6px;">Нагрузочный тест Locust, инструкции, чек-лист, стоп-лист</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot active">🚀</div>
+      <div class="tl-body">
+        <div class="tl-title">Пилот: Иркутский + Южный регион</div>
+        <div class="tl-date">Апрель 2026</div>
+        <span class="tl-status status-active">В работе</span>
+        <div style="font-size: 13px; color: var(--muted); margin-top: 6px;">100 магазинов, 500 исполнителей, 2 региона · 2 месяца</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot next">📊</div>
+      <div class="tl-body">
+        <div class="tl-title">Анализ пилота + доработки</div>
+        <div class="tl-date">Июль 2026</div>
+        <span class="tl-status status-next">Следующий шаг</span>
+        <div style="font-size: 13px; color: var(--muted); margin-top: 6px;">Сбор метрик, обратная связь, приоритизация улучшений</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot next">🌍</div>
+      <div class="tl-body">
+        <div class="tl-title">Масштабирование на всю сеть KARI</div>
+        <div class="tl-date">III квартал 2026</div>
+        <span class="tl-status status-next">Планируется</span>
+        <div style="font-size: 13px; color: var(--muted); margin-top: 6px;">500+ магазинов, 5 000+ исполнителей, экономия 40% затрат</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot next">💼</div>
+      <div class="tl-body">
+        <div class="tl-title">B2B: продажа другим ритейлерам</div>
+        <div class="tl-date">2027</div>
+        <span class="tl-status status-next">Перспектива</span>
+        <div style="font-size: 13px; color: var(--muted); margin-top: 6px;">Новый источник дохода KARI — платформа как сервис</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="footer-logo">KARI · САМОЗАНЯТЫЕ</span>
+    <span class="footer-page">8 / 10</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- СЛАЙД 9: КАК МЫ СОЗДАЛИ (МОДЕЛЬ РАЗРАБОТКИ) -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="slide slide-dark">
+  <div class="slide-header">
+    <div class="slide-num">Слайд 09</div>
+    <h2 class="slide-title">Как мы <span>это создали</span></h2>
+    <p class="slide-sub">Уникальная модель: Бизнес + AI + IT — без внешних подрядчиков</p>
+  </div>
+
+  <div class="grid-3">
+    <div class="card-dark" style="text-align: center; padding: 32px 24px;">
+      <div style="font-size: 52px; margin-bottom: 16px;">🎯</div>
+      <div style="font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 8px;">Юрий</div>
+      <div style="font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 16px;">Product Owner</div>
+      <ul style="list-style: none; text-align: left; display: flex; flex-direction: column; gap: 8px;">
+        <li style="font-size: 13px; color: rgba(255,255,255,0.8);">✓ Постановка задач</li>
+        <li style="font-size: 13px; color: rgba(255,255,255,0.8);">✓ Знание бизнеса</li>
+        <li style="font-size: 13px; color: rgba(255,255,255,0.8);">✓ Юридические требования</li>
+        <li style="font-size: 13px; color: rgba(255,255,255,0.8);">✓ Проверка результата</li>
+      </ul>
+    </div>
+    <div class="card-kari" style="text-align: center; padding: 32px 24px;">
+      <div style="font-size: 52px; margin-bottom: 16px;">🤖</div>
+      <div style="font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 8px;">Claude AI</div>
+      <div style="font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 16px;">Разработчик</div>
+      <ul style="list-style: none; text-align: left; display: flex; flex-direction: column; gap: 8px;">
+        <li style="font-size: 13px; color: rgba(255,255,255,0.9);">✓ Весь код (36 файлов)</li>
+        <li style="font-size: 13px; color: rgba(255,255,255,0.9);">✓ Backend + Frontend + Mobile</li>
+        <li style="font-size: 13px; color: rgba(255,255,255,0.9);">✓ Интеграции ФНС/Банк</li>
+        <li style="font-size: 13px; color: rgba(255,255,255,0.9);">✓ Документация</li>
+      </ul>
+    </div>
+    <div class="card-dark" style="text-align: center; padding: 32px 24px;">
+      <div style="font-size: 52px; margin-bottom: 16px;">🖥️</div>
+      <div style="font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 8px;">IT KARI</div>
+      <div style="font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 16px;">DevOps / Поддержка</div>
+      <ul style="list-style: none; text-align: left; display: flex; flex-direction: column; gap: 8px;">
+        <li style="font-size: 13px; color: rgba(255,255,255,0.8);">✓ Сервер и деплой</li>
+        <li style="font-size: 13px; color: rgba(255,255,255,0.8);">✓ Grafana-мониторинг</li>
+        <li style="font-size: 13px; color: rgba(255,255,255,0.8);">✓ Резервные копии</li>
+        <li style="font-size: 13px; color: rgba(255,255,255,0.8);">✓ Инциденты в пилоте</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="margin-top: 32px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 20px 28px;">
+    <div style="display: flex; gap: 40px; justify-content: center; align-items: center;">
+      <div style="text-align: center;">
+        <div style="font-size: 36px; font-weight: 900; color: var(--kari);">0 ₽</div>
+        <div style="font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px;">затраты на разработку</div>
+      </div>
+      <div style="width: 1px; height: 50px; background: rgba(255,255,255,0.1);"></div>
+      <div style="text-align: center;">
+        <div style="font-size: 36px; font-weight: 900; color: var(--kari);">3 мес</div>
+        <div style="font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px;">от идеи до пилота</div>
+      </div>
+      <div style="width: 1px; height: 50px; background: rgba(255,255,255,0.1);"></div>
+      <div style="text-align: center;">
+        <div style="font-size: 36px; font-weight: 900; color: var(--kari);">13</div>
+        <div style="font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px;">готовых модулей</div>
+      </div>
+      <div style="width: 1px; height: 50px; background: rgba(255,255,255,0.1);"></div>
+      <div style="text-align: center;">
+        <div style="font-size: 36px; font-weight: 900; color: var(--kari);">100%</div>
+        <div style="font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px;">собственная разработка</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="footer-logo">KARI · САМОЗАНЯТЫЕ</span>
+    <span class="footer-page">9 / 10</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- СЛАЙД 10: ЗАПРОС И СЛЕДУЮЩИЕ ШАГИ -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="slide slide-dark" style="align-items: center; text-align: center; justify-content: center;">
+  <div style="position: relative; z-index: 1; max-width: 700px;">
+    <div style="font-size: 13px; font-weight: 800; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 24px;">Слайд 10 · Финал</div>
+    <h2 style="font-size: 48px; font-weight: 900; color: #fff; line-height: 1.1; margin-bottom: 16px;">
+      Готовы к <span style="color: var(--kari);">старту</span>
+    </h2>
+    <p style="font-size: 18px; color: rgba(255,255,255,0.6); margin-bottom: 48px; line-height: 1.6;">
+      Платформа построена, протестирована и готова к пилоту.<br>
+      Нужно одобрение на запуск в Иркутском и Южном регионе.
+    </p>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 48px; text-align: left;">
+      <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 20px;">
+        <div style="font-size: 22px; margin-bottom: 8px;">📋</div>
+        <div style="font-size: 14px; font-weight: 800; color: #fff; margin-bottom: 4px;">Нужно от IT</div>
+        <div style="font-size: 13px; color: rgba(255,255,255,0.6);">Задеплоить сервер по инструкции KARI_deploy.html и запустить нагрузочный тест Locust</div>
+      </div>
+      <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 20px;">
+        <div style="font-size: 22px; margin-bottom: 8px;">👥</div>
+        <div style="font-size: 14px; font-weight: 800; color: #fff; margin-bottom: 4px;">Нужно от HRD</div>
+        <div style="font-size: 13px; color: rgba(255,255,255,0.6);">Загрузить стоп-лист бывших сотрудников до запуска пилота (Excel-импорт)</div>
+      </div>
+      <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 20px;">
+        <div style="font-size: 22px; margin-bottom: 8px;">🏪</div>
+        <div style="font-size: 14px; font-weight: 800; color: #fff; margin-bottom: 4px;">Нужно от директоров</div>
+        <div style="font-size: 13px; color: rgba(255,255,255,0.6);">Пригласить исполнителей через QR-код / ссылку на Expo Go (цель 100+)</div>
+      </div>
+      <div style="background: rgba(160,31,114,0.25); border: 1px solid rgba(160,31,114,0.5); border-radius: 14px; padding: 20px;">
+        <div style="font-size: 22px; margin-bottom: 8px;">✅</div>
+        <div style="font-size: 14px; font-weight: 800; color: #fff; margin-bottom: 4px;">Нужно от руководства</div>
+        <div style="font-size: 13px; color: rgba(255,255,255,0.6);">Одобрить запуск пилота в Иркутском + Южном регионе в Апреле 2026</div>
+      </div>
+    </div>
+
+    <div style="font-size: 14px; color: rgba(255,255,255,0.4);">
+      Контакт: Юрий, Директор региона · Иркутский регион KARI
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="footer-logo">KARI · САМОЗАНЯТЫЕ</span>
+    <span class="footer-page">10 / 10</span>
+  </div>
+</div>
+
+</body>
+</html>

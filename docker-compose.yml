@@ -1,0 +1,158 @@
+# =============================================================================
+# KARI.Самозанятые — Docker Compose (тестовый стенд)
+# Сервер: 79.174.78.53
+#
+# Запуск:  docker compose up -d
+# Стоп:    docker compose down
+# Логи:    docker compose logs -f backend
+# =============================================================================
+
+version: '3.9'
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # БАЗА ДАННЫХ — PostgreSQL 15
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: postgres:15-alpine
+    container_name: kari_postgres
+    environment:
+      POSTGRES_DB:       ${POSTGRES_DB:-kari_db}
+      POSTGRES_USER:     ${POSTGRES_USER:-kari}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-kari_pass_2026}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - kari_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-kari} -d ${POSTGRES_DB:-kari_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ---------------------------------------------------------------------------
+  # ОЧЕРЕДИ — Redis 7
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: kari_redis
+    restart: unless-stopped
+    networks:
+      - kari_net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ---------------------------------------------------------------------------
+  # ХРАНИЛИЩЕ ФАЙЛОВ — MinIO (фото задач, PDF договоры)
+  # Консоль: http://79.174.78.53:9001
+  # ---------------------------------------------------------------------------
+  minio:
+    image: minio/minio:latest
+    container_name: kari_minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER:     ${MINIO_ACCESS_KEY:-kari_minio}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-kari_minio_secret_2026}
+    volumes:
+      - minio_data:/data
+    ports:
+      - "9000:9000"   # MinIO API
+      - "9001:9001"   # MinIO веб-консоль
+    restart: unless-stopped
+    networks:
+      - kari_net
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ---------------------------------------------------------------------------
+  # BACKEND — FastAPI (Python)
+  # API документация: http://79.174.78.53:8000/docs
+  # ---------------------------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: kari_backend
+    env_file:
+      - .env
+    environment:
+      # Переопределяем адреса: внутри Docker — имена сервисов, не localhost
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-kari}:${POSTGRES_PASSWORD:-kari_pass_2026}@postgres:5432/${POSTGRES_DB:-kari_db}
+      REDIS_URL:    redis://redis:6379/0
+      MINIO_ENDPOINT: minio:9000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    networks:
+      - kari_net
+
+  # ---------------------------------------------------------------------------
+  # ФОНОВЫЕ ЗАДАЧИ — Celery Worker + Beat
+  # Выполняет: проверка ФНС (06:00, 07:00), выплаты, снятие блокировок (01:00)
+  # ---------------------------------------------------------------------------
+  celery:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: kari_celery
+    command: celery -A app.tasks.fns_tasks worker --loglevel=info -B --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-kari}:${POSTGRES_PASSWORD:-kari_pass_2026}@postgres:5432/${POSTGRES_DB:-kari_db}
+      REDIS_URL:    redis://redis:6379/0
+      MINIO_ENDPOINT: minio:9000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - kari_net
+
+  # ---------------------------------------------------------------------------
+  # ФРОНТЕНД — React (собирается Vite, раздаётся nginx)
+  # Веб-кабинет: http://79.174.78.53
+  # ---------------------------------------------------------------------------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://79.174.78.53:8000
+    container_name: kari_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - kari_net
+
+# -----------------------------------------------------------------------------
+# ТОМА (данные сохраняются между перезапусками)
+# -----------------------------------------------------------------------------
+volumes:
+  postgres_data:
+  minio_data:
+
+# -----------------------------------------------------------------------------
+# СЕТЬ (сервисы видят друг друга по именам: postgres, redis, minio, backend)
+# -----------------------------------------------------------------------------
+networks:
+  kari_net:
+    driver: bridge

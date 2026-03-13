@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KARI.Самозанятые — Инструкция для директора магазина</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --kari: #A01F72;
+    --dark: #242D4A;
+    --green: #27ae60;
+    --warn: #e67e22;
+    --red: #e74c3c;
+    --bg: #f4f6f9;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--dark); }
+
+  /* ШАПКА */
+  .hero {
+    background: linear-gradient(135deg, var(--kari) 0%, #6b1150 100%);
+    color: #fff; padding: 48px 40px 40px; text-align: center;
+  }
+  .hero-logo { font-size: 42px; font-weight: 900; letter-spacing: 5px; }
+  .hero-sub  { font-size: 13px; opacity: .7; letter-spacing: 3px; margin-top: 4px; }
+  .hero h1   { font-size: 28px; font-weight: 800; margin-top: 24px; }
+  .hero p    { font-size: 16px; opacity: .85; margin-top: 8px; }
+  .hero-pilot {
+    display: inline-block; background: rgba(255,255,255,.2);
+    border-radius: 20px; padding: 6px 20px; font-size: 13px;
+    font-weight: 700; margin-top: 16px; letter-spacing: 1px;
+  }
+
+  /* НАВИГАЦИЯ */
+  .nav {
+    background: #fff; padding: 16px 40px;
+    display: flex; gap: 8px; flex-wrap: wrap;
+    border-bottom: 2px solid var(--bg);
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  }
+  .nav a {
+    text-decoration: none; color: var(--dark); font-size: 13px;
+    font-weight: 700; padding: 6px 14px; border-radius: 20px;
+    transition: .2s;
+  }
+  .nav a:hover { background: var(--kari); color: #fff; }
+
+  /* КОНТЕНТ */
+  .container { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* СЕКЦИЯ */
+  .section {
+    background: #fff; border-radius: 16px; padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.05);
+  }
+  .section-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--kari); color: #fff; font-size: 16px; font-weight: 800;
+    margin-right: 12px; flex-shrink: 0;
+  }
+  .section-header {
+    display: flex; align-items: center; margin-bottom: 24px;
+    padding-bottom: 16px; border-bottom: 2px solid var(--bg);
+  }
+  .section-title { font-size: 20px; font-weight: 800; }
+  .section-icon  { font-size: 28px; margin-right: 12px; }
+
+  /* ШАГИ */
+  .steps { display: flex; flex-direction: column; gap: 16px; }
+  .step  {
+    display: flex; gap: 16px; align-items: flex-start;
+    background: var(--bg); border-radius: 12px; padding: 16px;
+  }
+  .step-num {
+    min-width: 32px; height: 32px; border-radius: 50%;
+    background: var(--kari); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 14px;
+  }
+  .step-body h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .step-body p  { font-size: 14px; color: #555; line-height: 1.6; }
+  .step-body .tip {
+    font-size: 12px; color: var(--warn); font-weight: 700;
+    margin-top: 6px;
+  }
+
+  /* КАРТОЧКА-ПРЕДУПРЕЖДЕНИЕ */
+  .alert {
+    border-radius: 12px; padding: 16px 20px; margin-bottom: 16px;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .alert-red    { background: #fff5f5; border-left: 4px solid var(--red); }
+  .alert-warn   { background: #fffbf0; border-left: 4px solid var(--warn); }
+  .alert-green  { background: #f0fff4; border-left: 4px solid var(--green); }
+  .alert-kari   { background: #fdf0f8; border-left: 4px solid var(--kari); }
+  .alert-icon   { font-size: 22px; flex-shrink: 0; }
+  .alert-text h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .alert-text p  { font-size: 13px; color: #555; line-height: 1.6; }
+
+  /* ТАБЛИЦА */
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { background: var(--dark); color: #fff; padding: 10px 14px; text-align: left; font-weight: 700; }
+  td { padding: 10px 14px; border-bottom: 1px solid #f0f0f0; }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: #fafafa; }
+
+  /* СТАТУС-ЧИПЫ */
+  .chip {
+    display: inline-block; border-radius: 20px;
+    padding: 3px 10px; font-size: 12px; font-weight: 700;
+  }
+  .chip-green { background: #e8f5e9; color: var(--green); }
+  .chip-warn  { background: #fff3e0; color: var(--warn); }
+  .chip-red   { background: #ffebee; color: var(--red); }
+  .chip-kari  { background: #fce4f4; color: var(--kari); }
+  .chip-gray  { background: #f5f5f5; color: #666; }
+
+  /* СКРИНШОТЫ-ЗАГЛУШКИ */
+  .screen-mock {
+    background: var(--dark); border-radius: 16px; padding: 20px;
+    margin: 16px 0; color: #fff; font-size: 13px;
+  }
+  .screen-mock-bar {
+    background: var(--kari); border-radius: 10px; padding: 10px 16px;
+    font-weight: 700; font-size: 15px; margin-bottom: 12px;
+  }
+  .screen-mock-row {
+    background: rgba(255,255,255,.08); border-radius: 8px;
+    padding: 10px 14px; margin-bottom: 8px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  /* FAQ */
+  .faq-item { margin-bottom: 16px; }
+  .faq-q { font-weight: 700; font-size: 15px; margin-bottom: 6px; color: var(--kari); }
+  .faq-a { font-size: 14px; color: #555; line-height: 1.7; }
+
+  /* КОНТАКТЫ */
+  .contacts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .contact-card {
+    background: var(--bg); border-radius: 12px; padding: 16px;
+    text-align: center;
+  }
+  .contact-icon  { font-size: 32px; margin-bottom: 8px; }
+  .contact-title { font-size: 14px; font-weight: 700; color: var(--dark); }
+  .contact-val   { font-size: 13px; color: var(--kari); font-weight: 700; margin-top: 4px; }
+
+  /* ЧЕКЛИСТ */
+  .checklist { display: flex; flex-direction: column; gap: 10px; }
+  .check-item {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--bg); border-radius: 10px; padding: 12px 16px;
+  }
+  .check-box {
+    width: 22px; height: 22px; border-radius: 6px;
+    border: 2px solid #ccc; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; cursor: pointer;
+  }
+  .check-text { font-size: 14px; font-weight: 600; }
+
+  /* ПОДВАЛ */
+  .footer {
+    background: var(--dark); color: rgba(255,255,255,.5);
+    text-align: center; padding: 24px; font-size: 12px;
+  }
+
+  @media (max-width: 600px) {
+    .hero { padding: 32px 20px; }
+    .nav  { padding: 12px 16px; }
+    .section { padding: 20px; }
+    .contacts { grid-template-columns: 1fr; }
+  }
+
+/* ═══════════════════════════════════════════════════════════
+   МОБИЛЬНАЯ АДАПТАЦИЯ — добавлено 11.03.2026
+   Адаптировано для экранов смартфонов (< 768px)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Таблицы — горизонтальный скролл на всех устройствах */
+table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+/* Изображения — масштабирование */
+img { max-width: 100% !important; height: auto !important; }
+@media (max-width: 768px) {
+  /* Боковое меню — скрываем, убираем отступ */
+  .sidebar { display: none !important; }
+  .main-content { margin-left: 0 !important; padding: 16px !important; }
+  .site-header { position: relative !important; }
+
+  /* Отступы шапки */
+  .header, .page-header { padding: 20px 16px !important; }
+  .header-top { flex-wrap: wrap !important; gap: 8px !important; }
+  .header-meta, .header-actions, .header-badges { flex-wrap: wrap !important; gap: 8px !important; }
+
+  /* Основной контент */
+  .main, .content, .container { padding: 16px !important; }
+
+  /* Типографика */
+  h1 { font-size: 22px !important; }
+  h2 { font-size: 18px !important; }
+  h3 { font-size: 15px !important; }
+
+  /* Горизонтальные ряды — перенос */
+  .header-pills, .filter-tabs, .nav-tabs, .tabs-row,
+  .section-tabs, .tab-bar { flex-wrap: wrap !important; }
+  .step { flex-direction: column !important; }
+
+  /* Кодовые блоки */
+  pre, code {
+    overflow-x: auto !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 13px !important; }
+  .badge, .tag, .pill, .status-badge { font-size: 11px !important; padding: 3px 8px !important; }
+  h1, .header h1, .logo-area h1 { font-size: 19px !important; }
+  .btn-print, .btn-export { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ШАПКА -->
+<div class="hero">
+  <div class="hero-logo">KARI</div>
+  <div class="hero-sub">САМОЗАНЯТЫЕ</div>
+  <h1>Инструкция для директора магазина</h1>
+  <p>Как работать с платформой самозанятых исполнителей</p>
+  <div class="hero-pilot">🚀 Пилот: Апрель 2026 · Иркутский регион</div>
+</div>
+
+<!-- НАВИГАЦИЯ -->
+<nav class="nav">
+  <a href="#start">С чего начать</a>
+  <a href="#tasks">Создание заданий</a>
+  <a href="#review">Приёмка работ</a>
+  <a href="#payments">Выплаты</a>
+  <a href="#fns">ФНС и документы</a>
+  <a href="#checklist">Чеклист</a>
+  <a href="#faq">Вопросы и ответы</a>
+  <a href="#contacts">Поддержка</a>
+</nav>
+
+<div class="container">
+
+  <!-- БЫСТРЫЙ СТАРТ -->
+  <div class="section" id="start">
+    <div class="section-header">
+      <span class="section-icon">🚀</span>
+      <div>
+        <div class="section-title">С чего начать</div>
+        <div style="font-size:13px;color:#888;margin-top:2px">Первый вход в систему занимает 5 минут</div>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Откройте веб-кабинет</h4>
+          <p>Перейдите по ссылке <strong>kari-samozanyatye.ru</strong> в браузере на компьютере или телефоне.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Введите номер телефона</h4>
+          <p>Используйте рабочий номер телефона, который зарегистрирован в системе KARI. Придёт SMS с 4-значным кодом.</p>
+          <div class="tip">⚠️ Если SMS не пришло в течение 2 минут — нажмите «Отправить снова»</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Вы в системе</h4>
+          <p>После входа вы увидите главную страницу вашего магазина с заданиями, бюджетом и уведомлениями.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-green" style="margin-top:20px">
+      <span class="alert-icon">💡</span>
+      <div class="alert-text">
+        <h4>Ваша роль в системе</h4>
+        <p>Вы управляете <strong>одним магазином</strong>: создаёте задания для самозанятых, принимаете выполненные работы, контролируете бюджет. Платформа автоматически делает всё остальное: выплаты, документы, ФНС.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- СОЗДАНИЕ ЗАДАНИЙ -->
+  <div class="section" id="tasks">
+    <div class="section-header">
+      <span class="section-icon">📋</span>
+      <div>
+        <div class="section-title">Создание задания</div>
+        <div style="font-size:13px;color:#888;margin-top:2px">Опишите работу — исполнители увидят её в приложении</div>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Нажмите «+ Создать задание»</h4>
+          <p>Кнопка находится в правом верхнем углу главной страницы вашего магазина.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Заполните форму</h4>
+          <p>Обязательные поля: <strong>название, описание, сумма оплаты, срок выполнения, количество исполнителей.</strong></p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Сохраните — задание появится в бирже</h4>
+          <p>Самозанятые увидят ваше задание мгновенно. Они берут его сами — вам не нужно никого назначать.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="margin:24px 0 12px;font-size:16px">Типы заданий и примерные суммы</h3>
+    <table>
+      <thead>
+        <tr><th>Тип задания</th><th>Пример</th><th>Примерная оплата</th><th>Время</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Уборка</td>
+          <td>Уборка торгового зала после закрытия</td>
+          <td>900 – 1 500 ₽</td>
+          <td>2–3 ч</td>
+        </tr>
+        <tr>
+          <td>Выкладка</td>
+          <td>Выкладка весенней коллекции обуви</td>
+          <td>1 500 – 2 500 ₽</td>
+          <td>3–5 ч</td>
+        </tr>
+        <tr>
+          <td>Инвентаризация</td>
+          <td>Инвентаризация склада</td>
+          <td>2 500 – 4 000 ₽</td>
+          <td>6–8 ч</td>
+        </tr>
+        <tr>
+          <td>Переоценка</td>
+          <td>Обновление ценников</td>
+          <td>1 200 – 1 800 ₽</td>
+          <td>3–5 ч</td>
+        </tr>
+        <tr>
+          <td>Промо</td>
+          <td>Раздача листовок у магазина</td>
+          <td>700 – 1 200 ₽</td>
+          <td>2–3 ч</td>
+        </tr>
+        <tr>
+          <td>Разгрузка</td>
+          <td>Разгрузка поставки на склад</td>
+          <td>1 800 – 3 000 ₽</td>
+          <td>3–6 ч</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="alert alert-warn" style="margin-top:20px">
+      <span class="alert-icon">⚠️</span>
+      <div class="alert-text">
+        <h4>Максимальная разовая сумма — 100 000 ₽</h4>
+        <p>Ограничение системы. Если задание стоит больше — разбейте на несколько заданий. Также следите за бюджетом: система предупредит при достижении 80%.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ПРИЁМКА РАБОТ -->
+  <div class="section" id="review">
+    <div class="section-header">
+      <span class="section-icon">✅</span>
+      <div>
+        <div class="section-title">Приёмка выполненных работ</div>
+        <div style="font-size:13px;color:#888;margin-top:2px">Без вашего подтверждения выплата не произойдёт</div>
+      </div>
+    </div>
+
+    <div class="alert alert-kari">
+      <span class="alert-icon">📸</span>
+      <div class="alert-text">
+        <h4>Что присылает исполнитель</h4>
+        <p>1–3 фотографии результата работы с геометкой. Фото подтверждает, что задание выполнено в вашем магазине.</p>
+      </div>
+    </div>
+
+    <div class="steps" style="margin-top:20px">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Получите уведомление «Работа сдана на проверку»</h4>
+          <p>Придёт SMS или push-уведомление. Откройте задание в разделе «На проверке».</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Просмотрите фотоотчёт</h4>
+          <p>Оцените качество выполнения: соответствие фото и задания, порядок в зале, выкладка по стандарту.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Нажмите «Принять» или «Отклонить»</h4>
+          <p>При отклонении укажите причину — исполнитель получит уведомление и сможет исправить.</p>
+          <div class="tip">⏰ Приёмка должна быть выполнена в течение 24 часов после сдачи</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>Выплата запускается автоматически</h4>
+          <p>После вашего одобрения система сама отправит деньги на карту исполнителя и зарегистрирует чек в ФНС.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="margin:24px 0 12px;font-size:16px">Статусы заданий</h3>
+    <table>
+      <thead>
+        <tr><th>Статус</th><th>Что происходит</th><th>Что делать</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="chip chip-kari">🟣 Доступно</span></td>
+          <td>Задание в бирже, ждёт исполнителя</td>
+          <td>Ничего, ждём</td>
+        </tr>
+        <tr>
+          <td><span class="chip chip-warn">🟡 В работе</span></td>
+          <td>Исполнитель взял задание</td>
+          <td>Ничего, ждём сдачи</td>
+        </tr>
+        <tr>
+          <td><span class="chip chip-warn">⚠️ На проверке</span></td>
+          <td>Исполнитель сдал фотоотчёт</td>
+          <td><strong>Принять или отклонить!</strong></td>
+        </tr>
+        <tr>
+          <td><span class="chip chip-green">✅ Завершено</span></td>
+          <td>Работа принята, выплата запущена</td>
+          <td>Ничего, всё готово</td>
+        </tr>
+        <tr>
+          <td><span class="chip chip-red">❌ Отклонено</span></td>
+          <td>Вы отклонили работу</td>
+          <td>Задание снова открыто для исполнителей</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ВЫПЛАТЫ -->
+  <div class="section" id="payments">
+    <div class="section-header">
+      <span class="section-icon">💰</span>
+      <div>
+        <div class="section-title">Выплаты и бюджет</div>
+        <div style="font-size:13px;color:#888;margin-top:2px">Деньги переводятся автоматически на карту любого банка</div>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Вы принимаете работу</h4>
+          <p>Нажимаете «Принять» в карточке задания.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Система формирует акт и подписывает ПЭП</h4>
+          <p>Исполнитель получает SMS с кодом для подписания акта выполненных работ. Это происходит автоматически.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Деньги на карте в течение 3 рабочих дней</h4>
+          <p>Совкомбанк переводит оплату + KARI компенсирует 6% налог. Исполнитель получает <strong>сумму из задания + налог.</strong></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-green" style="margin-top:20px">
+      <span class="alert-icon">💡</span>
+      <div class="alert-text">
+        <h4>Бюджет магазина</h4>
+        <p>На главной странице показан прогресс бюджета. При достижении 80% вы получите предупреждение. При превышении лимита — новые задания создать нельзя. Обратитесь к директору подразделения для увеличения лимита.</p>
+      </div>
+    </div>
+
+    <div class="alert alert-red" style="margin-top:12px">
+      <span class="alert-icon">⛔</span>
+      <div class="alert-text">
+        <h4>Важно: лимит дохода самозанятого</h4>
+        <p>Каждый самозанятый может зарабатывать не более <strong>2 400 000 ₽ в год</strong>. Система автоматически блокирует задания для исполнителей, приближающихся к лимиту. Это не ошибка — это требование ФНС.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ФНС И ДОКУМЕНТЫ -->
+  <div class="section" id="fns">
+    <div class="section-header">
+      <span class="section-icon">🏛️</span>
+      <div>
+        <div class="section-title">ФНС и документы</div>
+        <div style="font-size:13px;color:#888;margin-top:2px">Платформа автоматически контролирует все налоговые требования</div>
+      </div>
+    </div>
+
+    <div class="alert alert-kari">
+      <span class="alert-icon">🤖</span>
+      <div class="alert-text">
+        <h4>Что делает система автоматически</h4>
+        <p>
+          ✓ Ежедневно проверяет статус каждого самозанятого в ФНС «Мой налог»<br>
+          ✓ Блокирует задания для исполнителей без активного статуса<br>
+          ✓ Регистрирует чеки в ФНС после каждой выплаты<br>
+          ✓ Контролирует аннулированные чеки — уведомляет вас и бухгалтерию
+        </p>
+      </div>
+    </div>
+
+    <h3 style="margin:24px 0 12px;font-size:16px">Что вам нужно знать о чеках ФНС</h3>
+
+    <div class="alert alert-warn">
+      <span class="alert-icon">⚠️</span>
+      <div class="alert-text">
+        <h4>Аннулированный чек — срочная ситуация</h4>
+        <p>Если исполнитель аннулировал чек в «Мой налог» — система немедленно уведомит вас и бухгалтерию. В этом случае: <strong>не выдавайте новых заданий этому исполнителю</strong> до разрешения ситуации. Бухгалтерия займётся возвратом средств.</p>
+      </div>
+    </div>
+
+    <h3 style="margin:24px 0 12px;font-size:16px">Документооборот (ЭДО)</h3>
+    <table>
+      <thead>
+        <tr><th>Документ</th><th>Кто подписывает</th><th>Как подписывается</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Договор ГПХ</td>
+          <td>Исполнитель + KARI</td>
+          <td>Исполнитель — ПЭП через SMS-код. KARI — автоматически.</td>
+        </tr>
+        <tr>
+          <td>Акт выполненных работ</td>
+          <td>Исполнитель + KARI</td>
+          <td>После вашей приёмки. Исполнитель подписывает SMS-кодом.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ЧЕКЛИСТ -->
+  <div class="section" id="checklist">
+    <div class="section-header">
+      <span class="section-icon">☑️</span>
+      <div>
+        <div class="section-title">Чеклист перед запуском пилота</div>
+        <div style="font-size:13px;color:#888;margin-top:2px">Проверьте готовность вашего магазина</div>
+      </div>
+    </div>
+
+    <div class="checklist">
+      <div class="check-item">
+        <div class="check-box">□</div>
+        <div class="check-text">Вы вошли в веб-кабинет и видите свой магазин</div>
+      </div>
+      <div class="check-item">
+        <div class="check-box">□</div>
+        <div class="check-text">Бюджет магазина установлен и отображается корректно</div>
+      </div>
+      <div class="check-item">
+        <div class="check-box">□</div>
+        <div class="check-text">Создано тестовое задание и оно появилось в бирже</div>
+      </div>
+      <div class="check-item">
+        <div class="check-box">□</div>
+        <div class="check-text">Вы знаете как принять и отклонить выполненную работу</div>
+      </div>
+      <div class="check-item">
+        <div class="check-box">□</div>
+        <div class="check-text">Номер телефона поддержки сохранён: <strong>см. раздел «Поддержка»</strong></div>
+      </div>
+      <div class="check-item">
+        <div class="check-box">□</div>
+        <div class="check-text">Ознакомлены с ограничением лимита дохода самозанятого (2 400 000 ₽/год)</div>
+      </div>
+      <div class="check-item">
+        <div class="check-box">□</div>
+        <div class="check-text">Знаете, что делать при аннулировании чека ФНС</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="section" id="faq">
+    <div class="section-header">
+      <span class="section-icon">❓</span>
+      <div><div class="section-title">Вопросы и ответы</div></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Почему исполнитель не может взять задание?</div>
+      <div class="faq-a">Возможные причины: 1) Все места заняты — задание взяло нужное количество исполнителей. 2) Исполнитель близок к лимиту дохода 2 400 000 ₽/год. 3) Статус ФНС исполнителя неактивен. Система автоматически сообщает причину.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Что делать, если фотоотчёт некачественный?</div>
+      <div class="faq-a">Нажмите «Отклонить» и укажите причину. Например: «Плохо освещено, не видно результата». Исполнитель получит уведомление, сможет исправить и сдать повторно. При систематических нарушениях обратитесь в поддержку — исполнителя можно заблокировать.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Исполнитель взял задание и не пришёл — что делать?</div>
+      <div class="faq-a">Задания автоматически возвращаются в биржу, если исполнитель не сдал работу до срока дедлайна. Вы также можете отменить задание вручную через кнопку «Отменить» в карточке.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Могу ли я работать с конкретным исполнителем напрямую?</div>
+      <div class="faq-a">Нет. Все задания публикуются в бирже и доступны всем самозанятым региона. Это требование ФНС: отношения должны быть не трудовыми, а подрядными. Вы можете оценить исполнителя после работы — рейтинговая система обеспечит приоритет лучшим.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Бюджет закончился — что делать?</div>
+      <div class="faq-a">Обратитесь к вашему директору подразделения — только он может увеличить бюджетный лимит магазина. В системе нельзя создать задание, если нет средств в бюджете.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Когда исполнитель получает деньги?</div>
+      <div class="faq-a">В течение 3 рабочих дней после того как вы нажали «Принять». Исполнитель видит статус выплаты в своём приложении в режиме реального времени.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Мне нужен отчёт по всем выплатам за месяц</div>
+      <div class="faq-a">Раздел «Выплаты» показывает полную историю. Вышестоящий директор и HRD/Бухгалтерия имеют доступ к консолидированным отчётам по всем магазинам подразделения.</div>
+    </div>
+  </div>
+
+  <!-- ПОДДЕРЖКА -->
+  <div class="section" id="contacts">
+    <div class="section-header">
+      <span class="section-icon">🆘</span>
+      <div><div class="section-title">Поддержка</div></div>
+    </div>
+
+    <div class="contacts">
+      <div class="contact-card">
+        <div class="contact-icon">💬</div>
+        <div class="contact-title">Telegram поддержка</div>
+        <div class="contact-val">@kari_support</div>
+        <div style="font-size:12px;color:#888;margin-top:4px">Ответ в течение 30 минут в рабочее время</div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-icon">📞</div>
+        <div class="contact-title">Горячая линия пилота</div>
+        <div class="contact-val">8-800-XXX-XX-XX</div>
+        <div style="font-size:12px;color:#888;margin-top:4px">Бесплатно, пн–пт 9:00–18:00 МСК</div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-icon">📧</div>
+        <div class="contact-title">Email для вопросов</div>
+        <div class="contact-val">samozanyatye@kari.com</div>
+        <div style="font-size:12px;color:#888;margin-top:4px">Для нетерочных запросов</div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-icon">👤</div>
+        <div class="contact-title">Куратор пилота</div>
+        <div class="contact-val">Юрий — Директор региона</div>
+        <div style="font-size:12px;color:#888;margin-top:4px">По вопросам бюджета и стратегии</div>
+      </div>
+    </div>
+
+    <div class="alert alert-green" style="margin-top:20px">
+      <span class="alert-icon">✅</span>
+      <div class="alert-text">
+        <h4>Что сделает поддержка</h4>
+        <p>Решит технические проблемы с входом, заданиями, выплатами. При критических ситуациях (аннулирование чека, ошибка выплаты) — приоритетная реакция в течение 1 часа.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ПОДВАЛ -->
+<div class="footer">
+  KARI.Самозанятые · Инструкция для директора магазина<br>
+  Версия 1.0 · Апрель 2026 · Иркутский + Южный регион<br>
+  Внутренний документ KARI — не для распространения
+</div>
+
+</body>
+</html>

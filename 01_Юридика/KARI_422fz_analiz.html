@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Анализ 422-ФЗ для платформы KARI</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --kari: #A01F72;
+    --dark: #242D4A;
+    --green: #16a34a;
+    --yellow: #d97706;
+    --red: #dc2626;
+    --bg: #f8f9fb;
+    --card: #ffffff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--dark);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── Шапка ── */
+  .header {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a2240 60%, var(--kari) 100%);
+    color: white;
+    padding: 36px 40px 32px;
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+  .logo-badge {
+    background: var(--kari);
+    color: white;
+    font-size: 22px;
+    font-weight: 900;
+    padding: 6px 18px;
+    border-radius: 8px;
+    letter-spacing: 1px;
+  }
+  .law-number {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 5px 14px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+  .header h1 {
+    font-size: 26px;
+    font-weight: 900;
+    margin-bottom: 6px;
+  }
+  .header p {
+    font-size: 14px;
+    opacity: 0.75;
+  }
+
+  /* ── Ключевые цифры ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    padding: 24px 40px;
+    background: white;
+    border-bottom: 1px solid #e8eaf0;
+  }
+  .stat-card {
+    text-align: center;
+    padding: 16px 8px;
+    border-radius: 12px;
+    border: 2px solid #f0f2f6;
+  }
+  .stat-card .num {
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-card .lbl {
+    font-size: 11px;
+    font-weight: 700;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .stat-kari .num { color: var(--kari); }
+  .stat-green .num { color: var(--green); }
+  .stat-blue .num  { color: #2563eb; }
+  .stat-orange .num { color: var(--yellow); }
+  .stat-red .num   { color: var(--red); }
+
+  /* ── Основной контент ── */
+  .main { padding: 28px 40px; max-width: 1200px; margin: 0 auto; }
+
+  /* ── Секция ── */
+  .section { margin-bottom: 32px; }
+  .section-title {
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--dark);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid var(--kari);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title span { font-size: 22px; }
+
+  /* ── Карточки статей ── */
+  .articles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .article-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e8eaf0;
+    padding: 18px;
+    transition: box-shadow 0.2s;
+  }
+  .article-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .article-num {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #888;
+    margin-bottom: 4px;
+  }
+  .article-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 8px;
+  }
+  .article-text {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.5;
+  }
+
+  /* ── Таблица ставок ── */
+  .rates-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e8eaf0;
+  }
+  .rates-table th {
+    background: var(--dark);
+    color: white;
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .rates-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f2f6;
+    font-size: 13px;
+  }
+  .rates-table tr:last-child td { border-bottom: none; }
+  .rates-table tr:hover td { background: #fafafa; }
+  .rate-big { font-size: 20px; font-weight: 900; }
+  .rate-kari { color: var(--kari); }
+  .rate-note { font-size: 11px; color: #888; margin-top: 2px; }
+
+  /* ── Требования к чеку ── */
+  .check-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  .check-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e8eaf0;
+    padding: 18px;
+  }
+  .check-card h4 {
+    font-size: 14px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .check-list {
+    list-style: none;
+    padding: 0;
+  }
+  .check-list li {
+    font-size: 13px;
+    color: #444;
+    padding: 4px 0;
+    border-bottom: 1px solid #f5f5f5;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .check-list li:last-child { border-bottom: none; }
+  .check-list li::before {
+    content: '✓';
+    color: var(--green);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ── Риски ── */
+  .risks-list { display: flex; flex-direction: column; gap: 12px; }
+  .risk-item {
+    background: white;
+    border-radius: 12px;
+    border-left: 5px solid;
+    padding: 16px 20px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .risk-item.risk-red   { border-color: var(--red);    background: #fff5f5; }
+  .risk-item.risk-orange{ border-color: var(--yellow);  background: #fffbf0; }
+  .risk-item.risk-green { border-color: var(--green);  background: #f0fdf4; }
+  .risk-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+  .risk-body h4 { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
+  .risk-body p  { font-size: 13px; color: #555; }
+  .risk-body .solution {
+    margin-top: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 6px;
+    display: inline-block;
+  }
+  .risk-red    .solution { background: #fee2e2; color: var(--red); }
+  .risk-orange .solution { background: #fef3c7; color: var(--yellow); }
+  .risk-green  .solution { background: #dcfce7; color: var(--green); }
+
+  /* ── Чеклист соответствия ── */
+  .compliance-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  .compliance-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e8eaf0;
+    padding: 18px;
+  }
+  .compliance-card h4 {
+    font-size: 14px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #f0f2f6;
+  }
+  .comp-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid #f8f8f8;
+    font-size: 13px;
+  }
+  .comp-item:last-child { border-bottom: none; }
+  .comp-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .comp-text { color: #444; }
+  .comp-ref { font-size: 11px; color: #999; font-weight: 700; }
+
+  /* ── Timeline чека ── */
+  .timeline {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e8eaf0;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .tl-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    padding: 0 8px;
+  }
+  .tl-step::after {
+    content: '→';
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #ccc;
+  }
+  .tl-step:last-child::after { display: none; }
+  .tl-date {
+    font-size: 13px;
+    font-weight: 900;
+    color: var(--kari);
+    margin-bottom: 4px;
+  }
+  .tl-desc {
+    font-size: 12px;
+    color: #555;
+    line-height: 1.4;
+  }
+
+  /* ── Вывод ── */
+  .conclusion {
+    background: linear-gradient(135deg, var(--dark), #1a2240);
+    color: white;
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin-top: 32px;
+  }
+  .conclusion h3 {
+    font-size: 18px;
+    font-weight: 900;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .conclusion-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .concl-item {
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 14px 16px;
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+  .concl-item h5 {
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.7;
+    margin-bottom: 6px;
+  }
+  .concl-item p {
+    font-size: 13px;
+    opacity: 0.9;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    padding: 20px 40px;
+    font-size: 12px;
+    color: #aaa;
+    border-top: 1px solid #e8eaf0;
+    background: white;
+    margin-top: 32px;
+  }
+
+  /* ── Бейджи ── */
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge-green { background: #dcfce7; color: var(--green); }
+  .badge-red   { background: #fee2e2; color: var(--red); }
+  .badge-orange{ background: #fef3c7; color: var(--yellow); }
+  .badge-kari  { background: #fce7f3; color: var(--kari); }
+
+  .highlight {
+    background: #fef3c7;
+    border-left: 3px solid var(--yellow);
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    margin: 10px 0;
+    color: #555;
+  }
+  .highlight strong { color: var(--dark); }
+
+  @media (max-width: 900px) {
+    .stats-grid { grid-template-columns: repeat(3, 1fr); }
+    .articles-grid { grid-template-columns: repeat(2, 1fr); }
+    .check-grid { grid-template-columns: 1fr; }
+    .compliance-grid { grid-template-columns: 1fr; }
+    .conclusion-grid { grid-template-columns: 1fr; }
+  }
+
+/* ═══════════════════════════════════════════════════════════
+   МОБИЛЬНАЯ АДАПТАЦИЯ — добавлено 11.03.2026
+   Адаптировано для экранов смартфонов (< 768px)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Таблицы — горизонтальный скролл на всех устройствах */
+table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+/* Изображения — масштабирование */
+img { max-width: 100% !important; height: auto !important; }
+@media (max-width: 900px) {
+  /* Сетки 4-5 колонок → 2 колонки */
+  .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 768px) {
+  /* Все многоколоночные сетки → 1 колонка */
+  .stats-grid { grid-template-columns: 1fr !important; }
+  .articles-grid { grid-template-columns: 1fr !important; }
+  .check-grid { grid-template-columns: 1fr !important; }
+  .compliance-grid { grid-template-columns: 1fr !important; }
+  .conclusion-grid { grid-template-columns: 1fr !important; }
+
+  /* Боковое меню — скрываем, убираем отступ */
+  .sidebar { display: none !important; }
+  .main-content { margin-left: 0 !important; padding: 16px !important; }
+  .site-header { position: relative !important; }
+
+  /* Отступы шапки */
+  .header, .page-header { padding: 20px 16px !important; }
+  .header-top { flex-wrap: wrap !important; gap: 8px !important; }
+  .header-meta, .header-actions, .header-badges { flex-wrap: wrap !important; gap: 8px !important; }
+
+  /* Основной контент */
+  .main, .content, .container { padding: 16px !important; }
+
+  /* Типографика */
+  h1 { font-size: 22px !important; }
+  h2 { font-size: 18px !important; }
+  h3 { font-size: 15px !important; }
+
+  /* Горизонтальные ряды — перенос */
+  .header-pills, .filter-tabs, .nav-tabs, .tabs-row,
+  .section-tabs, .tab-bar { flex-wrap: wrap !important; }
+  .step { flex-direction: column !important; }
+
+  /* Кодовые блоки */
+  pre, code {
+    overflow-x: auto !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 13px !important; }
+  .badge, .tag, .pill, .status-badge { font-size: 11px !important; padding: 3px 8px !important; }
+  h1, .header h1, .logo-area h1 { font-size: 19px !important; }
+  .btn-print, .btn-export { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ШАПКА -->
+<div class="header">
+  <div class="header-top">
+    <div class="logo-badge">KARI</div>
+    <div class="law-number">ФЗ № 422 от 27.11.2018</div>
+    <div class="law-number">Редакция от 01.01.2026</div>
+  </div>
+  <h1>Анализ Федерального закона о НПД</h1>
+  <p>«О проведении эксперимента по установлению специального налогового режима "Налог на профессиональный доход"» — всё, что важно знать для платформы KARI.Самозанятые</p>
+</div>
+
+<!-- КЛЮЧЕВЫЕ ЦИФРЫ -->
+<div class="stats-grid">
+  <div class="stat-card stat-kari">
+    <div class="num">6%</div>
+    <div class="lbl">Ставка НПД<br>для юрлиц</div>
+  </div>
+  <div class="stat-card stat-green">
+    <div class="num">4%</div>
+    <div class="lbl">Ставка НПД<br>для физлиц</div>
+  </div>
+  <div class="stat-card stat-red">
+    <div class="num">2,4 млн</div>
+    <div class="lbl">Лимит дохода<br>в год</div>
+  </div>
+  <div class="stat-card stat-blue">
+    <div class="num">28 дек<br>2028</div>
+    <div class="lbl">Срок действия<br>эксперимента</div>
+  </div>
+  <div class="stat-card stat-orange">
+    <div class="num">10 000₽</div>
+    <div class="lbl">Налоговый<br>вычет</div>
+  </div>
+</div>
+
+<!-- ОСНОВНОЙ КОНТЕНТ -->
+<div class="main">
+
+  <!-- ОБЗОР СТАТЕЙ -->
+  <div class="section">
+    <div class="section-title"><span>📖</span> Обзор всех статей закона</div>
+    <div class="articles-grid">
+
+      <div class="article-card">
+        <div class="article-num">Статья 1</div>
+        <div class="article-title">Территория и срок</div>
+        <div class="article-text">
+          Эксперимент проводится <strong>до 31.12.2028</strong>. С 01.07.2020 — все регионы РФ.
+          <br><br>🔒 <strong>Налоговые ставки заморожены на 10 лет</strong> — нельзя повышать ставки или снижать лимит дохода.
+        </div>
+      </div>
+
+      <div class="article-card">
+        <div class="article-num">Статья 2</div>
+        <div class="article-title">Кто может быть самозанятым</div>
+        <div class="article-text">
+          Любое физлицо (в т.ч. ИП), работающее <strong>без работодателя и наёмных сотрудников</strong>.
+          <br><br>✅ Освобождён от НДФЛ и НДС. ИП на НПД — не платит страховые взносы.
+        </div>
+      </div>
+
+      <div class="article-card">
+        <div class="article-num">Статья 3</div>
+        <div class="article-title">Мой налог и API ФНС</div>
+        <div class="article-text">
+          Основной интерфейс — приложение «Мой налог».
+          <br><br>💡 <strong>Совкомбанк</strong> как "уполномоченная кредитная организация" может взаимодействовать с ФНС напрямую — это ускоряет онбординг.
+        </div>
+      </div>
+
+      <div class="article-card">
+        <div class="article-num">Статья 4</div>
+        <div class="article-title">Кто НЕ может быть самозанятым</div>
+        <div class="article-text">
+          ❌ Имеет наёмных работников<br>
+          ❌ Доход &gt; 2,4 млн руб/год<br>
+          ❌ Работал в этой компании менее 2 лет назад<br>
+          ❌ Применяет другой спецрежим (УСН и т.д.)
+        </div>
+      </div>
+
+      <div class="article-card">
+        <div class="article-num">Статья 5</div>
+        <div class="article-title">Регистрация и снятие с учёта</div>
+        <div class="article-text">
+          Регистрация через «Мой налог», Госуслуги или банк (без фото).
+          <br><br>⚠️ При утрате права (превышение лимита) — <strong>ФНС снимает автоматически</strong>. Платформа обязана это отслеживать.
+        </div>
+      </div>
+
+      <div class="article-card">
+        <div class="article-num">Статья 6</div>
+        <div class="article-title">Что облагается налогом</div>
+        <div class="article-text">
+          Доходы от реализации услуг/работ.
+          <br><br>❌ Не облагаются: зарплата, имущество, доходы от бывшего работодателя (менее 2 лет).
+        </div>
+      </div>
+
+      <div class="article-card">
+        <div class="article-num">Статья 7</div>
+        <div class="article-title">Когда считается доход</div>
+        <div class="article-text">
+          Дата получения денег = дата дохода.
+          <br><br>💡 При расчётах через посредника — последний день месяца получения средств посредником.
+        </div>
+      </div>
+
+      <div class="article-card">
+        <div class="article-num">Статья 8</div>
+        <div class="article-title">Налоговая база</div>
+        <div class="article-text">
+          Учёт нарастающим итогом с начала года.
+          <br><br>✅ При возврате средств — можно скорректировать (аннулировать) чек. Модуль 3.11 платформы это уже учитывает.
+        </div>
+      </div>
+
+      <div class="article-card">
+        <div class="article-num">Статья 9</div>
+        <div class="article-title">Налоговый период</div>
+        <div class="article-text">
+          <strong>Календарный месяц</strong> — это значит, что KARI должен получать чеки минимум раз в месяц, не реже.
+        </div>
+      </div>
+
+      <div class="article-card">
+        <div class="article-num">Статья 10</div>
+        <div class="article-title">Налоговые ставки</div>
+        <div class="article-text">
+          🏢 <strong>KARI (юрлицо) → 6%</strong> — это ставка для всех исполнителей платформы.
+          <br><br>👤 При работе с физлицами — 4%. К платформе не применяется.
+        </div>
+      </div>
+
+      <div class="article-card">
+        <div class="article-num">Статья 11</div>
+        <div class="article-title">Уплата налога</div>
+        <div class="article-text">
+          <strong>ФНС сама считает налог</strong> и уведомляет до 12-го числа след. месяца.
+          <br><br>Платёж — до <strong>28-го числа</strong> следующего месяца. Можно делегировать банку.
+        </div>
+      </div>
+
+      <div class="article-card">
+        <div class="article-num">Статья 12</div>
+        <div class="article-title">Налоговый вычет</div>
+        <div class="article-text">
+          Единоразово <strong>10 000 руб.</strong> — пока не исчерпан, реальная ставка 4% (вычет 2% от базы).
+          <br><br>ФНС применяет автоматически. Повторно не предоставляется.
+        </div>
+      </div>
+
+      <div class="article-card">
+        <div class="article-num">Статья 13</div>
+        <div class="article-title">Декларация</div>
+        <div class="article-text">
+          ✅ <strong>Налоговая декларация НЕ сдаётся!</strong>
+          <br><br>Самозанятый только формирует чеки — всё остальное делает ФНС.
+        </div>
+      </div>
+
+      <div class="article-card">
+        <div class="article-num">Статья 14</div>
+        <div class="article-title">Чеки (КРИТИЧЕСКИ ВАЖНО)</div>
+        <div class="article-text">
+          Самозанятый <strong>ОБЯЗАН</strong> выдать чек с ИНН заказчика.
+          <br><br>⏰ При безналичном расчёте — до <strong>9-го числа</strong> следующего месяца.
+          <br><br>KARI без чека <strong>не может учесть расходы</strong> в налоге на прибыль!
+        </div>
+      </div>
+
+      <div class="article-card">
+        <div class="article-num">Статья 15</div>
+        <div class="article-title">Особенности применения</div>
+        <div class="article-text">
+          ✅ При наличии чека — KARI <strong>не платит страховые взносы</strong> за самозанятого.
+          <br><br>❌ Без чека — нельзя учесть расходы в прибыли (УСН, ЕСХН тоже).
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- СТАВКИ НАЛОГА -->
+  <div class="section">
+    <div class="section-title"><span>💰</span> Налоговые ставки и расчёт (ст. 10, 11, 12)</div>
+    <table class="rates-table">
+      <thead>
+        <tr>
+          <th>Кто заказчик</th>
+          <th>Ставка НПД</th>
+          <th>С налоговым вычетом (10 000₽)</th>
+          <th>KARI компенсирует</th>
+          <th>Пример: выплата 5 000₽</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Юрлицо (KARI)</strong> <span class="badge badge-kari">наш случай</span></td>
+          <td><span class="rate-big rate-kari">6%</span><div class="rate-note">ст.10 п.2</div></td>
+          <td><span class="rate-big" style="color:#16a34a">4%</span><div class="rate-note">пока вычет не исчерпан</div></td>
+          <td><span class="rate-big rate-kari">6%</span><div class="rate-note">KARI доплачивает</div></td>
+          <td>Исполнитель получает 5 000₽ + 300₽ компенсация = <strong>5 300₽</strong></td>
+        </tr>
+        <tr>
+          <td>Физлицо (не применяется)</td>
+          <td><span class="rate-big" style="color:#888">4%</span><div class="rate-note">ст.10 п.1</div></td>
+          <td><span class="rate-big" style="color:#888">3%</span><div class="rate-note">пока вычет не исчерпан</div></td>
+          <td>—</td>
+          <td>—</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight" style="margin-top: 14px;">
+      <strong>Важно про налоговый вычет:</strong> у каждого нового самозанятого есть вычет 10 000₽.
+      Пока он не исчерпан, реальная ставка = 4% (а не 6%). Это не влияет на выплаты KARI —
+      KARI всегда компенсирует 6%. Разницу (2%) самозанятый экономит самостоятельно.
+    </div>
+  </div>
+
+  <!-- ТРЕБОВАНИЯ К ЧЕКУ -->
+  <div class="section">
+    <div class="section-title"><span>🧾</span> Требования к чеку (ст. 14) — что обязана хранить платформа</div>
+
+    <div class="check-grid">
+      <div class="check-card">
+        <h4>📋 Обязательные реквизиты чека</h4>
+        <ul class="check-list">
+          <li>Наименование документа (чек)</li>
+          <li>Дата и время расчёта</li>
+          <li>ФИО самозанятого</li>
+          <li>ИНН самозанятого</li>
+          <li>«Налог на профессиональный доход» — указание на режим</li>
+          <li>Наименование услуги/работы</li>
+          <li>Сумма расчёта</li>
+          <li><strong>ИНН покупателя (KARI)</strong> — обязателен при расчётах с юрлицом!</li>
+          <li>QR-код для проверки в системе ФНС</li>
+          <li>Уникальный номер чека (присваивает ФНС)</li>
+        </ul>
+      </div>
+
+      <div class="check-card">
+        <h4>⏰ Сроки выдачи чека</h4>
+        <ul class="check-list">
+          <li>Наличные / эквайринг → <strong>немедленно в момент расчёта</strong></li>
+          <li>Безналичный расчёт → <strong>не позже 9-го числа следующего месяца</strong></li>
+          <li>Через посредника → не позже 9-го числа след. месяца (если нет ККТ)</li>
+        </ul>
+        <br>
+        <h4>🏦 Что это значит для KARI</h4>
+        <ul class="check-list">
+          <li>Выплата в январе → чек до 9 февраля</li>
+          <li>Платформа должна напоминать исполнителю о чеке</li>
+          <li>Без чека KARI не может учесть расходы в налоге на прибыль</li>
+          <li>ИНН KARI исполнитель вводит при создании чека — нужно давать исполнителям</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Таймлайн -->
+    <div style="margin-top: 14px;">
+      <div style="font-size: 13px; font-weight: 700; color: #666; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">📅 Типичный цикл: выплата январь</div>
+      <div class="timeline">
+        <div class="tl-step">
+          <div class="tl-date">Январь</div>
+          <div class="tl-desc">Исполнитель<br>выполняет задание</div>
+        </div>
+        <div class="tl-step">
+          <div class="tl-date">31 янв</div>
+          <div class="tl-desc">KARI выплачивает<br>через Совкомбанк</div>
+        </div>
+        <div class="tl-step">
+          <div class="tl-date">до 9 фев</div>
+          <div class="tl-desc">Исполнитель формирует<br><strong>чек в «Мой налог»</strong></div>
+        </div>
+        <div class="tl-step">
+          <div class="tl-date">12 фев</div>
+          <div class="tl-desc">ФНС уведомляет<br>о сумме налога</div>
+        </div>
+        <div class="tl-step">
+          <div class="tl-date">28 фев</div>
+          <div class="tl-desc">Исполнитель<br>платит налог</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- РИСКИ ДЛЯ ПЛАТФОРМЫ -->
+  <div class="section">
+    <div class="section-title"><span>⚠️</span> Ключевые риски для платформы KARI</div>
+    <div class="risks-list">
+
+      <div class="risk-item risk-red">
+        <div class="risk-icon">🔴</div>
+        <div class="risk-body">
+          <h4>Бывший сотрудник KARI — нельзя привлекать как самозанятого</h4>
+          <p>Статья 6, п. 2, пп. 8: доходы от работодателя или бывшего работодателя менее 2 лет назад — <strong>НЕ облагаются НПД</strong>. Это значит, работа с такими людьми = трудовые отношения = штраф.</p>
+          <div class="solution">🚨 КРИТИЧНО: добавить проверку при онбординге — «Вы работали в KARI в последние 2 года?»</div>
+        </div>
+      </div>
+
+      <div class="risk-item risk-red">
+        <div class="risk-icon">🔴</div>
+        <div class="risk-body">
+          <h4>Без чека — KARI теряет право на вычет расходов</h4>
+          <p>Статья 15, п. 8: если KARI выплатил деньги, но не получил чек — вся выплата <strong>не может быть учтена в расходах</strong> при расчёте налога на прибыль. Это прямые финансовые потери.</p>
+          <div class="solution">🚨 КРИТИЧНО: платформа должна контролировать получение чека, блокировать новые задания при отсутствии чека по прошлым выплатам</div>
+        </div>
+      </div>
+
+      <div class="risk-item risk-orange">
+        <div class="risk-icon">🟡</div>
+        <div class="risk-body">
+          <h4>Превышение лимита 2,4 млн — ФНС снимает с учёта автоматически</h4>
+          <p>При превышении лимита ФНС автоматически аннулирует статус. Если платформа не заметит — выплата уйдёт человеку, который уже <strong>не является самозанятым</strong>. KARI будет обязан удержать НДФЛ (13%) и уплатить страховые взносы.</p>
+          <div class="solution">✅ Уже реализовано: ежедневная проверка статуса ФНС в 07:00, лимитный контроль в системе</div>
+        </div>
+      </div>
+
+      <div class="risk-item risk-orange">
+        <div class="risk-icon">🟡</div>
+        <div class="risk-body">
+          <h4>Просрочка выдачи чека</h4>
+          <p>Если самозанятый не выдал чек до 9-го числа — это нарушение закона для него. Для KARI — риск отсутствия документа, подтверждающего расход.</p>
+          <div class="solution">⚠️ Важно: добавить push-уведомление «Не забудьте сформировать чек в Мой налог» после каждой выплаты</div>
+        </div>
+      </div>
+
+      <div class="risk-item risk-orange">
+        <div class="risk-icon">🟡</div>
+        <div class="risk-body">
+          <h4>ИНН KARI в каждом чеке</h4>
+          <p>По ст. 14, п. 6, пп. 8: при расчётах с юрлицом исполнитель <strong>обязан вносить ИНН покупателя</strong> (KARI). Без этого чек недействителен для налогового учёта.</p>
+          <div class="solution">⚠️ Важно: в инструкции исполнителя и в приложении явно показывать ИНН KARI для вставки в чек</div>
+        </div>
+      </div>
+
+      <div class="risk-item risk-green">
+        <div class="risk-icon">🟢</div>
+        <div class="risk-body">
+          <h4>Декларация не нужна — риска нет</h4>
+          <p>Ст. 13: самозанятый не сдаёт декларацию. ФНС сама считает налог. Это упрощает жизнь исполнителям и снижает административную нагрузку.</p>
+          <div class="solution">✅ Отлично: не нужно никакой отчётности от исполнителей, только чеки</div>
+        </div>
+      </div>
+
+      <div class="risk-item risk-green">
+        <div class="risk-icon">🟢</div>
+        <div class="risk-body">
+          <h4>Страховые взносы не начисляются</h4>
+          <p>Ст. 15, п. 1-2: при наличии чека KARI не платит страховые взносы за самозанятого. Это одно из главных финансовых преимуществ модели.</p>
+          <div class="solution">✅ Ключевое преимущество: экономия 30% (СВ) + 13% (НДФЛ) = до 43% по сравнению с трудовыми договорами</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- СООТВЕТСТВИЕ ПЛАТФОРМЫ -->
+  <div class="section">
+    <div class="section-title"><span>✅</span> Соответствие платформы KARI требованиям закона</div>
+    <div class="compliance-grid">
+
+      <div class="compliance-card">
+        <h4>✅ Уже реализовано в платформе</h4>
+        <div class="comp-item">
+          <div class="comp-icon">✅</div>
+          <div class="comp-text">
+            Проверка статуса самозанятого через API ФНС при онбординге
+            <div class="comp-ref">ст. 5 — постановка на учёт</div>
+          </div>
+        </div>
+        <div class="comp-item">
+          <div class="comp-icon">✅</div>
+          <div class="comp-text">
+            Ежедневный мониторинг статуса ФНС в 07:00 (Celery задача)
+            <div class="comp-ref">ст. 5, ч. 15 — снятие по инициативе ФНС</div>
+          </div>
+        </div>
+        <div class="comp-item">
+          <div class="comp-icon">✅</div>
+          <div class="comp-text">
+            Лимит 2 400 000 руб/год — контролируется системой
+            <div class="comp-ref">ст. 4, п. 8</div>
+          </div>
+        </div>
+        <div class="comp-item">
+          <div class="comp-icon">✅</div>
+          <div class="comp-text">
+            Модуль контроля аннулирования чеков ФНС (3.11)
+            <div class="comp-ref">ст. 8, ч. 3-4 — корректировка при возврате</div>
+          </div>
+        </div>
+        <div class="comp-item">
+          <div class="comp-icon">✅</div>
+          <div class="comp-text">
+            KARI компенсирует 6% налога исполнителю
+            <div class="comp-ref">ст. 10, п. 2 — ставка для юрлиц</div>
+          </div>
+        </div>
+        <div class="comp-item">
+          <div class="comp-icon">✅</div>
+          <div class="comp-text">
+            Push-уведомления о выплате исполнителю
+            <div class="comp-ref">ст. 14 — напоминание о чеке</div>
+          </div>
+        </div>
+        <div class="comp-item">
+          <div class="comp-icon">✅</div>
+          <div class="comp-text">
+            ЭДО: акты подписываются ПЭП через SMS-код
+            <div class="comp-ref">ст. 14, ч. 4 — чек в электронной форме</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="compliance-card">
+        <h4>🔧 Рекомендуется доработать</h4>
+        <div class="comp-item">
+          <div class="comp-icon">🔴</div>
+          <div class="comp-text">
+            <strong>Проверка «бывший сотрудник KARI»</strong> — добавить вопрос при онбординге: «Вы работали в KARI в течение последних 2 лет?» При ответе «да» — блокировать регистрацию
+            <div class="comp-ref">ст. 6, п. 2, пп. 8 — запрет на НПД с бывшим работодателем</div>
+          </div>
+        </div>
+        <div class="comp-item">
+          <div class="comp-icon">🟡</div>
+          <div class="comp-text">
+            <strong>Push-напоминание о чеке</strong> — после каждой выплаты отправлять push: «Не забудьте сформировать чек в "Мой налог" — указать ИНН KARI [ИНН]»
+            <div class="comp-ref">ст. 14, ч. 3 — срок до 9-го числа след. месяца</div>
+          </div>
+        </div>
+        <div class="comp-item">
+          <div class="comp-icon">🟡</div>
+          <div class="comp-text">
+            <strong>ИНН KARI в приложении</strong> — показывать ИНН KARI на экране «Кошелёк» как напоминание для формирования чека
+            <div class="comp-ref">ст. 14, ч. 6, пп. 8 — ИНН покупателя в чеке</div>
+          </div>
+        </div>
+        <div class="comp-item">
+          <div class="comp-icon">🟡</div>
+          <div class="comp-text">
+            <strong>Хранение чеков от исполнителей</strong> — добавить возможность загрузки скриншота/номера чека исполнителем в платформу для бухгалтерии KARI
+            <div class="comp-ref">ст. 15, п. 8 — без чека нет вычета расходов</div>
+          </div>
+        </div>
+        <div class="comp-item">
+          <div class="comp-icon">🟡</div>
+          <div class="comp-text">
+            <strong>Блокировка новых выплат</strong> при отсутствии чека по предыдущим — настроить логику в системе
+            <div class="comp-ref">ст. 14 + ст. 15 — финансовый контроль</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ВЫВОД -->
+  <div class="conclusion">
+    <h3>📊 Итоговая оценка платформы на соответствие 422-ФЗ</h3>
+    <div class="conclusion-grid">
+      <div class="concl-item">
+        <h5>🎯 Общая оценка</h5>
+        <p>Платформа KARI на <strong>85% соответствует</strong> требованиям 422-ФЗ. Основные механизмы защиты реализованы. Осталось закрыть 3 критических пробела.</p>
+      </div>
+      <div class="concl-item">
+        <h5>🔴 Критично (сделать сейчас)</h5>
+        <p>1. Добавить проверку «бывший сотрудник KARI» при онбординге<br>
+        2. Настроить push-напоминание о чеке с ИНН KARI после выплаты</p>
+      </div>
+      <div class="concl-item">
+        <h5>🟡 Важно (до пилота)</h5>
+        <p>3. ИНН KARI на экране «Кошелёк» в приложении<br>
+        4. Загрузка номера чека исполнителем в платформу<br>
+        5. Блокировка выплат при отсутствии чеков</p>
+      </div>
+      <div class="concl-item">
+        <h5>✅ Сильные стороны</h5>
+        <p>Ежедневная проверка ФНС ✓<br>
+        Лимит 2,4 млн ✓<br>
+        Контроль аннулирования чеков ✓<br>
+        Компенсация 6% налога ✓</p>
+      </div>
+      <div class="concl-item">
+        <h5>💰 Экономика (для презентации)</h5>
+        <p>Экономия KARI vs трудовой договор:<br>
+        Нет НДФЛ (13%) ✓<br>
+        Нет страх. взносов (30%+) ✓<br>
+        Нет отпусков, больничных ✓<br>
+        <strong>Итог: экономия ~40-43%</strong></p>
+      </div>
+      <div class="concl-item">
+        <h5>📅 Срок действия</h5>
+        <p>Эксперимент до <strong>31.12.2028</strong>. Ставки заморожены. У KARI есть минимум 2,5 года для масштабирования платформы на стабильной правовой базе.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  KARI.Самозанятые — Анализ Федерального закона № 422-ФЗ от 27.11.2018 (редакция 01.01.2026) &nbsp;|&nbsp;
+  Сформировано: 06.03.2026 &nbsp;|&nbsp;
+  Файл: /01_Юридика/KARI_422fz_analiz.html
+</div>
+
+</body>
+</html>

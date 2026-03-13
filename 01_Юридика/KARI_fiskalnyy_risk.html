@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KARI | Фискальные риски самозанятых</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --kari: #A01F72;
+    --kari-dark: #7d1858;
+    --kari-light: #f9eef5;
+    --navy: #242D4A;
+    --navy-light: #3a4566;
+    --red: #e53e3e;
+    --red-light: #fff5f5;
+    --red-border: #feb2b2;
+    --orange: #dd6b20;
+    --orange-light: #fffaf0;
+    --orange-border: #fbd38d;
+    --yellow: #d69e2e;
+    --yellow-light: #fffff0;
+    --yellow-border: #f6e05e;
+    --green: #276749;
+    --green-light: #f0fff4;
+    --green-border: #9ae6b4;
+    --blue: #2b6cb0;
+    --blue-light: #ebf8ff;
+    --blue-border: #bee3f8;
+    --gray: #718096;
+    --gray-light: #f7fafc;
+    --border: #e2e8f0;
+    --text: #2d3748;
+    --text-muted: #718096;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #f0f4f8;
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ========= ШАПКА ========= */
+  .header {
+    background: linear-gradient(135deg, var(--navy) 0%, #1a2240 100%);
+    color: white;
+    padding: 36px 0 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    background: var(--kari);
+    opacity: 0.12;
+    border-radius: 50%;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -30px;
+    width: 160px; height: 160px;
+    background: var(--kari);
+    opacity: 0.08;
+    border-radius: 50%;
+  }
+  .header .badge {
+    display: inline-block;
+    background: var(--kari);
+    color: white;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 900;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+  .header p {
+    font-size: 14px;
+    opacity: 0.75;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .header .meta {
+    display: flex;
+    gap: 28px;
+    justify-content: center;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .header .meta span {
+    font-size: 12px;
+    opacity: 0.65;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  /* ========= ПРЕДУПРЕЖДЕНИЕ ВВЕРХУ ========= */
+  .top-warning {
+    background: var(--red-light);
+    border: 2px solid var(--red-border);
+    border-left: 5px solid var(--red);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin: 24px auto;
+    max-width: 900px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .top-warning .icon { font-size: 24px; flex-shrink: 0; }
+  .top-warning strong { color: var(--red); display: block; font-size: 15px; margin-bottom: 5px; }
+  .top-warning p { font-size: 13.5px; color: var(--text); line-height: 1.55; }
+
+  /* ========= КОНТЕНТ ========= */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 20px 60px; }
+
+  /* ========= СЕКЦИИ ========= */
+  .section {
+    background: white;
+    border-radius: 14px;
+    padding: 28px 30px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border: 1px solid var(--border);
+  }
+  .section-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-title .num {
+    background: var(--kari);
+    color: white;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 900;
+    flex-shrink: 0;
+  }
+
+  /* ========= КРИТЕРИИ ФНС ========= */
+  .criteria-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 640px) {
+    .criteria-grid { grid-template-columns: 1fr; }
+  }
+  .criterion-card {
+    border-radius: 12px;
+    padding: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .criterion-card.c1 { background: #ebf8ff; border: 1px solid #bee3f8; }
+  .criterion-card.c2 { background: #e9d8fd; border: 1px solid #d6bcfa; }
+  .criterion-card.c3 { background: #fed7aa; border: 1px solid #fdba74; }
+  .criterion-card .c-num {
+    font-size: 36px;
+    font-weight: 900;
+    opacity: 0.15;
+    position: absolute;
+    top: 8px; right: 14px;
+    line-height: 1;
+  }
+  .criterion-card .c-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .criterion-card.c1 .c-label { color: #2b6cb0; }
+  .criterion-card.c2 .c-label { color: #553c9a; }
+  .criterion-card.c3 .c-label { color: #c05621; }
+  .criterion-card .c-value {
+    font-size: 20px;
+    font-weight: 900;
+    margin-bottom: 6px;
+  }
+  .criterion-card.c1 .c-value { color: #2b6cb0; }
+  .criterion-card.c2 .c-value { color: #553c9a; }
+  .criterion-card.c3 .c-value { color: #c05621; }
+  .criterion-card .c-desc {
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: var(--text);
+  }
+  .criterion-card .c-note {
+    margin-top: 10px;
+    background: rgba(255,255,255,0.7);
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 11.5px;
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  /* ========= ТРИГГЕР — ВСЕ 3 ========= */
+  .all-three {
+    background: var(--red-light);
+    border: 2px dashed var(--red);
+    border-radius: 12px;
+    padding: 16px 20px;
+    text-align: center;
+    margin: 16px 0;
+  }
+  .all-three .arrow { font-size: 24px; color: var(--red); }
+  .all-three strong { color: var(--red); font-size: 15px; }
+  .all-three p { font-size: 13px; color: var(--text); margin-top: 4px; }
+
+  /* ========= ФОРМУЛА ========= */
+  .formula-box {
+    background: var(--navy);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin: 14px 0;
+    color: white;
+    font-family: 'Courier New', monospace;
+    font-size: 13.5px;
+    position: relative;
+  }
+  .formula-box .f-label {
+    font-family: 'Nunito', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #a0aec0;
+    margin-bottom: 8px;
+  }
+  .formula-box .f-key { color: #68d391; font-weight: 700; }
+  .formula-box .f-value { color: #f6e05e; }
+  .formula-box .f-comment { color: #718096; font-style: italic; }
+
+  /* ========= ПРИМЕРЫ ========= */
+  .examples-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 14px 0;
+  }
+  @media (max-width: 580px) {
+    .examples-grid { grid-template-columns: 1fr; }
+  }
+  .example-card {
+    border-radius: 10px;
+    padding: 14px 16px;
+    border: 1px solid;
+  }
+  .example-card.danger {
+    background: var(--red-light);
+    border-color: var(--red-border);
+  }
+  .example-card.safe {
+    background: var(--green-light);
+    border-color: var(--green-border);
+  }
+  .example-card .ex-title {
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .example-card.danger .ex-title { color: var(--red); }
+  .example-card.safe .ex-title { color: var(--green); }
+  .example-card .ex-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 3px 0;
+    border-bottom: 1px dotted rgba(0,0,0,0.08);
+  }
+  .example-card .ex-row:last-child { border-bottom: none; }
+  .example-card .ex-row .ex-val {
+    font-weight: 700;
+  }
+  .example-card.danger .ex-row.trigger .ex-val { color: var(--red); }
+  .example-card.safe .ex-row.ok .ex-val { color: var(--green); }
+  .example-card .ex-result {
+    margin-top: 10px;
+    padding: 7px 10px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 700;
+  }
+  .example-card.danger .ex-result { background: var(--red); color: white; }
+  .example-card.safe .ex-result { background: var(--green); color: white; }
+
+  /* ========= ПАТТЕРНЫ ========= */
+  .patterns-list { list-style: none; padding: 0; }
+  .patterns-list li {
+    display: flex;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+  .patterns-list li:last-child { border-bottom: none; }
+  .pattern-icon {
+    width: 42px; height: 42px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .pattern-icon.red { background: var(--red-light); }
+  .pattern-icon.orange { background: var(--orange-light); }
+  .pattern-icon.yellow { background: var(--yellow-light); }
+  .pattern-icon.blue { background: var(--blue-light); }
+  .pattern-body {}
+  .pattern-name {
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+  .pattern-desc {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .pattern-example {
+    margin-top: 8px;
+    background: var(--gray-light);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12.5px;
+    color: var(--gray);
+    border-left: 3px solid var(--border);
+  }
+  .pattern-example strong { color: var(--red); }
+
+  /* ========= УРОВНИ РИСКА ========= */
+  .risk-levels {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 16px 0;
+  }
+  @media (max-width: 600px) {
+    .risk-levels { grid-template-columns: 1fr 1fr; }
+  }
+  .risk-card {
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+    border: 1px solid;
+  }
+  .risk-card.low { background: var(--green-light); border-color: var(--green-border); }
+  .risk-card.medium { background: var(--yellow-light); border-color: var(--yellow-border); }
+  .risk-card.high { background: var(--orange-light); border-color: var(--orange-border); }
+  .risk-card.critical { background: var(--red-light); border-color: var(--red-border); }
+  .risk-card .r-emoji { font-size: 24px; margin-bottom: 6px; }
+  .risk-card .r-level {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .risk-card.low .r-level { color: var(--green); }
+  .risk-card.medium .r-level { color: var(--yellow); }
+  .risk-card.high .r-level { color: var(--orange); }
+  .risk-card.critical .r-level { color: var(--red); }
+  .risk-card .r-desc { font-size: 12px; color: var(--text); line-height: 1.4; }
+  .risk-card .r-action {
+    margin-top: 8px;
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 5px 8px;
+    border-radius: 5px;
+  }
+  .risk-card.low .r-action { background: rgba(39,103,73,0.1); color: var(--green); }
+  .risk-card.medium .r-action { background: rgba(214,158,46,0.15); color: var(--yellow); }
+  .risk-card.high .r-action { background: rgba(221,107,32,0.15); color: var(--orange); }
+  .risk-card.critical .r-action { background: var(--red); color: white; }
+
+  /* ========= ИНСТРУКЦИИ / ПРАВИЛА ========= */
+  .rules-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 14px 0;
+  }
+  @media (max-width: 580px) {
+    .rules-grid { grid-template-columns: 1fr; }
+  }
+  .rule-block {
+    border-radius: 10px;
+    padding: 16px;
+    border: 1px solid;
+  }
+  .rule-block.dont { background: var(--red-light); border-color: var(--red-border); }
+  .rule-block.do { background: var(--green-light); border-color: var(--green-border); }
+  .rule-block .rb-title {
+    font-size: 13px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .rule-block.dont .rb-title { color: var(--red); }
+  .rule-block.do .rb-title { color: var(--green); }
+  .rule-block ul { list-style: none; padding: 0; }
+  .rule-block ul li {
+    font-size: 13px;
+    padding: 5px 0;
+    border-bottom: 1px dotted rgba(0,0,0,0.08);
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .rule-block ul li:last-child { border-bottom: none; }
+  .rule-block.dont ul li::before { content: '✗'; color: var(--red); font-weight: 900; flex-shrink: 0; }
+  .rule-block.do ul li::before { content: '✓'; color: var(--green); font-weight: 900; flex-shrink: 0; }
+
+  /* ========= ТАБЛИЦА ========= */
+  .table-wrap { overflow-x: auto; margin: 14px 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  th {
+    background: var(--navy);
+    color: white;
+    padding: 10px 14px;
+    font-weight: 700;
+    text-align: left;
+    font-size: 12px;
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: var(--gray-light); }
+  td.ok { color: var(--green); font-weight: 700; }
+  td.warn { color: var(--orange); font-weight: 700; }
+  td.bad { color: var(--red); font-weight: 700; }
+
+  /* ========= INFO BOX ========= */
+  .info-box {
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 14px 0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 13.5px;
+    line-height: 1.5;
+    border: 1px solid;
+  }
+  .info-box.info { background: var(--blue-light); border-color: var(--blue-border); }
+  .info-box.warn { background: var(--orange-light); border-color: var(--orange-border); }
+  .info-box.tip { background: var(--green-light); border-color: var(--green-border); }
+  .info-box.danger { background: var(--red-light); border-color: var(--red-border); }
+  .info-box .ib-icon { font-size: 20px; flex-shrink: 0; }
+  .info-box strong { display: block; margin-bottom: 4px; }
+  .info-box.info strong { color: var(--blue); }
+  .info-box.warn strong { color: var(--orange); }
+  .info-box.tip strong { color: var(--green); }
+  .info-box.danger strong { color: var(--red); }
+
+  /* ========= FLOW (процесс) ========= */
+  .flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    margin: 16px 0;
+    align-items: stretch;
+  }
+  .flow-step {
+    flex: 1;
+    min-width: 130px;
+    background: var(--gray-light);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 12px;
+    text-align: center;
+    position: relative;
+  }
+  .flow-step + .flow-step::before {
+    content: '→';
+    position: absolute;
+    left: -14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray);
+    font-size: 16px;
+    font-weight: 900;
+  }
+  @media (max-width: 580px) {
+    .flow { flex-direction: column; }
+    .flow-step + .flow-step::before {
+      content: '↓';
+      left: 50%;
+      top: -14px;
+      transform: translateX(-50%);
+    }
+  }
+  .flow-step .fs-icon { font-size: 22px; margin-bottom: 6px; }
+  .flow-step .fs-label { font-size: 12px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+  .flow-step .fs-desc { font-size: 11.5px; color: var(--gray); }
+  .flow-step.highlight { background: var(--red-light); border-color: var(--red); }
+  .flow-step.highlight .fs-label { color: var(--red); }
+
+  /* ========= ВАЖНАЯ ЦИТАТА ========= */
+  .law-quote {
+    background: var(--kari-light);
+    border-left: 4px solid var(--kari);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 14px 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .law-quote .lq-ref {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--kari);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  /* ========= ЧЕКЛИСТ ========= */
+  .checklist { list-style: none; padding: 0; margin: 12px 0; }
+  .checklist li {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13.5px;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li .cl-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .checklist li.critical .cl-text { color: var(--red); font-weight: 700; }
+  .checklist li.warn .cl-text { color: var(--orange); }
+  .checklist li.ok .cl-text { color: var(--green); }
+
+  /* ========= ПОДВАЛ ========= */
+  .footer {
+    text-align: center;
+    padding: 30px 20px;
+    background: var(--navy);
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+  }
+  .footer strong { color: white; display: block; font-size: 13px; margin-bottom: 6px; }
+
+/* ═══════════════════════════════════════════════════════════
+   МОБИЛЬНАЯ АДАПТАЦИЯ — добавлено 11.03.2026
+   Адаптировано для экранов смартфонов (< 768px)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Таблицы — горизонтальный скролл на всех устройствах */
+table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+/* Изображения — масштабирование */
+img { max-width: 100% !important; height: auto !important; }
+@media (max-width: 900px) {
+  /* Сетки 4-5 колонок → 2 колонки */
+  .risk-levels { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 768px) {
+  /* Все многоколоночные сетки → 1 колонка */
+  .risk-levels { grid-template-columns: 1fr !important; }
+
+  /* Боковое меню — скрываем, убираем отступ */
+  .sidebar { display: none !important; }
+  .main-content { margin-left: 0 !important; padding: 16px !important; }
+  .site-header { position: relative !important; }
+
+  /* Отступы шапки */
+  .header, .page-header { padding: 20px 16px !important; }
+  .header-top { flex-wrap: wrap !important; gap: 8px !important; }
+  .header-meta, .header-actions, .header-badges { flex-wrap: wrap !important; gap: 8px !important; }
+
+  /* Основной контент */
+  .main, .content, .container { padding: 16px !important; }
+
+  /* Типографика */
+  h1 { font-size: 22px !important; }
+  h2 { font-size: 18px !important; }
+  h3 { font-size: 15px !important; }
+
+  /* Горизонтальные ряды — перенос */
+  .header-pills, .filter-tabs, .nav-tabs, .tabs-row,
+  .section-tabs, .tab-bar { flex-wrap: wrap !important; }
+  .step { flex-direction: column !important; }
+
+  /* Кодовые блоки */
+  pre, code {
+    overflow-x: auto !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 13px !important; }
+  .badge, .tag, .pill, .status-badge { font-size: 11px !important; padding: 3px 8px !important; }
+  h1, .header h1, .logo-area h1 { font-size: 19px !important; }
+  .btn-print, .btn-export { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================ ШАПКА -->
+<div class="header">
+  <div class="badge">KARI · Юридический отдел</div>
+  <h1>🏛️ Фискальные риски самозанятых</h1>
+  <p>Критерии переквалификации ФНС, паттерны выплат и автоматический контроль платформы</p>
+  <div class="meta">
+    <span>📅 Март 2026</span>
+    <span>📋 Версия 1.0</span>
+    <span>⚖️ На основе практики ФНС и 422-ФЗ</span>
+    <span>👩‍⚖️ Автор: Юлия (юрист KARI)</span>
+  </div>
+</div>
+
+<!-- ============================================================ КОНТЕНТ -->
+<div class="container">
+
+  <!-- ============================================================ ГЛАВНОЕ ПРЕДУПРЕЖДЕНИЕ -->
+  <div class="top-warning">
+    <div class="icon">⚠️</div>
+    <div>
+      <strong>Критически важно для всех операторов платформы</strong>
+      <p>
+        ФНС квалифицирует отношения с самозанятым как <b>трудовые</b>, если одновременно выполняются три критерия.
+        В этом случае KARI доначисляют <b>НДФЛ + страховые взносы + штрафы за весь период сотрудничества</b>.
+        Цена одной ошибки — десятки тысяч рублей на каждого исполнителя.
+        Платформа контролирует эти критерии автоматически.
+      </p>
+    </div>
+  </div>
+
+  <!-- ============================================================ 1. ТРИ КРИТЕРИЯ ФНС -->
+  <div class="section">
+    <div class="section-title">
+      <div class="num">1</div>
+      Три критерия ФНС — переквалификация в трудовые отношения
+    </div>
+
+    <p style="font-size:13.5px; margin-bottom:18px; color:var(--text-muted);">
+      ФНС проверяет <b>каждого</b> исполнителя-самозанятого по трём критериям.
+      Все три сработали одновременно — высокий риск налоговых претензий к KARI.
+    </p>
+
+    <div class="criteria-grid">
+      <!-- Критерий 1 -->
+      <div class="criterion-card c1">
+        <div class="c-num">1</div>
+        <div class="c-label">Критерий 1 · Доход</div>
+        <div class="c-value">35 000 ₽/мес</div>
+        <div class="c-desc">
+          Средний доход исполнителя от KARI превышает 35 000 ₽ в месяц
+          (по месяцам с выплатами)
+        </div>
+        <div class="c-note">
+          ⚠️ ФНС делит на число месяцев <b>с выплатами</b>, а не на 12!
+        </div>
+      </div>
+      <!-- Критерий 2 -->
+      <div class="criterion-card c2">
+        <div class="c-num">2</div>
+        <div class="c-label">Критерий 2 · Срок</div>
+        <div class="c-value">3+ месяца/год</div>
+        <div class="c-desc">
+          Исполнитель работал с KARI 3 и более месяцев в одном
+          календарном году
+        </div>
+        <div class="c-note">
+          ⚠️ Месяцы <b>не обязательно подряд</b>. Любые 3 в году — уже триггер
+        </div>
+      </div>
+      <!-- Критерий 3 -->
+      <div class="criterion-card c3">
+        <div class="c-num">3</div>
+        <div class="c-label">Критерий 3 · Доля НПД</div>
+        <div class="c-value">&gt; 75% от НПД</div>
+        <div class="c-desc">
+          Доля дохода от KARI составляет более 75% от всего
+          дохода исполнителя по НПД за год
+        </div>
+        <div class="c-note">
+          ℹ️ Данные берутся из API ФНС «Мой налог» (в разработке)
+        </div>
+      </div>
+    </div>
+
+    <!-- Триггер -->
+    <div class="all-three">
+      <div class="arrow">⚡</div>
+      <strong>Все три критерия одновременно → Автоматический стоп-лист FISCAL_RISK</strong>
+      <p>Платформа автоматически блокирует дальнейшие выплаты и уведомляет директора региона</p>
+    </div>
+
+    <!-- Важное уточнение -->
+    <div class="info-box warn">
+      <div class="ib-icon">💡</div>
+      <div>
+        <strong>Если выполнены 2 из 3 — действие продолжается</strong>
+        Если исполнитель работает более 3 месяцев, но доля KARI в его НПД доходе меньше 75%
+        — отношения считаются допустимыми. Платформа показывает предупреждение (высокий риск),
+        но автоматической блокировки нет.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ 2. ФОРМУЛА РАСЧЁТА СРЕДНЕГО ДОХОДА -->
+  <div class="section">
+    <div class="section-title">
+      <div class="num">2</div>
+      Формула расчёта — почему это важно
+    </div>
+
+    <p style="font-size:13.5px; margin-bottom:16px;">
+      Ключевая ошибка: многие думают, что средний доход = сумма за год ÷ 12.
+      Это <b>неверно</b>. ФНС считает иначе.
+    </p>
+
+    <div class="formula-box">
+      <div class="f-label">Правильная формула ФНС</div>
+      <span class="f-key">avg_income</span> = <span class="f-value">total_income</span> ÷ <span class="f-key">months_with_payments</span><br>
+      <span class="f-comment">
+        &nbsp;&nbsp;&nbsp;// НЕ делим на 12 — делим на число месяцев, когда были реальные выплаты
+      </span>
+    </div>
+
+    <div class="examples-grid">
+      <!-- Пример опасный -->
+      <div class="example-card danger">
+        <div class="ex-title">❌ Опасный пример</div>
+        <div class="ex-row"><span>Сумма за год</span><span class="ex-val">105 000 ₽</span></div>
+        <div class="ex-row trigger"><span>Месяцев с выплатами</span><span class="ex-val">3 мес</span></div>
+        <div class="ex-row trigger"><span>Средний доход ФНС</span><span class="ex-val">35 000 ₽/мес 🔴</span></div>
+        <div class="ex-row trigger"><span>Срок сотрудничества</span><span class="ex-val">3 месяца 🔴</span></div>
+        <div class="ex-result">Критерии 1+2 сработали — РИСК!</div>
+      </div>
+      <!-- Пример безопасный -->
+      <div class="example-card safe">
+        <div class="ex-title">✅ Безопасный пример</div>
+        <div class="ex-row"><span>Сумма за год</span><span class="ex-val">105 000 ₽</span></div>
+        <div class="ex-row ok"><span>Месяцев с выплатами</span><span class="ex-val">4 мес</span></div>
+        <div class="ex-row ok"><span>Средний доход ФНС</span><span class="ex-val">26 250 ₽/мес 🟢</span></div>
+        <div class="ex-row ok"><span>Срок сотрудничества</span><span class="ex-val">4 месяца 🔴</span></div>
+        <div class="ex-result">Критерий 1 не сработал — допустимо</div>
+      </div>
+    </div>
+
+    <div class="info-box info">
+      <div class="ib-icon">📌</div>
+      <div>
+        <strong>Вывод для операторов</strong>
+        При 3 месяцах работы лимит одной выплаты такой:
+        <b>35 000 ₽ × 3 = 105 000 ₽ за весь период</b>.
+        Чтобы снизить риск — распределяйте выплаты на большее число месяцев
+        или привлекайте исполнителя реже (2–3 раза в год, не подряд).
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ 3. ПАТТЕРНЫ ВЫПЛАТ -->
+  <div class="section">
+    <div class="section-title">
+      <div class="num">3</div>
+      Запрещённые паттерны выплат
+    </div>
+
+    <p style="font-size:13.5px; margin-bottom:18px; color:var(--text-muted);">
+      Помимо трёх критериев, ФНС анализирует <b>ритмичность и структуру</b> выплат.
+      Эти паттерны имитируют трудовые отношения. Платформа автоматически их обнаруживает.
+    </p>
+
+    <ul class="patterns-list">
+      <!-- Паттерн 1 -->
+      <li>
+        <div class="pattern-icon red">📅</div>
+        <div class="pattern-body">
+          <div class="pattern-name">Паттерн 1: Ритм «зарплата + аванс»</div>
+          <div class="pattern-desc">
+            Выплаты ровно 2 раза в месяц <b>или</b> строго каждые 2 недели
+            — признак регулярного начисления оклада и аванса. Именно так выплачивается
+            зарплата по ТК РФ.
+          </div>
+          <div class="pattern-example">
+            <strong>Пример нарушения:</strong> 3-го и 18-го числа каждого месяца на протяжении 4 месяцев.
+          </div>
+        </div>
+      </li>
+      <!-- Паттерн 2 -->
+      <li>
+        <div class="pattern-icon orange">🔁</div>
+        <div class="pattern-body">
+          <div class="pattern-name">Паттерн 2: Одинаковые суммы</div>
+          <div class="pattern-desc">
+            Три и более выплаты подряд на <b>абсолютно одинаковую сумму</b>.
+            Фиксированная сумма — признак оклада, а не оплаты реальных заданий
+            (которые по объёму всегда разные).
+          </div>
+          <div class="pattern-example">
+            <strong>Пример нарушения:</strong> Январь 18 000 ₽, Февраль 18 000 ₽, Март 18 000 ₽ — это тревожный сигнал.
+          </div>
+        </div>
+      </li>
+      <!-- Паттерн 3 -->
+      <li>
+        <div class="pattern-icon yellow">📝</div>
+        <div class="pattern-body">
+          <div class="pattern-name">Паттерн 3: Слишком ранний акт</div>
+          <div class="pattern-desc">
+            Акт выполненных работ подписан <b>менее чем через 5 дней</b> после
+            даты начала работы по договору. Это физически невозможно при реальном
+            выполнении задания — такой акт выглядит как формальный документ для
+            прикрытия трудовых отношений.
+          </div>
+          <div class="pattern-example">
+            <strong>Пример нарушения:</strong> Договор подписан 1 апреля, акт выполненных работ — 3 апреля (через 2 дня).
+          </div>
+        </div>
+      </li>
+      <!-- Паттерн 4 -->
+      <li>
+        <div class="pattern-icon blue">📦</div>
+        <div class="pattern-body">
+          <div class="pattern-name">Паттерн 4: Невозможный объём</div>
+          <div class="pattern-desc">
+            Стоимость одного акта превышает <b>100 000 ₽</b>
+            — такой объём работ требует обязательного контроля и пояснений.
+            Может указывать на дробление крупной регулярной выплаты через
+            фиктивные задания.
+          </div>
+          <div class="pattern-example">
+            <strong>Пример нарушения:</strong> Акт на «организацию складских работ» на 127 000 ₽ за один месяц.
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ============================================================ 4. УРОВНИ РИСКА -->
+  <div class="section">
+    <div class="section-title">
+      <div class="num">4</div>
+      Уровни риска и действия платформы
+    </div>
+
+    <div class="risk-levels">
+      <div class="risk-card low">
+        <div class="r-emoji">🟢</div>
+        <div class="r-level">Низкий</div>
+        <div class="r-desc">Ни один из критериев ФНС не сработал</div>
+        <div class="r-action">Работаем штатно</div>
+      </div>
+      <div class="risk-card medium">
+        <div class="r-emoji">🟡</div>
+        <div class="r-level">Средний</div>
+        <div class="r-desc">1–2 критерия или 1 паттерн</div>
+        <div class="r-action">Рекомендация директору</div>
+      </div>
+      <div class="risk-card high">
+        <div class="r-emoji">🟠</div>
+        <div class="r-level">Высокий</div>
+        <div class="r-desc">2 критерия + паттерны</div>
+        <div class="r-action">Push директору региона</div>
+      </div>
+      <div class="risk-card critical">
+        <div class="r-emoji">🔴</div>
+        <div class="r-level">Критический</div>
+        <div class="r-desc">Все 3 критерия сработали</div>
+        <div class="r-action">Автоматический стоп-лист</div>
+      </div>
+    </div>
+
+    <div class="info-box danger">
+      <div class="ib-icon">🚨</div>
+      <div>
+        <strong>При критическом уровне платформа действует автоматически</strong>
+        Celery-задача ежедневно в 08:00 МСК проверяет всех исполнителей.
+        При обнаружении критического риска: исполнитель добавляется в стоп-лист
+        с причиной <code style="background:#fed7d7;padding:2px 6px;border-radius:4px;">FISCAL_RISK</code>,
+        выплаты блокируются, директору региона отправляется Push-уведомление.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ 5. КАК РАБОТАЕТ ПЛАТФОРМА -->
+  <div class="section">
+    <div class="section-title">
+      <div class="num">5</div>
+      Как платформа контролирует риски
+    </div>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="fs-icon">🕗</div>
+        <div class="fs-label">08:00 МСК</div>
+        <div class="fs-desc">Celery-задача запускает сканирование</div>
+      </div>
+      <div class="flow-step">
+        <div class="fs-icon">🔍</div>
+        <div class="fs-label">Проверка</div>
+        <div class="fs-desc">3 критерия + 4 паттерна для каждого исполнителя</div>
+      </div>
+      <div class="flow-step">
+        <div class="fs-icon">📊</div>
+        <div class="fs-label">Оценка</div>
+        <div class="fs-desc">Присваивается уровень: low / medium / high / critical</div>
+      </div>
+      <div class="flow-step highlight">
+        <div class="fs-icon">🚫</div>
+        <div class="fs-label">Стоп-лист</div>
+        <div class="fs-desc">Critical → автоматическая блокировка (FISCAL_RISK)</div>
+      </div>
+      <div class="flow-step">
+        <div class="fs-icon">📱</div>
+        <div class="fs-label">Уведомление</div>
+        <div class="fs-desc">Push директору региона: high + critical</div>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Событие</th>
+            <th>Момент проверки</th>
+            <th>Что происходит</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Ежедневный скан</b></td>
+            <td>08:00 МСК каждый день</td>
+            <td>Проверка всех активных исполнителей с ИНН</td>
+          </tr>
+          <tr>
+            <td><b>Перед выплатой</b></td>
+            <td>Каждая выплата в очереди</td>
+            <td>Блокируется если исполнитель уже в стоп-листе FISCAL_RISK</td>
+          </tr>
+          <tr>
+            <td><b>Ручная проверка</b></td>
+            <td>По запросу директора</td>
+            <td>POST /api/v1/fiscal-risk/scan — запуск скана вручную</td>
+          </tr>
+          <tr>
+            <td><b>Просмотр исполнителя</b></td>
+            <td>В любой момент</td>
+            <td>GET /api/v1/fiscal-risk/executor/{id} — полный отчёт</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ============================================================ 6. ПРАВИЛА ДЛЯ ОПЕРАТОРОВ -->
+  <div class="section">
+    <div class="section-title">
+      <div class="num">6</div>
+      Правила для операторов платформы
+    </div>
+
+    <div class="rules-grid">
+      <div class="rule-block dont">
+        <div class="rb-title">🚫 Запрещено</div>
+        <ul>
+          <li>Привлекать одного исполнителя более 3 месяцев в году, если его средний доход близок к 35 000 ₽/мес</li>
+          <li>Делать выплаты строго 2 раза в месяц (1-е и 15-е, 5-е и 20-е и т.д.)</li>
+          <li>Устанавливать одинаковую сумму на одинаковый объём ежемесячно</li>
+          <li>Подписывать акт через 1–3 дня после начала работы</li>
+          <li>Делать один акт на сумму свыше 100 000 ₽ без согласования с юристом</li>
+          <li>Игнорировать предупреждения платформы об «Оранжевом» или «Красном» риске</li>
+        </ul>
+      </div>
+      <div class="rule-block do">
+        <div class="rb-title">✅ Рекомендуется</div>
+        <ul>
+          <li>Разнообразить суммы выплат — задания должны быть разного объёма</li>
+          <li>Делать перерывы в сотрудничестве — не каждый месяц подряд</li>
+          <li>Привлекать разных исполнителей ротационно (пул исполнителей)</li>
+          <li>Акт подписывать не ранее чем через 5 рабочих дней после начала работы</li>
+          <li>Следить за долей KARI в НПД-доходах исполнителя (идеально &lt; 50%)</li>
+          <li>Своевременно реагировать на уведомления платформы о рисках</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ 7. ПОГРАНИЧНЫЕ СЛУЧАИ -->
+  <div class="section">
+    <div class="section-title">
+      <div class="num">7</div>
+      Пограничные случаи — что делать
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Ситуация</th>
+            <th>Критерии</th>
+            <th>Статус</th>
+            <th>Действие</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>3 мес., доход 34 900 ₽/мес, доля 80%</td>
+            <td>К1✗ К2✓ К3✓</td>
+            <td class="warn">Средний</td>
+            <td>Рекомендация снизить объём</td>
+          </tr>
+          <tr>
+            <td>3 мес., доход 36 000 ₽/мес, доля 50%</td>
+            <td>К1✓ К2✓ К3✗</td>
+            <td class="warn">Высокий</td>
+            <td>Push директору, консультация юриста</td>
+          </tr>
+          <tr>
+            <td>4 мес., доход 34 000 ₽/мес, доля 80%</td>
+            <td>К1✗ К2✓ К3✓</td>
+            <td class="warn">Средний</td>
+            <td>Мониторинг, не увеличивать объём</td>
+          </tr>
+          <tr>
+            <td>5 мес., доход 38 000 ₽/мес, доля 80%</td>
+            <td>К1✓ К2✓ К3✓</td>
+            <td class="bad">Критический</td>
+            <td>Автоматический стоп-лист FISCAL_RISK</td>
+          </tr>
+          <tr>
+            <td>1 мес., доход 50 000 ₽/мес, доля 90%</td>
+            <td>К1✓ К2✗ К3✓</td>
+            <td class="ok">Низкий</td>
+            <td>Допустимо — срок &lt; 3 мес.</td>
+          </tr>
+          <tr>
+            <td>2 мес., доход 60 000 ₽/мес, доля 90%</td>
+            <td>К1✓ К2✗ К3✓</td>
+            <td class="warn">Средний</td>
+            <td>Внимание — ещё 1 мес. = критично</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="law-quote">
+      <div class="lq-ref">⚖️ Позиция ФНС (письмо № АБ-4-20/14902@ от 20.02.2019)</div>
+      Признаки подмены трудовых отношений: систематическое вознаграждение, выполнение одной и той же функции,
+      подчинение режиму работодателя, отсутствие иных заказчиков, постоянный характер работ.
+      Чем больше этих признаков — тем выше риск переквалификации.
+    </div>
+  </div>
+
+  <!-- ============================================================ 8. ЧЕКЛИСТ ЮРИСТА -->
+  <div class="section">
+    <div class="section-title">
+      <div class="num">8</div>
+      Чеклист юриста — что проверить при аудите
+    </div>
+
+    <ul class="checklist">
+      <li class="critical">
+        <span class="cl-icon">🔴</span>
+        <span class="cl-text">
+          Все исполнители со статусом FISCAL_RISK в стоп-листе — пересмотреть историю выплат,
+          определить причину и проконсультировать операторов о реструктуризации отношений
+        </span>
+      </li>
+      <li class="warn">
+        <span class="cl-icon">🟠</span>
+        <span class="cl-text">
+          Исполнители с «Высоким» риском — лично встретиться с директором региона,
+          согласовать план снижения объёмов или привлечения альтернативных исполнителей
+        </span>
+      </li>
+      <li class="warn">
+        <span class="cl-icon">🟡</span>
+        <span class="cl-text">
+          Паттерн «одинаковые суммы» — проверить, что задания действительно разные по объёму,
+          запросить обоснование у директора магазина
+        </span>
+      </li>
+      <li class="warn">
+        <span class="cl-icon">🟡</span>
+        <span class="cl-text">
+          Акты подписаны менее чем через 5 дней после начала — уточнить фактическую дату
+          выполнения работ, при необходимости переоформить документы
+        </span>
+      </li>
+      <li class="ok">
+        <span class="cl-icon">🟢</span>
+        <span class="cl-text">
+          Ежемесячно выгружать отчёт «Фискальный риск» из кабинета директора региона
+          (раздел «Фискальный контроль») и архивировать для подтверждения добросовестности
+        </span>
+      </li>
+      <li class="ok">
+        <span class="cl-icon">🟢</span>
+        <span class="cl-text">
+          Сверять данные платформы с выписками Совкомбанка — суммы и даты выплат
+          должны совпадать с данными в акте
+        </span>
+      </li>
+      <li class="ok">
+        <span class="cl-icon">📋</span>
+        <span class="cl-text">
+          Не реже 1 раза в квартал проводить обучение для директоров магазинов
+          по правилам работы с самозанятыми и рискам переквалификации
+        </span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ============================================================ 9. СТОП-ЛИСТ FISCAL_RISK -->
+  <div class="section">
+    <div class="section-title">
+      <div class="num">9</div>
+      Стоп-лист FISCAL_RISK — снятие блокировки
+    </div>
+
+    <p style="font-size:13.5px; margin-bottom:16px; color:var(--text-muted);">
+      Автоматическое добавление в стоп-лист не означает «навсегда».
+      Ниже — порядок снятия блокировки после устранения причины.
+    </p>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="fs-icon">🔎</div>
+        <div class="fs-label">Анализ</div>
+        <div class="fs-desc">Юрист проверяет какие критерии сработали и почему</div>
+      </div>
+      <div class="flow-step">
+        <div class="fs-icon">🤝</div>
+        <div class="fs-label">Соглашение</div>
+        <div class="fs-desc">Договариваемся с исполнителем об изменении условий работы</div>
+      </div>
+      <div class="flow-step">
+        <div class="fs-icon">📅</div>
+        <div class="fs-label">Пауза</div>
+        <div class="fs-desc">Рекомендованный перерыв: 2–3 месяца без выплат</div>
+      </div>
+      <div class="flow-step">
+        <div class="fs-icon">✅</div>
+        <div class="fs-label">Разблокировка</div>
+        <div class="fs-desc">Директор региона или HRD снимает флаг в системе</div>
+      </div>
+    </div>
+
+    <div class="info-box tip">
+      <div class="ib-icon">💡</div>
+      <div>
+        <strong>Альтернатива: предложить исполнителю другие форматы</strong>
+        Если риск обусловлен исключительно зависимостью от KARI —
+        предложить исполнителю найти дополнительных заказчиков (чтобы снизить долю KARI в НПД),
+        или рассмотреть оформление в штат на неполную занятость (0.25 ставки).
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ 10. КОНТАКТЫ -->
+  <div class="section">
+    <div class="section-title">
+      <div class="num">10</div>
+      Контакты и ответственные
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Роль</th>
+            <th>Ответственность</th>
+            <th>Инструмент в платформе</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Юрист (Юлия)</b></td>
+            <td>Аудит рисков, консультации операторов, обновление методики</td>
+            <td>Экспорт отчётов из кабинета HRD</td>
+          </tr>
+          <tr>
+            <td><b>Директор региона</b></td>
+            <td>Утверждение блокировок, Push-уведомления, ручной запуск скана</td>
+            <td>Раздел «🏛️ Фискальный контроль» в кабинете</td>
+          </tr>
+          <tr>
+            <td><b>HRD</b></td>
+            <td>Ведение стоп-листа, снятие блокировок, проверка новых исполнителей</td>
+            <td>Раздел «🚫 Стоп-лист» + Фискальный контроль</td>
+          </tr>
+          <tr>
+            <td><b>IT-поддержка</b></td>
+            <td>Настройка Celery Beat, мониторинг Grafana, устранение сбоев</td>
+            <td>Celery задача: <code>fiscal_risk.run_full_scan</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="info-box info">
+      <div class="ib-icon">📞</div>
+      <div>
+        <strong>При возникновении спорных ситуаций</strong>
+        Все случаи добавления в стоп-лист FISCAL_RISK фиксируются в журнале аудита (таблица audit_log).
+        Запись сохраняется 5 лет и может быть предоставлена ФНС как подтверждение добросовестности KARI.
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- ============================================================ ПОДВАЛ -->
+<div class="footer">
+  <strong>KARI.Самозанятые — Внутренний документ. Не для распространения.</strong>
+  Документ подготовлен на основе комментариев юриста KARI (Юлия, 06.03.2026).
+  Версия 1.0 · Март 2026 · KARI Federal Retail
+</div>
+
+</body>
+</html>

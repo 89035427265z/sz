@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__filesystem__directory_tree",
+      "mcp__filesystem__create_directory",
+      "mcp__filesystem__read_text_file",
+      "Bash(python3 -c \":*)",
+      "mcp__scheduled-tasks__list_scheduled_tasks",
+      "Bash(brew install sshpass)",
+      "Bash(python3 -c \"import paramiko; print\\(''ok''\\)\")",
+      "Bash(pip3 install paramiko)"
+    ]
+  }
+}

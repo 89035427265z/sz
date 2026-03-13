@@ -1,0 +1,3119 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ТЗ — Платформа KARI.Самозанятые v1.0</title>
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+  
+    /* === СБРОС И БАЗОВЫЕ СТИЛИ === */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #242D4A;
+      --red: #A01F72;
+      --red-dark: #7a1750;
+      --gray:    #f5f5f5;
+      --gray-mid:#e0e0e0;
+      --gray-text:#6b7280;
+      --white:   #ffffff;
+      --nav-w:   260px;
+      --header-h:80px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--gray);
+      color: var(--black);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    /* === ШАПКА === */
+    .site-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--header-h);
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px 0 24px;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo-mark {
+      background: var(--red);
+      color: var(--white);
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      padding: 6px 14px;
+      border-radius: 4px;
+      line-height: 1;
+    }
+
+    .logo-subtitle {
+      color: #555555;
+      font-size: 13px;
+      font-weight: 400;
+      opacity:  1;
+      border-left: 1px solid rgba(0,0,0,0.15);
+      padding-left: 16px;
+      line-height: 1.4;
+    }
+
+    .header-meta {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .badge-status {
+      background: #22c55e;
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .header-version {
+      color: #777777;
+      font-size: 12px;
+    }
+
+    .btn-print {
+      background: var(--red);
+      color: var(--white);
+      border: none;
+      padding: 8px 20px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      letter-spacing: 0.3px;
+    }
+    .btn-print:hover { background: var(--red-dark); }
+
+    /* === НАВИГАЦИЯ СЛЕВА === */
+    .sidebar {
+      position: fixed;
+      top: var(--header-h);
+      left: 0;
+      width: var(--nav-w);
+      height: calc(100vh - var(--header-h));
+      background: var(--white);
+      border-right: 1px solid var(--gray-mid);
+      overflow-y: auto;
+      z-index: 900;
+      padding: 24px 0;
+    }
+
+    .nav-section-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gray-text);
+      padding: 8px 20px 4px;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 9px 20px 9px 20px;
+      text-decoration: none;
+      color: var(--black);
+      font-size: 13px;
+      font-weight: 400;
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+      line-height: 1.4;
+    }
+
+    .sidebar a:hover {
+      background: var(--gray);
+      color: var(--red);
+      border-left-color: var(--red);
+    }
+
+    .sidebar a.active {
+      background: #fff0f1;
+      color: var(--red);
+      border-left-color: var(--red);
+      font-weight: 600;
+    }
+
+    .nav-num {
+      display: inline-block;
+      width: 22px;
+      height: 22px;
+      background: var(--black);
+      color: var(--white);
+      font-size: 10px;
+      font-weight: 700;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 22px;
+      margin-right: 8px;
+      flex-shrink: 0;
+    }
+
+    .sidebar a:hover .nav-num { background: var(--red); }
+    .sidebar a.active .nav-num { background: var(--red); }
+
+    /* === ОСНОВНОЙ КОНТЕНТ === */
+    .main-content {
+      margin-left: var(--nav-w);
+      margin-top: var(--header-h);
+      padding: 40px 48px 60px;
+      max-width: 1100px;
+    }
+
+    /* === СЕКЦИИ === */
+    .section {
+      background: var(--white);
+      border-radius: 12px;
+      margin-bottom: 32px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .section-header {
+      background: var(--black);
+      padding: 20px 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .section-num {
+      background: var(--red);
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 800;
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      color: var(--white);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .section-body {
+      padding: 32px;
+    }
+
+    /* === ТИТУЛЬНЫЙ БЛОК === */
+    .title-block {
+      background: linear-gradient(135deg, var(--black) 0%, #2d2d2d 100%);
+      border-radius: 12px;
+      padding: 48px;
+      margin-bottom: 32px;
+      color: var(--white);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+
+    .title-block .doc-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+
+    .title-block h1 {
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    .title-block h1 span { color: var(--red); }
+
+    .title-block .doc-version {
+      font-size: 16px;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 32px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-top: 32px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .meta-item label {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 4px;
+    }
+
+    .meta-item span {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    /* === ИНФО БЛОКИ === */
+    .info-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .info-card {
+      background: var(--gray);
+      border-radius: 8px;
+      padding: 20px;
+      border-left: 4px solid var(--red);
+    }
+
+    .info-card .ic-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--gray-text);
+      margin-bottom: 6px;
+    }
+
+    .info-card .ic-value {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--black);
+      line-height: 1;
+    }
+
+    .info-card .ic-sub {
+      font-size: 12px;
+      color: var(--gray-text);
+      margin-top: 4px;
+    }
+
+    /* === ТАБЛИЦЫ === */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+
+    thead tr {
+      background: var(--black);
+      color: var(--white);
+    }
+
+    thead th {
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    tbody tr { border-bottom: 1px solid var(--gray-mid); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #fafafa; }
+
+    tbody td {
+      padding: 12px 16px;
+      vertical-align: top;
+    }
+
+    .td-role {
+      font-weight: 700;
+      color: var(--black);
+      white-space: nowrap;
+    }
+
+    .td-access {
+      font-size: 12px;
+      color: var(--gray-text);
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      margin: 2px 2px 2px 0;
+    }
+
+    .tag-blue  { background: #dbeafe; color: #1d4ed8; }
+    .tag-green { background: #dcfce7; color: #15803d; }
+    .tag-red   { background: #fee2e2; color: #b91c1c; }
+    .tag-gray  { background: var(--gray-mid); color: #374151; }
+    .tag-purple{ background: #ede9fe; color: #6d28d9; }
+    .tag-orange{ background: #ffedd5; color: #c2410c; }
+
+    /* === ПОДЗАГОЛОВКИ === */
+    h2 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--black);
+    }
+
+    h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 24px 0 12px;
+      color: var(--black);
+      padding-left: 12px;
+      border-left: 3px solid var(--red);
+    }
+
+    h4 {
+      font-size: 14px;
+      font-weight: 700;
+      margin: 16px 0 8px;
+      color: var(--black);
+    }
+
+    p { margin-bottom: 12px; color: #374151; }
+
+    /* === СПИСКИ === */
+    ul.styled, ol.styled {
+      margin: 8px 0 16px 0;
+      padding-left: 0;
+      list-style: none;
+    }
+
+    ul.styled li {
+      padding: 6px 0 6px 24px;
+      position: relative;
+      border-bottom: 1px solid var(--gray);
+      font-size: 14px;
+    }
+
+    ul.styled li:last-child { border-bottom: none; }
+
+    ul.styled li::before {
+      content: '';
+      position: absolute;
+      left: 6px; top: 14px;
+      width: 6px; height: 6px;
+      background: var(--red);
+      border-radius: 50%;
+    }
+
+    /* === СПРИНТ КАРТОЧКИ === */
+    .sprint-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .sprint-card {
+      border: 1px solid var(--gray-mid);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .sprint-header {
+      background: var(--black);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sprint-header h4 {
+      color: var(--white);
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .sprint-header .sprint-weeks {
+      background: var(--red);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .sprint-body {
+      padding: 16px 20px;
+      background: var(--white);
+    }
+
+    .sprint-body ul { margin: 0; }
+    .sprint-body li { font-size: 13px; }
+
+    /* === МОДУЛЬ КАРТОЧКИ === */
+    .module-card {
+      border: 1px solid var(--gray-mid);
+      border-radius: 10px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .module-card-header {
+      background: var(--gray);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--gray-mid);
+    }
+
+    .module-icon {
+      width: 36px; height: 36px;
+      background: var(--black);
+      color: var(--white);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .module-card-header h3 {
+      margin: 0;
+      padding: 0;
+      border: none;
+      font-size: 15px;
+    }
+
+    .module-card-body { padding: 20px; }
+
+    /* === КРИТЕРИИ ГОТОВНОСТИ === */
+    .criteria-list { list-style: none; }
+    .criteria-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--gray);
+    }
+    .criteria-item:last-child { border-bottom: none; }
+    .criteria-check {
+      width: 24px; height: 24px;
+      background: #dcfce7;
+      border: 2px solid #22c55e;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: #15803d;
+      font-weight: 700;
+    }
+    .criteria-text { font-size: 14px; line-height: 1.5; }
+    .criteria-kpi {
+      font-weight: 700;
+      color: var(--red);
+    }
+
+    /* === ИНТЕГРАЦИИ === */
+    .integration-card {
+      border: 1px solid var(--gray-mid);
+      border-radius: 10px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .integration-header {
+      background: var(--black);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .integration-header h4 {
+      color: var(--white);
+      margin: 0;
+      font-size: 14px;
+    }
+    .integration-body { padding: 16px 20px; }
+    .integration-row {
+      display: flex;
+      gap: 8px;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--gray);
+      font-size: 13px;
+    }
+    .integration-row:last-child { border-bottom: none; }
+    .integration-row label {
+      font-weight: 700;
+      color: var(--gray-text);
+      min-width: 100px;
+      flex-shrink: 0;
+    }
+
+    /* === НЕФУНКЦИОНАЛЬНЫЕ ТРЕБОВАНИЯ === */
+    .nfr-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    .nfr-item {
+      background: var(--gray);
+      border-radius: 8px;
+      padding: 16px 20px;
+      border-top: 3px solid var(--black);
+    }
+    .nfr-item h4 {
+      font-size: 13px;
+      margin-bottom: 6px;
+      color: var(--black);
+    }
+    .nfr-value {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--red);
+      line-height: 1;
+    }
+    .nfr-desc {
+      font-size: 12px;
+      color: var(--gray-text);
+      margin-top: 6px;
+    }
+
+    /* === МИГРАЦИЯ === */
+    .migration-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .migration-step {
+      display: flex;
+      gap: 20px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--gray);
+    }
+    .migration-step:last-child { border-bottom: none; }
+    .step-num {
+      width: 32px; height: 32px;
+      background: var(--red);
+      color: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .step-content h4 { margin: 4px 0 4px; }
+    .step-content p { margin: 0; font-size: 13px; color: var(--gray-text); }
+
+    /* === КОНТАКТЫ === */
+    .contacts-table tbody td:first-child { font-weight: 700; }
+
+    /* === ПРЕДУПРЕЖДЕНИЕ === */
+    .alert {
+      border-radius: 8px;
+      padding: 14px 20px;
+      margin: 16px 0;
+      font-size: 14px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .alert-info  { background: #dbeafe; border-left: 4px solid #3b82f6; color: #1e40af; }
+    .alert-warn  { background: #fef9c3; border-left: 4px solid #eab308; color: #854d0e; }
+    .alert-red   { background: #fee2e2; border-left: 4px solid var(--red); color: #991b1b; }
+
+    .alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+    /* === ФУТЕР === */
+    footer {
+      margin-left: var(--nav-w);
+      background: var(--black);
+      color: rgba(255,255,255,0.5);
+      padding: 20px 48px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    footer strong { color: var(--white); }
+
+    /* === ПЕЧАТЬ === */
+    @media print {
+      .sidebar, .site-header, .btn-print, footer .btn-print { display: none !important; }
+      .main-content { margin: 0; padding: 20px; }
+      .section { box-shadow: none; break-inside: avoid; }
+      .sprint-grid { grid-template-columns: 1fr; }
+      .info-cards { grid-template-columns: 1fr 1fr; }
+      .nfr-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* === SCROLLBAR === */
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--gray-mid); border-radius: 2px; }
+
+    /* === РАЗДЕЛИТЕЛЬ В НАВИГАЦИИ === */
+    .nav-divider {
+      height: 1px;
+      background: var(--gray-mid);
+      margin: 12px 20px;
+    }
+  
+  /* ===== ЛОГОТИП KARI ===== */
+  .kari-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+  .kari-logo-symbol {
+    width: 32px;
+    height: 32px;
+    background: #A01F72;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .kari-logo-symbol::after {
+    content: 'r';
+    color: white;
+    font-size: 16px;
+    font-weight: 900;
+    font-style: italic;
+    transform: rotate(45deg);
+    display: block;
+  }
+  .kari-logo-text {
+    font-size: 24px;
+    font-weight: 900;
+    color: #242D4A;
+    letter-spacing: 2px;
+    font-style: italic;
+  }
+  .kari-logo-white .kari-logo-text {
+    color: white;
+  }
+  /* ===== ЛОГОТИП KARI (маленький) ===== */
+  .kari-logo-small {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .kari-logo-small-symbol {
+    width: 18px;
+    height: 18px;
+    background: #A01F72;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .kari-logo-small-symbol::after {
+    content: 'r';
+    color: white;
+    font-size: 9px;
+    font-weight: 900;
+    font-style: italic;
+    transform: rotate(45deg);
+    display: block;
+  }
+  .kari-logo-small-text {
+    font-size: 14px;
+    font-weight: 900;
+    color: #242D4A;
+    font-style: italic;
+  }
+
+  /* ===== НОВЫЙ ЛОГОТИП SVG ===== */
+  .kari-logo-wrap { display: flex; align-items: center; gap: 10px; }
+  .kari-text { font-size: 26px; font-weight: 900; font-style: italic; color: #A01F72; letter-spacing: 1px; font-family: 'Nunito', sans-serif; }
+  .kari-subtext { font-size: 10px; color: #A01F72; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; display: block; margin-top: -4px; }
+
+  /* ===== БЕЛАЯ ШАПКА И МЕНЮ ===== */
+  .page-header, .site-header, .app-header {
+    background: #ffffff !important;
+    border-bottom: 3px solid #A01F72 !important;
+    color: #333333 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+  }
+  .page-header *, .site-header *, .app-header * {
+    color: #333333 !important;
+  }
+  /* Исключения: кнопки и бейджи сохраняют свой цвет */
+  .page-header .btn-print, .site-header .btn-print, .app-header .btn-print,
+  .badge-status, .nav-num, .tab-badge {
+    color: #ffffff !important;
+  }
+  .header-avatar { color: #ffffff !important; }
+
+
+/* ═══════════════════════════════════════════════════════════
+   МОБИЛЬНАЯ АДАПТАЦИЯ — добавлено 11.03.2026
+   Адаптировано для экранов смартфонов (< 768px)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Таблицы — горизонтальный скролл на всех устройствах */
+table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+/* Изображения — масштабирование */
+img { max-width: 100% !important; height: auto !important; }
+@media (max-width: 900px) {
+  /* Сетки 4-5 колонок → 2 колонки */
+  .meta-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 768px) {
+  /* Все многоколоночные сетки → 1 колонка */
+  .meta-grid { grid-template-columns: 1fr !important; }
+  .info-cards { grid-template-columns: 1fr !important; }
+  .nfr-grid { grid-template-columns: 1fr !important; }
+
+  /* Боковое меню — скрываем, убираем отступ */
+  .sidebar { display: none !important; }
+  .main-content { margin-left: 0 !important; padding: 16px !important; }
+  .site-header { position: relative !important; }
+
+  /* Отступы шапки */
+  .header, .page-header { padding: 20px 16px !important; }
+  .header-top { flex-wrap: wrap !important; gap: 8px !important; }
+  .header-meta, .header-actions, .header-badges { flex-wrap: wrap !important; gap: 8px !important; }
+
+  /* Основной контент */
+  .main, .content, .container { padding: 16px !important; }
+
+  /* Типографика */
+  h1 { font-size: 22px !important; }
+  h2 { font-size: 18px !important; }
+  h3 { font-size: 15px !important; }
+
+  /* Горизонтальные ряды — перенос */
+  .header-pills, .filter-tabs, .nav-tabs, .tabs-row,
+  .section-tabs, .tab-bar { flex-wrap: wrap !important; }
+  .step { flex-direction: column !important; }
+
+  /* Кодовые блоки */
+  pre, code {
+    overflow-x: auto !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 13px !important; }
+  .badge, .tag, .pill, .status-badge { font-size: 11px !important; padding: 3px 8px !important; }
+  h1, .header h1, .logo-area h1 { font-size: 19px !important; }
+  .btn-print, .btn-export { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== ШАПКА ===== -->
+<header class="site-header">
+  <div class="header-logo">
+    <div class="kari-logo-wrap">
+  <svg xmlns="http://www.w3.org/2000/svg" height="56" viewBox="0 0 728.5 221.5" style="display:block"><g transform="translate(-56.5 -186.5)"><path transform="matrix(1,0,0,-1,167.381,186.9256)" d="M0 0V0C-60.585 0-109.775-48.659-110.678-109.017-101.105-89.662-88.255-77.239-76.191-67.482-58.14-52.881-36.41-45.828-16.28-44.574 5.777-43.201 23.053-47.846 37.189-59.05 42.293-63.095 46.38-67.877 49.613-73.02 55.602-82.543 58.375-93.663 57.368-105.985 55.198-132.527 33.39-153.87 6.804-155.519-24.699-157.473-50.859-132.506-50.859-101.431-50.859-87.238-45.395-74.325-36.465-64.663-46.559-67.782-56.643-72.841-65.837-80.278-74.971-87.666-85.145-97.851-93.512-111.315-102.647-126.015-106.433-143.045-106.537-160.35V-221.399H0C61.15-221.399 110.721-171.838 110.721-110.7V-110.699C110.721-49.561 61.15 0 0 0" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,484.762,262.1775)" d="M0 0H-51.44L-106.801-52.162V41.158H-144.053V-144.054H-106.801V-91.887L-51.433-144.054H3.854L-76.443-72.024Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,0,595.276)" d="M744.002 189.045H781.255V314.95503H744.002Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,550.4052,371.5924)" d="M0 0C-20.818 0-37.694 16.739-37.694 37.388-37.694 58.037-20.818 74.776 0 74.776 20.818 74.776 37.694 58.037 37.694 37.388 37.694 16.739 20.818 0 0 0M37.738 101.384C26.659 107.826 13.769 111.534 0 111.534-41.285 111.534-74.753 78.338-74.753 37.388-74.753-3.562-41.285-36.758 0-36.758 13.769-36.758 26.659-33.05 37.738-26.609V-34.639H74.99V109.415H37.738Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,762.6282,267.7195)" d="M0 0C12.459 0 22.559 10.1 22.559 22.559 22.559 28.064 20.582 33.104 17.306 37.02 15.132 39.862 12.219 42.197 8.653 43.858-2.579 49.086-18.377 47.019-33.605 38.323-49.001 29.531-61.329 13.083-68.67-6.989V5.542H-105.923V-138.512H-68.67V-37.268C-65.411-6.761-50.524 20.852-30.241 32.433-25.463 35.163-20.667 37.153-16.051 38.402-20.072 34.327-22.559 28.736-22.559 22.559-22.559 10.1-12.459 0 0 0" fill="#a91d7a"/></g></svg>
+  <span class="kari-subtext">самозанятые</span>
+</div>
+    <div class="logo-subtitle">Платформа KARI.Самозанятые<br>Техническое задание v3.0</div>
+  </div>
+  <div class="header-meta">
+    <span class="badge-status">v3.0 — Обновлено</span>
+    <span class="header-version">v3.0 &nbsp;|&nbsp; Март 2026</span>
+    <button class="btn-print" onclick="window.print()">Распечатать</button>
+  </div>
+</header>
+
+<!-- ===== НАВИГАЦИЯ ===== -->
+<nav class="sidebar" id="sidebar">
+  <div class="nav-section-title">Документ</div>
+  <a href="#cover" class="active">Титульный лист</a>
+
+  <div class="nav-divider"></div>
+  <div class="nav-section-title">Разделы</div>
+
+  <a href="#section1">
+    <span class="nav-num">1</span>Общее описание
+  </a>
+  <a href="#section2">
+    <span class="nav-num">2</span>Роли и права
+  </a>
+  <a href="#section2b" style="padding-left:32px;font-size:12px">
+    ↳ Делегирование прав
+  </a>
+  <a href="#section2c" style="padding-left:32px;font-size:12px">
+    ↳ Система лимитов
+  </a>
+  <a href="#section3">
+    <span class="nav-num">3</span>Модули системы
+  </a>
+  <a href="#section4">
+    <span class="nav-num">4</span>Технический стек
+  </a>
+  <a href="#section5">
+    <span class="nav-num">5</span>Интеграции
+  </a>
+  <a href="#section6">
+    <span class="nav-num">6</span>Нефункц. требования
+  </a>
+  <a href="#section7">
+    <span class="nav-num">7</span>План разработки
+  </a>
+  <a href="#section8">
+    <span class="nav-num">8</span>Критерии готовности
+  </a>
+  <a href="#section9">
+    <span class="nav-num">9</span>Миграция с Наймикс
+  </a>
+  <a href="#section10">
+    <span class="nav-num">10</span>Команда проекта
+  </a>
+  <div class="nav-divider"></div>
+  <div class="nav-section-title">v2.0 — новое</div>
+  <a href="#section2b" style="color:var(--red);font-weight:600;font-size:12px">+ Делегирование прав</a>
+  <a href="#section2c" style="color:var(--red);font-weight:600;font-size:12px">+ Система бюджетных лимитов</a>
+  <a href="#module38" style="color:var(--red);font-weight:600;font-size:12px">+ Контроль риска 80%</a>
+  <a href="#module39" style="color:var(--red);font-weight:600;font-size:12px">+ Планировщик смен</a>
+  <div class="nav-section-title">v3.0 — новое</div>
+  <a href="#module310" style="color:var(--red);font-weight:600;font-size:12px">+ Фотоотчёт при сдаче</a>
+  <a href="#module311" style="color:var(--red);font-weight:600;font-size:12px">+ Контроль аннулирования чеков</a>
+  <a href="#module312" style="color:var(--red);font-weight:600;font-size:12px">+ Массовые выплаты (реестр)</a>
+  <a href="#module313" style="color:var(--red);font-weight:600;font-size:12px">+ Стоп-лист (422-ФЗ)</a>
+  <a href="#section11" style="color:var(--red);font-weight:600;font-size:12px">+ Модель разработки: KARI + AI</a>
+  <a href="#section12" style="color:var(--red);font-weight:600;font-size:12px">+ User Stories мобильного приложения</a>
+</nav>
+
+<!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
+<main class="main-content">
+
+  <!-- ТИТУЛЬНЫЙ ЛИСТ -->
+  <div class="title-block" id="cover">
+    <div class="doc-label">Техническое задание &nbsp;|&nbsp; ООО KARI</div>
+    <h1>Платформа <span>KARI.Самозанятые</span><br>v3.0</h1>
+    <div class="doc-version">Цифровая платформа для работы с самозанятыми исполнителями</div>
+
+    <div class="meta-grid">
+      <div class="meta-item">
+        <label>Версия</label>
+        <span>3.0</span>
+      </div>
+      <div class="meta-item">
+        <label>Актуализировано</label>
+        <span>Март 2026</span>
+      </div>
+      <div class="meta-item">
+        <label>Статус</label>
+        <span style="color:#4ade80">✅ Разработка идёт</span>
+      </div>
+      <div class="meta-item">
+        <label>Product Owner</label>
+        <span>Юрий (Директор региона)</span>
+      </div>
+      <div class="meta-item">
+        <label>Юр. лицо</label>
+        <span>ООО KARI</span>
+      </div>
+      <div class="meta-item">
+        <label>Банк-партнёр</label>
+        <span>Совкомбанк</span>
+      </div>
+      <div class="meta-item">
+        <label>Запуск пилота</label>
+        <span style="color:#fbbf24">Апрель 2026</span>
+      </div>
+      <div class="meta-item">
+        <label>Пилот</label>
+        <span>Иркутский + Южный регион, 100 магазинов</span>
+      </div>
+      <div class="meta-item" style="grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.15);padding-top:16px;margin-top:4px">
+        <label>История версий</label>
+        <span style="font-weight:400;font-size:13px">
+          v1.0 — Февраль 2025: Базовое ТЗ (5 ролей, 7 модулей, 6 спринтов)&nbsp;&nbsp;|&nbsp;&nbsp;
+          v2.0 — Февраль 2026: +3 роли, делегирование прав, бюджетные лимиты, контроль риска 80%, планировщик смен&nbsp;&nbsp;|&nbsp;&nbsp;
+          <strong style="color:#e8a4cc">v3.0 — Март 2026: +Фотоотчёт, +Контроль аннулирования чеков ФНС, +Массовые выплаты по Excel-реестру, +Стоп-лист (422-ФЗ ст.6 п.2 пп.8), модель разработки: Юрий (PO) + Claude AI (код) + IT поддержка KARI (деплой)</strong>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 1 -->
+  <div class="section" id="section1">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Общее описание проекта</div>
+    </div>
+    <div class="section-body">
+
+      <h3>Цель проекта</h3>
+      <p>
+        Создание <strong>собственной цифровой платформы</strong> для управления самозанятыми исполнителями
+        по модели ВкусВилл. Полный отказ от стороннего агрегатора <strong>Наймикс</strong>.
+        В перспективе — монетизация платформы как <strong>B2B-продукта</strong> для других компаний.
+      </p>
+
+      <div class="alert alert-info">
+        <div class="alert-icon">i</div>
+        <div>
+          <strong>Статус регистрации:</strong> ООО KARI находится в процессе регистрации
+          как Оператор электронной площадки ФНС. До завершения регистрации все выплаты
+          проходят через Совкомбанк как банк-партнёр.
+        </div>
+      </div>
+
+      <h3>Ключевые показатели</h3>
+      <div class="info-cards">
+        <div class="info-card">
+          <div class="ic-label">Запуск пилота</div>
+          <div class="ic-value">Апрель 2026</div>
+          <div class="ic-sub">Иркутский + Южный регион</div>
+        </div>
+        <div class="info-card">
+          <div class="ic-label">Магазины в пилоте</div>
+          <div class="ic-value">100</div>
+          <div class="ic-sub">торговых точек</div>
+        </div>
+        <div class="info-card">
+          <div class="ic-label">Исполнители — старт</div>
+          <div class="ic-value">1 000</div>
+          <div class="ic-sub">самозанятых</div>
+        </div>
+        <div class="info-card">
+          <div class="ic-label">Исполнители — год</div>
+          <div class="ic-value">5 000</div>
+          <div class="ic-sub">самозанятых</div>
+        </div>
+        <div class="info-card">
+          <div class="ic-label">Пиковая нагрузка</div>
+          <div class="ic-value">10 000</div>
+          <div class="ic-sub">одновременных пользователей</div>
+        </div>
+        <div class="info-card">
+          <div class="ic-label">Категории заданий</div>
+          <div class="ic-value">5+</div>
+          <div class="ic-sub">мерч, промо, курьер, уборка, грузчик</div>
+        </div>
+      </div>
+
+      <h3>Бизнес-контекст</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Параметр</th>
+            <th>Значение</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="td-role">Юридическое лицо</td><td>ООО KARI</td></tr>
+          <tr><td class="td-role">Статус ФНС</td><td>В процессе регистрации как Оператор электронной площадки</td></tr>
+          <tr><td class="td-role">Банк-партнёр</td><td>Совкомбанк (переводы на карты любых банков РФ)</td></tr>
+          <tr><td class="td-role">Налоговый режим исполнителей</td><td>НПД (налог на профессиональный доход), 4–6%</td></tr>
+          <tr><td class="td-role">Компенсация налога</td><td>KARI компенсирует 6% самозанятому (закладывается в выплату)</td></tr>
+          <tr><td class="td-role">Лимит дохода самозанятого</td><td>2 400 000 руб./год (контролируется системой)</td></tr>
+          <tr><td class="td-role">Подписание документов</td><td>ПЭП (Простая электронная подпись) через SMS-код</td></tr>
+          <tr><td class="td-role">Хранение данных</td><td>Серверы на территории РФ (требование 152-ФЗ)</td></tr>
+          <tr><td class="td-role">Перспектива</td><td>B2B монетизация платформы для других компаний</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 2 -->
+  <div class="section" id="section2">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Роли и права доступа</div>
+    </div>
+    <div class="section-body">
+
+      <div class="alert alert-info" style="margin-bottom:20px">
+        <div class="alert-icon">i</div>
+        <div>
+          <strong>v2.0 — обновлено:</strong> Добавлены роли «Директор региона», «Директор подразделения»
+          и «Делегат директора региона». Расширена иерархия управления и система бюджетных лимитов.
+        </div>
+      </div>
+
+      <h3>Иерархия ролей</h3>
+      <div style="background:#f8f8f8;border-radius:10px;padding:20px;margin-bottom:24px;overflow-x:auto">
+        <div style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;font-size:13px;font-weight:600">
+          <div style="background:#242D4A;color:white;padding:8px 18px;border-radius:8px;text-align:center">HRD<br><small style="font-weight:400;font-size:11px">вся страна</small></div>
+          <div style="color:#999;font-size:18px">→</div>
+          <div style="background:#A01F72;color:white;padding:8px 18px;border-radius:8px;text-align:center">Директор региона<br><small style="font-weight:400;font-size:11px">регион, лимиты</small></div>
+          <div style="color:#999;font-size:18px">→</div>
+          <div style="background:#c0396e;color:white;padding:8px 18px;border-radius:8px;text-align:center">Директор подразделения<br><small style="font-weight:400;font-size:11px">группа магазинов</small></div>
+          <div style="color:#999;font-size:18px">→</div>
+          <div style="background:#5b7fa6;color:white;padding:8px 18px;border-radius:8px;text-align:center">Директор магазина<br><small style="font-weight:400;font-size:11px">один магазин</small></div>
+        </div>
+        <div style="text-align:center;margin-top:12px;font-size:12px;color:#888">
+          Делегат директора региона — сотрудник с переданными правами (подтверждается ЭП)
+        </div>
+      </div>
+
+      <p>Система поддерживает <strong>8 ролей</strong> пользователей с разграниченным доступом.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Роль</th>
+            <th>Доступ</th>
+            <th>Права и возможности</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="td-role">Исполнитель</div>
+              <div class="td-access">(самозанятый)</div>
+              <span class="tag tag-blue">Мобильное приложение</span>
+              <span class="tag tag-gray">Мобильный веб</span>
+            </td>
+            <td>
+              <span class="tag tag-blue">iOS</span>
+              <span class="tag tag-blue">Android</span>
+              <span class="tag tag-gray">Web (мобильная версия)</span>
+            </td>
+            <td>
+              Регистрация и онбординг &bull; Просмотр биржи заданий &bull; Взятие задания &bull;
+              Сдача задания (фото + геометка) &bull; Подписание договора/акта (ПЭП, SMS-код) &bull;
+              Просмотр кошелька и истории выплат &bull; Чат с менеджером &bull;
+              Управление профилем и документами &bull;
+              <strong>Загрузка внешних чеков</strong> (подтверждение доходов вне KARI) &bull;
+              <strong>Уведомления о риске 80%</strong> с рекомендациями внешних заказов
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="td-role">Директор магазина</div>
+              <span class="tag tag-green">Веб-кабинет</span>
+            </td>
+            <td>
+              <span class="tag tag-green">Web</span>
+            </td>
+            <td>
+              Создание заданий для своего магазина &bull; Просмотр откликов и исполнителей &bull;
+              Приёмка / отклонение выполненных заданий &bull; Чат с исполнителем &bull;
+              Рейтинг исполнителей &bull; Чёрный список &bull;
+              Повторное приглашение конкретного исполнителя &bull;
+              <strong>Просмотр бюджетного лимита</strong> своего магазина (только чтение) &bull;
+              Запрос на увеличение лимита
+            </td>
+          </tr>
+          <tr style="background:#fff5fb">
+            <td>
+              <div class="td-role" style="color:#A01F72">Директор подразделения</div>
+              <span class="tag" style="background:#f5e6f0;color:#A01F72">Новая роль v2.0</span>
+            </td>
+            <td>
+              <span class="tag tag-green">Web</span>
+              <span class="tag" style="background:#f5e6f0;color:#A01F72">Группа магазинов</span>
+            </td>
+            <td>
+              Все права директора магазина &bull; Просмотр статистики по группе магазинов &bull;
+              Просмотр бюджетных лимитов магазинов своей группы (только чтение) &bull;
+              Запрос увеличения лимита у директора региона &bull;
+              Создание массовых заданий в рамках своего подразделения &bull;
+              Выгрузка отчётов по своей группе &bull;
+              Уведомления об исполнителях с риском 80%
+            </td>
+          </tr>
+          <tr style="background:#fff5fb">
+            <td>
+              <div class="td-role" style="color:#A01F72">Директор региона</div>
+              <span class="tag" style="background:#f5e6f0;color:#A01F72">Новая роль v2.0</span>
+            </td>
+            <td>
+              <span class="tag tag-green">Web</span>
+              <span class="tag" style="background:#f5e6f0;color:#A01F72">Весь регион</span>
+            </td>
+            <td>
+              Все права директора подразделения &bull;
+              <strong>Установка и изменение бюджетных лимитов</strong> для магазинов и подразделений &bull;
+              Утверждение запросов на увеличение лимитов &bull;
+              <strong>Делегирование своих прав</strong> доверенным сотрудникам (с ЭП) &bull;
+              История действий делегатов &bull;
+              Автоуведомления о критических изменениях (превышение лимита, риск 80%) &bull;
+              Просмотр реестра исполнителей с риском 80% &bull;
+              Аналитика по всему региону &bull; Выгрузка любых отчётов в Excel
+            </td>
+          </tr>
+          <tr style="background:#fff5fb">
+            <td>
+              <div class="td-role" style="color:#A01F72">Делегат директора региона</div>
+              <span class="tag" style="background:#f5e6f0;color:#A01F72">Новая роль v2.0</span>
+            </td>
+            <td>
+              <span class="tag tag-green">Web</span>
+              <span class="tag tag-orange">Временный доступ</span>
+            </td>
+            <td>
+              Права директора региона в заданных рамках (определяет делегирующий) &bull;
+              <strong>Подтверждение полномочий через ЭП</strong> (SMS-код) &bull;
+              Все действия фиксируются в журнале с пометкой «делегат» &bull;
+              Срок действия прав — устанавливает директор региона &bull;
+              Уведомления директора региона о каждом значимом действии делегата
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="td-role">HRD (федеральный)</div>
+              <span class="tag tag-purple">Расширенный доступ</span>
+            </td>
+            <td>
+              <span class="tag tag-green">Web</span>
+              <span class="tag tag-purple">Вся страна</span>
+            </td>
+            <td>
+              Все права директора региона &bull; Управление всеми регионами &bull;
+              Создание и управление пользователями системы &bull; Полная аналитика по стране &bull;
+              Настройка системы &bull; Утверждение федеральных лимитов &bull;
+              Доступ к реестру всех исполнителей с риском 80%
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="td-role">Бухгалтерия</div>
+              <span class="tag tag-orange">Финансовый доступ</span>
+            </td>
+            <td>
+              <span class="tag tag-green">Web</span>
+              <span class="tag tag-orange">Финансовый модуль</span>
+            </td>
+            <td>
+              Просмотр и выгрузка реестров выплат &bull; Запуск массовых выплат &bull;
+              История всех транзакций &bull; Интеграция с 1С &bull;
+              Работа с чеками ФНС &bull; Контроль лимитов 2,4 млн руб./год
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="td-role">Администратор системы</div>
+              <span class="tag tag-red">Полный доступ</span>
+            </td>
+            <td>
+              <span class="tag tag-green">Web</span>
+              <span class="tag tag-red">Все модули</span>
+            </td>
+            <td>
+              Управление всеми пользователями &bull; Все настройки системы &bull;
+              Журнал всех действий (аудит лог) &bull; Резервные копии &bull;
+              Управление интеграциями &bull; Технический мониторинг
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 2b — ДЕЛЕГИРОВАНИЕ ПРАВ -->
+  <div class="section" id="section2b">
+    <div class="section-header">
+      <div class="section-num" style="background:#A01F72;font-size:11px">2b</div>
+      <div class="section-title">Делегирование прав директора региона</div>
+    </div>
+    <div class="section-body">
+
+      <div class="alert alert-info">
+        <div class="alert-icon">i</div>
+        <div>
+          Директор региона может передать часть своих прав доверенному сотруднику.
+          Делегирование подтверждается <strong>электронной подписью (ЭП)</strong>, все действия делегата фиксируются в системе.
+        </div>
+      </div>
+
+      <h3>Как работает делегирование</h3>
+      <table>
+        <thead><tr><th>Шаг</th><th>Действие</th><th>Технически</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>1. Выбор делегата</strong></td>
+            <td>Директор региона выбирает сотрудника из списка пользователей системы</td>
+            <td>Выпадающий список зарегистрированных сотрудников</td>
+          </tr>
+          <tr>
+            <td><strong>2. Определение прав</strong></td>
+            <td>Выбирает, какие именно права передаются (чекбоксы): установка лимитов, утверждение запросов, просмотр исполнителей</td>
+            <td>Матрица прав с чекбоксами</td>
+          </tr>
+          <tr>
+            <td><strong>3. Срок действия</strong></td>
+            <td>Устанавливает дату окончания делегирования (обязательно)</td>
+            <td>Datepicker, максимум 90 дней</td>
+          </tr>
+          <tr>
+            <td><strong>4. Подтверждение ЭП</strong></td>
+            <td>Директор региона подтверждает делегирование SMS-кодом (ПЭП)</td>
+            <td>SMS на телефон директора региона</td>
+          </tr>
+          <tr>
+            <td><strong>5. Уведомление делегату</strong></td>
+            <td>Делегат получает Push + Email с информацией о делегировании и сроках</td>
+            <td>FCM + почтовый сервис</td>
+          </tr>
+          <tr>
+            <td><strong>6. Работа делегата</strong></td>
+            <td>Все действия делегата отображаются в системе с меткой «Делегат: [имя]», директор получает автоуведомления</td>
+            <td>Метка в аудит-логе, Push-уведомления директору</td>
+          </tr>
+          <tr>
+            <td><strong>7. Отзыв/истечение</strong></td>
+            <td>Директор может отозвать делегирование в любой момент; по истечении срока — автоматически</td>
+            <td>Кнопка «Отозвать» + Cron-задача</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Автоуведомления директора региона</h3>
+      <table>
+        <thead><tr><th>Событие</th><th>Канал</th><th>Срочность</th></tr></thead>
+        <tbody>
+          <tr><td>Делегат изменил лимит магазина</td><td>Push + Email</td><td><span class="tag tag-orange">Высокая</span></td></tr>
+          <tr><td>Делегат утвердил запрос на &gt;100 000 руб.</td><td>Push + Email</td><td><span class="tag tag-orange">Высокая</span></td></tr>
+          <tr><td>Магазин превысил 80% бюджетного лимита</td><td>Push + Email</td><td><span class="tag tag-red">Критичная</span></td></tr>
+          <tr><td>Исполнитель достиг 80% риска дохода</td><td>Push</td><td><span class="tag tag-orange">Высокая</span></td></tr>
+          <tr><td>Срок делегирования истекает через 3 дня</td><td>Push + Email</td><td><span class="tag tag-blue">Средняя</span></td></tr>
+          <tr><td>Еженедельный отчёт по действиям делегата</td><td>Email</td><td><span class="tag tag-gray">Информационная</span></td></tr>
+        </tbody>
+      </table>
+
+      <h3>Журнал действий делегата</h3>
+      <p>В кабинете директора региона — отдельная вкладка «Журнал делегатов» с фильтрами:</p>
+      <ul class="styled">
+        <li>Фильтр по делегату, дате, типу действия</li>
+        <li>Каждая запись: дата/время, делегат, действие, объект (магазин/сумма), результат</li>
+        <li>Выгрузка журнала в Excel за любой период</li>
+        <li>Журнал хранится 3 года (требование аудита)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 2c — СИСТЕМА БЮДЖЕТНЫХ ЛИМИТОВ -->
+  <div class="section" id="section2c">
+    <div class="section-header">
+      <div class="section-num" style="background:#A01F72;font-size:11px">2c</div>
+      <div class="section-title">Система бюджетных лимитов</div>
+    </div>
+    <div class="section-body">
+
+      <h3>Иерархия лимитов</h3>
+      <div style="background:#f8f8f8;border-radius:10px;padding:20px;margin-bottom:24px">
+        <table>
+          <thead><tr><th>Уровень</th><th>Кто устанавливает</th><th>Кто видит</th><th>Действие при превышении</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Федеральный (страна)</strong></td>
+              <td>HRD</td>
+              <td>HRD, все директора регионов</td>
+              <td>Уведомление HRD, блокировка новых лимитов</td>
+            </tr>
+            <tr>
+              <td><strong>Региональный</strong></td>
+              <td>HRD → Директор региона</td>
+              <td>Директор региона, его делегаты</td>
+              <td>Уведомление директора региона</td>
+            </tr>
+            <tr>
+              <td><strong>Подразделение</strong></td>
+              <td>Директор региона</td>
+              <td>Директор подразделения (только просмотр)</td>
+              <td>Уведомление директора региона и подразделения</td>
+            </tr>
+            <tr>
+              <td><strong>Магазин</strong></td>
+              <td>Директор региона</td>
+              <td>Директор магазина (только просмотр)</td>
+              <td>Блокировка выплат, уведомления вверх по иерархии</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Цветовые статусы лимитов (в кабинетах)</h3>
+      <table>
+        <thead><tr><th>Заполненность</th><th>Цвет</th><th>Действие системы</th></tr></thead>
+        <tbody>
+          <tr><td>0 — 60%</td><td><span class="tag tag-green">Зелёный — норма</span></td><td>Работа в штатном режиме</td></tr>
+          <tr><td>60 — 80%</td><td><span class="tag tag-orange">Жёлтый — внимание</span></td><td>Уведомление директора подразделения</td></tr>
+          <tr><td>80 — 95%</td><td><span class="tag tag-red">Красный — риск</span></td><td>Уведомление директора региона, предупреждение при создании заданий</td></tr>
+          <tr><td>95 — 100%</td><td><span class="tag tag-red" style="background:#7a0000">Тёмно-красный — критично</span></td><td>Блокировка создания новых заданий, принудительное уведомление</td></tr>
+          <tr><td>&gt;100%</td><td><span class="tag tag-red">Блокировка</span></td><td>Новые задания не создаются, выплаты приостановлены до увеличения лимита</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Запрос на увеличение лимита (директор магазина / подразделения)</h3>
+      <ul class="styled">
+        <li>Директор магазина нажимает «Запросить увеличение лимита» → вводит желаемую сумму и обоснование</li>
+        <li>Запрос уходит директору региона (Push + Email уведомление)</li>
+        <li>Директор региона утверждает/отклоняет в кабинете с комментарием</li>
+        <li>При утверждении — лимит изменяется автоматически, инициатор получает уведомление</li>
+        <li>История всех запросов сохраняется с отметками кто/когда утвердил</li>
+      </ul>
+
+      <h3>Excel-выгрузка из кабинетов</h3>
+      <div class="alert alert-info">
+        <div class="alert-icon">📊</div>
+        <div>
+          Любая таблица в веб-кабинете (лимиты, исполнители, реестры, аналитика) должна выгружаться
+          в Excel одним кликом с <strong>сохранением форматирования</strong>: цветовые статусы,
+          маркеры (зелёный/жёлтый/красный), жирный шрифт для критичных значений,
+          заголовки с фоном KARI-пурпурным (#A01F72).
+          <br>Технология: SheetJS (XLSX.js) + стилизация ячеек через cellStyles API.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 3 -->
+  <div class="section" id="section3">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Модули системы</div>
+    </div>
+    <div class="section-body">
+
+      <!-- 3.1 -->
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon">3.1</div>
+          <h3>Модуль регистрации и онбординга</h3>
+        </div>
+        <div class="module-card-body">
+          <h4>Процесс регистрации исполнителя (шаги):</h4>
+          <table>
+            <thead><tr><th>Шаг</th><th>Действие</th><th>Технология</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Ввод номера телефона</td><td>Форма + валидация</td></tr>
+              <tr><td>2</td><td>Подтверждение по SMS-коду</td><td>2FA (двухфакторная аутентификация)</td></tr>
+              <tr><td>3</td><td>Загрузка фото паспорта</td><td>OCR — автораспознавание данных (Tesseract / Яндекс Vision)</td></tr>
+              <tr><td>4</td><td>Ввод ИНН</td><td>Валидация контрольного числа ИНН</td></tr>
+              <tr><td>5</td><td>Загрузка селфи</td><td>Верификация личности</td></tr>
+              <tr><td>6</td><td>Проверка статуса самозанятого</td><td>API ФНС (npd.nalog.ru) — автоматически</td></tr>
+              <tr><td>7</td><td>Подписание договора ГПХ</td><td>ПЭП — SMS-код</td></tr>
+              <tr><td>8</td><td>Добавление банковской карты</td><td>Верификация через тестовый перевод 1 руб.</td></tr>
+              <tr><td>9</td><td>Уведомление об успехе</td><td>Push + SMS</td></tr>
+            </tbody>
+          </table>
+
+          <div class="alert alert-warn">
+            <div class="alert-icon">!</div>
+            <div>
+              <strong>Ветвление на шаге 6:</strong> Если у пользователя нет статуса самозанятого —
+              показываем инструкцию и кнопку «Открыть приложение Мой налог».
+              После получения статуса — продолжить регистрацию.
+            </div>
+          </div>
+
+          <h4>Требования безопасности:</h4>
+          <ul class="styled">
+            <li>Шифрование всех персональных данных — AES-256</li>
+            <li>Хранение данных только на серверах в РФ (152-ФЗ)</li>
+            <li>Маскирование номера карты — показывать только последние 4 цифры</li>
+            <li>Журнал всех обращений к персональным данным (кто, когда, зачем)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 3.2 -->
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon">3.2</div>
+          <h3>Модуль биржи заданий</h3>
+        </div>
+        <div class="module-card-body">
+
+          <h4>Для исполнителя (мобильное приложение):</h4>
+          <ul class="styled">
+            <li>Лента заданий с фильтрами: город, категория, дата, сумма выплаты</li>
+            <li>Карточка задания: название, описание, адрес магазина, дата/время, сумма, требования</li>
+            <li>Карта с геолокацией — ближайшие задания к исполнителю</li>
+            <li>Кнопка «Взять задание» — резервирование задания за исполнителем</li>
+            <li>Push-уведомления о новых подходящих заданиях</li>
+            <li>История всех заданий исполнителя</li>
+          </ul>
+
+          <h4>Статусная модель задания:</h4>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0;">
+            <span class="tag tag-gray">Открыто</span>
+            <span style="font-size:18px;color:#ccc">→</span>
+            <span class="tag tag-blue">Взято</span>
+            <span style="font-size:18px;color:#ccc">→</span>
+            <span class="tag tag-orange">На проверке</span>
+            <span style="font-size:18px;color:#ccc">→</span>
+            <span class="tag tag-green">Принято</span>
+            <span style="font-size:18px;color:#ccc">/</span>
+            <span class="tag tag-red">Отклонено</span>
+            <span style="font-size:18px;color:#ccc">→</span>
+            <span class="tag tag-purple">Оплачено</span>
+          </div>
+
+          <h4>Категории заданий:</h4>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0;">
+            <span class="tag tag-blue">Мерчандайзинг</span>
+            <span class="tag tag-green">Промо-акции</span>
+            <span class="tag tag-orange">Курьер</span>
+            <span class="tag tag-gray">Уборка</span>
+            <span class="tag tag-purple">Грузчик</span>
+          </div>
+
+          <h4>Для директора магазина (веб-кабинет):</h4>
+          <ul class="styled">
+            <li>Создание задания: название, описание, категория, дата/время, адрес, сумма, количество исполнителей</li>
+            <li><strong>Создание задания из шаблона</strong> — выбрать готовый шаблон (Выкладка обуви, Инвентаризация, Уборка, Промо) → заполнить только дату и сумму</li>
+            <li>Просмотр откликов — список исполнителей, откликнувшихся на задание</li>
+            <li><strong>Приёмка: обязательный просмотр фотоотчёта</strong> + геометки от исполнителя → кнопки «Принять» или «Отклонить с комментарием» активируются только после просмотра фото</li>
+            <li>Повторное приглашение конкретного исполнителя на новое задание</li>
+            <li>Рейтинговая система исполнителей (1–5 звёзд) — оценка после каждой приёмки</li>
+            <li>Чёрный список исполнителей для магазина</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 3.3 -->
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon">3.3</div>
+          <h3>Модуль документооборота (ЭДО)</h3>
+        </div>
+        <div class="module-card-body">
+          <ul class="styled">
+            <li>Автогенерация договора ГПХ при регистрации исполнителя — по шаблону KARI</li>
+            <li>Автогенерация акта выполненных работ при приёмке задания директором</li>
+            <li>Подписание всех документов через ПЭП (SMS-код) — без бумажного документооборота</li>
+            <li>Хранение подписанных документов в системе — 5 лет</li>
+            <li>Скачивание документов в формате PDF</li>
+            <li>Реестр всех документов с поиском по: исполнителю, дате, сумме, статусу</li>
+            <li>Автоматическое получение чека от самозанятого через API ФНС после каждой выплаты</li>
+          </ul>
+
+          <div class="alert alert-info">
+            <div class="alert-icon">i</div>
+            <div>
+              <strong>ПЭП (Простая электронная подпись)</strong> — юридически значима согласно 63-ФЗ
+              при наличии соглашения сторон о признании ЭП. Соглашение включается в договор ГПХ при регистрации.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3.4 -->
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon">3.4</div>
+          <h3>Модуль выплат</h3>
+        </div>
+        <div class="module-card-body">
+          <h4>Логика расчёта выплаты:</h4>
+          <div class="alert alert-info">
+            <div class="alert-icon">$</div>
+            <div>
+              <strong>Формула:</strong> Итоговая выплата = Сумма задания + Компенсация налога 6%<br>
+              <strong>Пример:</strong> Задание 1 000 руб. → Выплата исполнителю 1 060 руб.
+              (60 руб. — компенсация НПД за счёт KARI)
+            </div>
+          </div>
+
+          <h4>Контроль лимита 2,4 млн руб./год:</h4>
+          <ul class="styled">
+            <li>Предупреждение HRD при достижении 80% лимита (1 920 000 руб.)</li>
+            <li>Блокировка выплат при достижении 100% лимита (2 400 000 руб.)</li>
+            <li>Уведомление самому исполнителю о приближении к лимиту</li>
+          </ul>
+
+          <h4>Виды выплат:</h4>
+          <table>
+            <thead><tr><th>Вид</th><th>Описание</th><th>Инициатор</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Единичная выплата</strong></td>
+                <td>Ручной запуск через кабинет бухгалтерии по одному исполнителю</td>
+                <td>Бухгалтерия</td>
+              </tr>
+              <tr>
+                <td><strong>Массовая выплата</strong></td>
+                <td>Загрузка реестра → автоматическая проверка → запуск → отчёт о результатах</td>
+                <td>Бухгалтерия</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Обязательные проверки перед каждой выплатой:</h4>
+          <ul class="styled">
+            <li>Автоматическая проверка статуса самозанятого через API ФНС непосредственно перед переводом</li>
+            <li>Если статус потерян → блокировка выплаты + уведомление HRD</li>
+            <li>Проверка лимита 2,4 млн руб./год</li>
+          </ul>
+
+          <h4>Сроки и способы выплат:</h4>
+          <ul class="styled">
+            <li>Исполнитель самостоятельно выбирает периодичность: ежедневно / еженедельно / по факту закрытия задания</li>
+            <li>Перевод на карту любого банка РФ через Совкомбанк API</li>
+            <li>Уведомление исполнителя: Push + SMS</li>
+          </ul>
+
+          <h4>Интеграция с бухгалтерией:</h4>
+          <ul class="styled">
+            <li>Автоматическая передача данных в ФНС и получение чека после каждой выплаты</li>
+            <li>Выгрузка реестров в форматах Excel и XML для 1С</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 3.5 -->
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon">3.5</div>
+          <h3>Модуль аналитики и дашбордов</h3>
+        </div>
+        <div class="module-card-body">
+          <h4>Для HRD (общий дашборд по всем регионам):</h4>
+          <table>
+            <thead><tr><th>Метрика</th><th>Описание</th></tr></thead>
+            <tbody>
+              <tr><td>Исполнители</td><td>Зарегистрированные (динамика), активные, неактивные</td></tr>
+              <tr><td>Задания</td><td>Открытые / в работе / завершённые (за период)</td></tr>
+              <tr><td>Финансы</td><td>Общая сумма выплат за выбранный период</td></tr>
+              <tr><td>Рейтинг магазинов</td><td>Топ по количеству заданий и активности</td></tr>
+              <tr><td>Рейтинг регионов</td><td>Сравнение регионов по ключевым метрикам</td></tr>
+              <tr><td>Топ исполнителей</td><td>По количеству выполненных заданий, сумме выплат</td></tr>
+              <tr><td>Категории</td><td>Распределение заданий по категориям</td></tr>
+              <tr><td>Скорость</td><td>Средний срок закрытия задания (в часах)</td></tr>
+              <tr><td>Воронка</td><td>Зарегистрировались → взяли задание → выполнили → получили выплату</td></tr>
+              <tr><td>Контроль лимитов</td><td>Список исполнителей, приближающихся к 2,4 млн руб.</td></tr>
+            </tbody>
+          </table>
+          <div style="margin-top:12px">
+            <span class="tag tag-green">Выгрузка любого отчёта в Excel</span>
+            <span class="tag tag-blue">Фильтрация по периоду</span>
+            <span class="tag tag-gray">Фильтрация по региону</span>
+            <span class="tag tag-gray">Фильтрация по магазину</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3.6 -->
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon">3.6</div>
+          <h3>Модуль коммуникаций</h3>
+        </div>
+        <div class="module-card-body">
+          <ul class="styled">
+            <li>Чат между исполнителем и директором магазина в рамках конкретного задания</li>
+            <li>Push-уведомления через Firebase Cloud Messaging (FCM)</li>
+            <li>SMS-уведомления для ключевых событий: выплата, новое задание, результат приёмки</li>
+            <li>Системные уведомления внутри приложения (колокольчик)</li>
+            <li>Шаблоны стандартных ответов для директора магазина</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 3.7 -->
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon">3.7</div>
+          <h3>Модуль безопасности</h3>
+        </div>
+        <div class="module-card-body">
+          <table>
+            <thead><tr><th>Функция</th><th>Реализация</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Аутентификация</strong></td>
+                <td>Двухфакторная (2FA) через SMS для всех пользователей</td>
+              </tr>
+              <tr>
+                <td><strong>Сессии</strong></td>
+                <td>Сессионные токены с автоистечением — 24 часа</td>
+              </tr>
+              <tr>
+                <td><strong>Аудит лог</strong></td>
+                <td>Журнал всех действий в системе: кто, что, когда</td>
+              </tr>
+              <tr>
+                <td><strong>Проверка ФССП</strong></td>
+                <td>Проверка исполнителей по базе долгов и ограничений по ФИО + дата рождения</td>
+              </tr>
+              <tr>
+                <td><strong>Чёрный список</strong></td>
+                <td>Блокировка нежелательных исполнителей на уровне магазина и системы</td>
+              </tr>
+              <tr>
+                <td><strong>Шифрование</strong></td>
+                <td>TLS 1.3 (при передаче) + AES-256 (в хранилище)</td>
+              </tr>
+              <tr>
+                <td><strong>Резервные копии</strong></td>
+                <td>Ежедневно, хранение 30 дней</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="alert alert-red">
+            <div class="alert-icon">!</div>
+            <div>
+              <strong>Требование 152-ФЗ:</strong> Все персональные данные граждан РФ должны
+              храниться и обрабатываться исключительно на серверах, расположенных на территории РФ.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3.8 — НОВЫЙ МОДУЛЬ -->
+      <div class="module-card" id="module38" style="border:2px solid #A01F72">
+        <div class="module-card-header" style="background:#A01F72">
+          <div class="module-icon" style="background:rgba(255,255,255,0.2)">3.8</div>
+          <h3 style="color:white">Модуль контроля риска 80% <span style="font-size:12px;font-weight:400;opacity:0.8">(новое в v2.0)</span></h3>
+        </div>
+        <div class="module-card-body">
+          <div class="alert alert-red">
+            <div class="alert-icon">!</div>
+            <div>
+              <strong>Риск 80% дохода от KARI:</strong> Если самозанятый получает ≥80% своего общего дохода
+              от заданий KARI — это признак трудовых отношений. Налоговая вправе переквалифицировать
+              договор ГПХ в трудовой, что грозит штрафами и доначислением НДФЛ/страховых взносов.
+            </div>
+          </div>
+
+          <h4>Источник данных: API ФНС</h4>
+          <ul class="styled">
+            <li>Как оператор электронной площадки KARI получает доступ к данным о доходах исполнителя — данные о сумме чеков, выданных через другие компании</li>
+            <li>API ФНС позволяет запросить агрегированные данные по ИНН: суммарный доход НПД за период и процент от KARI</li>
+            <li>Запросы к ФНС — ежедневно в 6:00 по каждому активному исполнителю</li>
+            <li>Данные хранятся в PostgreSQL с историей за 12 скользящих месяцев</li>
+          </ul>
+
+          <h4>Логика расчёта</h4>
+          <table>
+            <thead><tr><th>Показатель</th><th>Формула</th><th>Пример</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Доля дохода от KARI</td>
+                <td>Доход от KARI ÷ Общий доход НПД × 100%</td>
+                <td>80 000 ÷ 90 000 = 88.9%</td>
+              </tr>
+              <tr>
+                <td>Период расчёта</td>
+                <td>Последние 12 месяцев (скользящий период)</td>
+                <td>Обновляется ежедневно</td>
+              </tr>
+              <tr>
+                <td>Порог предупреждения</td>
+                <td>≥ 70% дохода от KARI</td>
+                <td>Уведомление исполнителю</td>
+              </tr>
+              <tr>
+                <td>Порог риска</td>
+                <td>≥ 80% дохода от KARI</td>
+                <td>Уведомление директору региона, исполнителю</td>
+              </tr>
+              <tr>
+                <td>Критичный порог</td>
+                <td>≥ 90% дохода от KARI</td>
+                <td>Принудительная рекомендация паузы заданий</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Функции для исполнителя (в ЛК мобильного приложения)</h4>
+          <ul class="styled">
+            <li><strong>Индикатор доли дохода</strong> — прогресс-бар на главном экране (зелёный / жёлтый / красный)</li>
+            <li><strong>Уведомление при достижении 70%</strong>: «Большая часть твоего дохода — от KARI. Рекомендуем взять заказы от других компаний»</li>
+            <li><strong>Уведомление при достижении 80%</strong>: «Важно: твой доход от KARI составляет X%. Пожалуйста, добавь чеки от других заказчиков или снизь активность в KARI»</li>
+            <li><strong>Форма загрузки внешних чеков</strong> — исполнитель может загрузить скриншот или PDF чека из ФНС-приложения от другого заказчика</li>
+            <li><strong>Рекомендации внешних заказов</strong> через биржу смен (см. модуль 3.9)</li>
+          </ul>
+
+          <h4>Функции для директора региона (в веб-кабинете)</h4>
+          <ul class="styled">
+            <li>Ежедневный реестр «Исполнители с риском 80%» — таблица с колонками: ФИО, ИНН, % дохода от KARI, магазин, дата последнего внешнего чека</li>
+            <li>Фильтр по магазину, подразделению, пороговому значению</li>
+            <li>Статус по каждому: «Загрузил внешние чеки», «Нет данных», «Предупреждён»</li>
+            <li>Выгрузка реестра в Excel с цветовыми метками</li>
+            <li>Кнопка «Отправить напоминание» — массовая или индивидуальная рассылка через Push/SMS</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 3.9 — НОВЫЙ МОДУЛЬ -->
+      <div class="module-card" id="module39" style="border:2px solid #A01F72">
+        <div class="module-card-header" style="background:#A01F72">
+          <div class="module-icon" style="background:rgba(255,255,255,0.2)">3.9</div>
+          <h3 style="color:white">Модуль интеграции с планировщиком смен <span style="font-size:12px;font-weight:400;opacity:0.8">(новое в v2.0)</span></h3>
+        </div>
+        <div class="module-card-body">
+          <div class="alert alert-info">
+            <div class="alert-icon">i</div>
+            <div>
+              В KARI разрабатывается отдельный инструмент планирования рабочих графиков
+              (анализ трафика, продаж, процессов магазина). Этот модуль обеспечивает
+              <strong>автоматическую передачу «дефицитных часов»</strong> из планировщика
+              в биржу заданий платформы самозанятых.
+            </div>
+          </div>
+
+          <h4>Схема работы</h4>
+          <table>
+            <thead><tr><th>Шаг</th><th>Планировщик смен</th><th>Платформа самозанятых</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Планировщик рассчитывает потребность в персонале (трафик + продажи)</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Вычитает штатных сотрудников по графику</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Определяет «дефицит» — дата, время, магазин, количество часов, тип задачи</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Отправляет API-запрос в платформу самозанятых</td>
+                <td>Получает «подсказку» для создания задания</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>—</td>
+                <td>Директор магазина видит уведомление: «Планировщик рекомендует создать задание на X/Y/Z»</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>—</td>
+                <td>Директор одним кликом создаёт задание из подсказки (с предзаполненными данными)</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>—</td>
+                <td>Задание публикуется в бирже и уходит подходящим исполнителям через Push</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>API для планировщика смен (входящий вебхук)</h4>
+          <div style="background:#1e1e1e;color:#d4d4d4;padding:16px;border-radius:8px;font-family:monospace;font-size:12px;margin:12px 0;overflow-x:auto">
+            <div style="color:#608b4e">// POST /api/v1/shift-planner/deficit-hint</div>
+            <div>{</div>
+            <div>&nbsp;&nbsp;"store_id": "MSK-042",</div>
+            <div>&nbsp;&nbsp;"date": "2026-03-15",</div>
+            <div>&nbsp;&nbsp;"time_from": "10:00",</div>
+            <div>&nbsp;&nbsp;"time_to": "18:00",</div>
+            <div>&nbsp;&nbsp;"hours": 8,</div>
+            <div>&nbsp;&nbsp;"task_type": "merchandising",</div>
+            <div>&nbsp;&nbsp;"people_needed": 2,</div>
+            <div>&nbsp;&nbsp;"comment": "Поставка новой коллекции, приёмка и расстановка товара"</div>
+            <div>}</div>
+          </div>
+
+          <h4>Рекомендации внешних заказов для исполнителей (биржа смен)</h4>
+          <ul class="styled">
+            <li>Если у исполнителя риск 80% — система предлагает ему задания от <strong>других компаний</strong> через общую биржу смен (будущее B2B развитие)</li>
+            <li>В ЛК исполнителя — отдельная вкладка «Другие заказчики» с доступными заданиями</li>
+            <li>Принцип: KARI делится незакрытыми слотами с другими B2B клиентами платформы — исполнитель получает доходность вне KARI, что снижает долю KARI в его доходе</li>
+            <li>На старте (MVP): заглушка «Скоро» — подключится при B2B монетизации платформы</li>
+          </ul>
+
+          <h4>Технические требования к интеграции</h4>
+          <table>
+            <thead><tr><th>Параметр</th><th>Значение</th></tr></thead>
+            <tbody>
+              <tr><td>Протокол</td><td>REST API + Webhook (входящий)</td></tr>
+              <tr><td>Аутентификация</td><td>API-ключ (заголовок X-API-Key)</td></tr>
+              <tr><td>Среда</td><td>Внутренняя сеть KARI (без выхода в интернет)</td></tr>
+              <tr><td>Формат</td><td>JSON</td></tr>
+              <tr><td>Время ответа</td><td>&lt; 200 мс</td></tr>
+              <tr><td>Версионирование</td><td>/api/v1/ — при изменениях в планировщике — не ломать контракт</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 3.10 — ФОТООТЧЁТ -->
+      <div class="module-card" id="module310" style="border:2px solid #A01F72">
+        <div class="module-card-header" style="background:#A01F72">
+          <div class="module-icon" style="background:rgba(255,255,255,0.2)">3.10</div>
+          <h3 style="color:white">Модуль фотоотчёта при сдаче задания <span style="font-size:12px;font-weight:400;opacity:0.8">(новое в v3.0)</span></h3>
+        </div>
+        <div class="module-card-body">
+          <div class="alert alert-info">
+            <div class="alert-icon">📸</div>
+            <div>
+              <strong>Зачем нужен фотоотчёт:</strong> Исполнитель должен доказать факт выполнения работы.
+              Директор магазина видит доказательство до нажатия кнопки «Принять».
+              Фото хранится в системе и прикрепляется к акту выполненных работ.
+            </div>
+          </div>
+
+          <h4>Процесс сдачи задания (мобильное приложение исполнителя):</h4>
+          <table>
+            <thead><tr><th>Шаг</th><th>Действие</th><th>Обязательность</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Исполнитель нажимает «Сдать задание» в мобильном приложении</td><td><span class="tag tag-red">Обязательно</span></td></tr>
+              <tr><td>2</td><td>Делает фото «до» (состояние до начала работы) через камеру телефона</td><td><span class="tag tag-orange">По типу задания</span></td></tr>
+              <tr><td>3</td><td>Делает 1–3 фото «после» (результат работы) — система требует минимум 1 фото</td><td><span class="tag tag-red">Обязательно</span></td></tr>
+              <tr><td>4</td><td>Система автоматически проставляет геометку (координаты магазина) и время съёмки в метаданные фото</td><td><span class="tag tag-red">Автоматически</span></td></tr>
+              <tr><td>5</td><td>Исполнитель добавляет краткий текстовый комментарий (опционально, максимум 300 символов)</td><td><span class="tag tag-gray">Опционально</span></td></tr>
+              <tr><td>6</td><td>Нажимает «Отправить на проверку» — задание переходит в статус «На проверке»</td><td><span class="tag tag-red">Обязательно</span></td></tr>
+            </tbody>
+          </table>
+
+          <h4>Требования к фотографиям:</h4>
+          <ul class="styled">
+            <li>Минимальное разрешение: 1280×720 пикселей</li>
+            <li>Максимальный размер одного файла: 10 МБ (система сжимает автоматически перед загрузкой)</li>
+            <li>Формат: JPEG или PNG</li>
+            <li>В метаданных фото (EXIF): дата/время и GPS-координаты — система проверяет соответствие адресу магазина (радиус допуска 300 м)</li>
+            <li>Если координаты не совпадают с адресом магазина — предупреждение, задание можно сдать с пометкой «без геолокации»</li>
+          </ul>
+
+          <h4>Процесс приёмки (веб-кабинет директора магазина):</h4>
+          <ul class="styled">
+            <li>Директор видит карточку задания с вкладкой «Фотоотчёт» — фото открываются в полный экран</li>
+            <li><strong>Кнопки «Принять» и «Отклонить» заблокированы до открытия хотя бы одного фото</strong> — чтобы исключить приёмку без проверки</li>
+            <li>При отклонении: директор обязан написать причину (минимум 20 символов)</li>
+            <li>При принятии: система автоматически генерирует акт, прикрепляет фото к акту, инициирует выплату</li>
+          </ul>
+
+          <h4>Хранение фотографий:</h4>
+          <ul class="styled">
+            <li>Фото хранятся в MinIO (файловое хранилище) — привязаны к конкретному заданию и акту</li>
+            <li>Срок хранения: 3 года (требование налогового архива)</li>
+            <li>Доступ к фото: директор магазина, директор подразделения, директор региона, HRD</li>
+            <li>Фото скачиваются вместе с актом выполненных работ в PDF</li>
+          </ul>
+
+          <h4>Требования по типам заданий — что фотографировать:</h4>
+          <table>
+            <thead><tr><th>Тип задания</th><th>Фото «до»</th><th>Фото «после»</th></tr></thead>
+            <tbody>
+              <tr><td><span class="tag tag-blue">Мерчандайзинг / Выкладка</span></td><td>Пустая полка / неупорядоченный товар</td><td>Выложенный товар с ценниками</td></tr>
+              <tr><td><span class="tag tag-orange">Промо-акция</span></td><td>Пустое место у входа</td><td>Установленная промо-конструкция/стойка</td></tr>
+              <tr><td><span class="tag tag-gray">Уборка</span></td><td>Загрязнённый пол/витрина</td><td>Чистый пол/витрина</td></tr>
+              <tr><td><span class="tag tag-purple">Инвентаризация</span></td><td>Не требуется</td><td>Заполненный бланк пересчёта (фото бланка)</td></tr>
+              <tr><td><span class="tag tag-green">Грузчик / Разгрузка</span></td><td>Машина с товаром / разбросанный груз</td><td>Расставленный по местам товар</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 3.11 — КОНТРОЛЬ АННУЛИРОВАНИЯ ЧЕКОВ -->
+      <div class="module-card" id="module311" style="border:2px solid #A01F72">
+        <div class="module-card-header" style="background:#A01F72">
+          <div class="module-icon" style="background:rgba(255,255,255,0.2)">3.11</div>
+          <h3 style="color:white">Модуль контроля аннулирования чеков ФНС <span style="font-size:12px;font-weight:400;opacity:0.8">(новое в v3.0)</span></h3>
+        </div>
+        <div class="module-card-body">
+          <div class="alert alert-red">
+            <div class="alert-icon">!</div>
+            <div>
+              <strong>Налоговый риск:</strong> После получения выплаты самозанятый технически может аннулировать
+              ранее выданный чек в приложении «Мой налог». В этом случае KARI теряет налоговое подтверждение расхода
+              и несёт риск доначисления налогов и штрафов при проверке.
+              Без автоматического контроля KARI узнаёт об этом только при налоговой проверке.
+            </div>
+          </div>
+
+          <h4>Как работает контроль:</h4>
+          <table>
+            <thead><tr><th>Действие</th><th>Периодичность</th><th>Технически</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Запрос в ФНС: статус каждого выданного чека</td>
+                <td>Ежедневно в 07:00 по всем чекам за последние 60 дней</td>
+                <td>API ФНС: GET /receipt/status по идентификатору чека</td>
+              </tr>
+              <tr>
+                <td>Если чек аннулирован — создать alert в системе</td>
+                <td>Немедленно при обнаружении</td>
+                <td>Запись в таблицу receipt_alerts с датой аннулирования</td>
+              </tr>
+              <tr>
+                <td>Уведомление бухгалтерии и HRD</td>
+                <td>В течение 1 часа после обнаружения</td>
+                <td>Email + Push уведомление</td>
+              </tr>
+              <tr>
+                <td>Блокировка новых заданий для исполнителя</td>
+                <td>Немедленно при аннулировании</td>
+                <td>Флаг receipt_blocked = true в профиле исполнителя</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Реестр аннулированных чеков (кабинет бухгалтерии и HRD):</h4>
+          <ul class="styled">
+            <li>Таблица: исполнитель, дата выплаты, сумма, дата аннулирования чека, статус урегулирования</li>
+            <li>Фильтры: по периоду, по исполнителю, по магазину, по статусу (урегулировано / не урегулировано)</li>
+            <li>Кнопка «Запросить пояснение» — система отправляет SMS исполнителю с просьбой выйти на связь</li>
+            <li>Кнопка «Урегулировано» — бухгалтер закрывает alert после разрешения ситуации (с комментарием)</li>
+            <li>Выгрузка реестра в Excel для налоговой отчётности</li>
+          </ul>
+
+          <h4>Уведомление исполнителю при аннулировании:</h4>
+          <ul class="styled">
+            <li>Push + SMS: «Ваш чек по заданию от [дата] на сумму [X] руб. аннулирован. Новые задания временно приостановлены. Свяжитесь с KARI.»</li>
+            <li>В приложении исполнителя — баннер с объяснением и контактом поддержки</li>
+            <li>Блокировка снимается вручную бухгалтерией после урегулирования</li>
+          </ul>
+
+          <h4>Варианты урегулирования:</h4>
+          <table>
+            <thead><tr><th>Ситуация</th><th>Действие KARI</th></tr></thead>
+            <tbody>
+              <tr><td>Исполнитель ошибся и готов исправить</td><td>Исполнитель повторно выдаёт чек через «Мой налог» → бухгалтерия подтверждает → блокировка снята</td></tr>
+              <tr><td>Исполнитель намеренно аннулировал</td><td>KARI обращается к исполнителю за возвратом суммы налога (6%) или удерживает из будущих выплат</td></tr>
+              <tr><td>Технический сбой в ФНС</td><td>Ожидать восстановления чека через ФНС; зафиксировать в реестре</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 3.12 — МАССОВЫЕ ВЫПЛАТЫ ПО РЕЕСТРУ -->
+      <div class="module-card" id="module312" style="border:2px solid #A01F72">
+        <div class="module-card-header" style="background:#A01F72">
+          <div class="module-icon" style="background:rgba(255,255,255,0.2)">3.12</div>
+          <h3 style="color:white">Модуль массовых выплат по Excel-реестру <span style="font-size:12px;font-weight:400;opacity:0.8">(новое в v3.0)</span></h3>
+        </div>
+        <div class="module-card-body">
+          <div class="alert alert-info">
+            <div class="alert-icon">📋</div>
+            <div>
+              <strong>Зачем нужен реестр:</strong> При 500+ самозанятых создавать каждую выплату вручную невозможно.
+              Бухгалтер загружает один Excel-файл → система автоматически обрабатывает все выплаты, проверяет статусы ФНС
+              и формирует документы. Экономия: вместо нескольких часов ручной работы — 15 минут.
+            </div>
+          </div>
+
+          <h4>Процесс массовой выплаты (шаги):</h4>
+          <table>
+            <thead><tr><th>Шаг</th><th>Кто</th><th>Действие</th><th>Результат</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Бухгалтер</td><td>Скачивает шаблон реестра из системы (Excel)</td><td>Готовый шаблон с нужными колонками</td></tr>
+              <tr><td>2</td><td>Бухгалтер</td><td>Заполняет реестр: ИНН / ID исполнителя, сумма к выплате, назначение платежа</td><td>Заполненный Excel-файл</td></tr>
+              <tr><td>3</td><td>Бухгалтер</td><td>Загружает файл в систему → нажимает «Проверить реестр»</td><td>Система валидирует данные (2–3 мин)</td></tr>
+              <tr><td>4</td><td>Система</td><td>Автоматически проверяет по каждой строке: статус самозанятого в ФНС, лимит 2,4 млн руб./год, корректность реквизитов</td><td>Отчёт валидации: строки OK / строки с ошибками</td></tr>
+              <tr><td>5</td><td>Бухгалтер</td><td>Просматривает отчёт валидации, исправляет ошибки (если есть) → нажимает «Запустить выплату»</td><td>Подтверждение запуска</td></tr>
+              <tr><td>6</td><td>Система</td><td>Проводит выплаты через Совкомбанк API (пакетный запрос), генерирует акты, получает чеки из ФНС</td><td>Деньги поступают на карты исполнителей</td></tr>
+              <tr><td>7</td><td>Система</td><td>Формирует итоговый отчёт о выплатах: успешно / с ошибками / отклонено</td><td>Excel-отчёт для бухгалтерии и 1С</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Структура шаблона реестра (Excel):</h4>
+          <table>
+            <thead><tr><th>Колонка</th><th>Тип данных</th><th>Обязательность</th><th>Пример</th></tr></thead>
+            <tbody>
+              <tr><td>ID исполнителя</td><td>Число</td><td><span class="tag tag-red">Обязательно</span></td><td>10042</td></tr>
+              <tr><td>ФИО</td><td>Текст</td><td><span class="tag tag-green">Справочно</span></td><td>Иванов Иван Иванович</td></tr>
+              <tr><td>ИНН</td><td>12 цифр</td><td><span class="tag tag-red">Обязательно</span></td><td>770100123456</td></tr>
+              <tr><td>Сумма (руб.)</td><td>Число, 2 знака</td><td><span class="tag tag-red">Обязательно</span></td><td>2500.00</td></tr>
+              <tr><td>Назначение платежа</td><td>Текст</td><td><span class="tag tag-red">Обязательно</span></td><td>Выкладка товара, магазин KARI Тверская, 14.03.2026</td></tr>
+              <tr><td>Номер задания</td><td>Текст</td><td><span class="tag tag-orange">Рекомендуется</span></td><td>TASK-00823</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Автоматические проверки при валидации реестра:</h4>
+          <ul class="styled">
+            <li><strong>Статус самозанятого в ФНС</strong> — проверяется по каждому ИНН непосредственно перед запуском. Если статус потерян — строка помечается ошибкой, выплата не проводится</li>
+            <li><strong>Лимит 2,4 млн руб./год</strong> — если с этой выплатой исполнитель превысит лимит — строка помечается предупреждением с указанием допустимой суммы</li>
+            <li><strong>Дубли</strong> — если в реестре два раза один ИНН — предупреждение</li>
+            <li><strong>Корректность суммы</strong> — сумма должна быть > 0 и не превышать установленный лимит одной транзакции</li>
+            <li><strong>Бюджетный лимит магазина</strong> — проверяется соответствие суммы выплат лимиту магазина. При превышении — блокировка строки</li>
+          </ul>
+
+          <h4>Итоговый отчёт о массовой выплате:</h4>
+          <ul class="styled">
+            <li>Excel-файл: дата, каждый исполнитель, сумма, статус (проведено / ошибка / отклонено), причина ошибки</li>
+            <li>Общий итог: количество успешных / неуспешных, общая сумма</li>
+            <li>XML-версия отчёта для импорта в 1С:Бухгалтерию</li>
+            <li>Хранится в системе как документ с возможностью повторного скачивания</li>
+          </ul>
+
+          <div class="alert alert-warn">
+            <div class="alert-icon">!</div>
+            <div>
+              <strong>Максимальный размер реестра:</strong> до 1 000 строк за один раз.
+              При большем объёме — разбивать на несколько файлов. Ориентировочное время обработки реестра из 500 строк — 5–10 минут.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3.13 — СТОП-ЛИСТ (422-ФЗ) -->
+      <div class="module-card" id="module313" style="border:2px solid #A01F72">
+        <div class="module-card-header" style="background:#A01F72">
+          <div class="module-icon" style="background:rgba(255,255,255,0.2)">3.13</div>
+          <h3 style="color:white">Модуль стоп-листа (422-ФЗ ст.6 п.2 пп.8) <span style="font-size:12px;font-weight:400;opacity:0.8">(новое в v3.0)</span></h3>
+        </div>
+        <div class="module-card-body">
+
+          <div class="alert alert-warn">
+            <div class="alert-icon">⚠️</div>
+            <div>
+              <strong>Правовое основание:</strong> 422-ФЗ «О проведении эксперимента по установлению специального
+              налогового режима» ст.6 п.2 пп.8: доходы физического лица от юридических лиц, в которых оно являлось
+              сотрудником <strong>менее 2 лет назад</strong>, не признаются объектом налогообложения НПД.
+              Нарушение ведёт к переквалификации договора ГПХ в трудовой и штрафам ФНС.
+            </div>
+          </div>
+
+          <h4>Что такое стоп-лист и зачем он нужен</h4>
+          <p>Стоп-лист — база ИНН физических лиц, которым <strong>категорически запрещено</strong> получать задания от KARI.
+          В список попадают: бывшие сотрудники KARI, уволившиеся менее 2 лет назад, а также лица, по ИНН которых
+          KARI получала штрафы от ФНС. Без стоп-листа любой бывший сотрудник может зарегистрироваться как
+          самозанятый и получить задание — что является прямым нарушением закона.</p>
+
+          <h4>Роли и права доступа к стоп-листу</h4>
+          <table>
+            <thead><tr><th>Роль</th><th>Просмотр</th><th>Добавление</th><th>Деактивация</th><th>Удаление</th></tr></thead>
+            <tbody>
+              <tr><td>HRD / Бухгалтерия</td><td>✅</td><td>✅</td><td>✅</td><td>—</td></tr>
+              <tr><td>Директор региона</td><td>✅</td><td>—</td><td>✅</td><td>✅</td></tr>
+              <tr><td>Директор подразделения</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+              <tr><td>Директор магазина</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Причины блокировки (три типа)</h4>
+          <table>
+            <thead><tr><th>Тип</th><th>Код</th><th>Описание</th><th>Срок блокировки</th><th>Авто-снятие</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Бывший сотрудник</td>
+                <td><code>former_employee</code></td>
+                <td>Работал в KARI по трудовому договору менее 2 лет назад (422-ФЗ)</td>
+                <td>Дата увольнения + 2 года</td>
+                <td>✅ Ежедневно в 01:00</td>
+              </tr>
+              <tr>
+                <td>Штраф ФНС</td>
+                <td><code>fns_fine</code></td>
+                <td>KARI получала штраф ФНС по данному ИНН</td>
+                <td>Бессрочно (до решения HRD)</td>
+                <td>— (только вручную)</td>
+              </tr>
+              <tr>
+                <td>Ручная блокировка</td>
+                <td><code>manual</code></td>
+                <td>Добавлен HR-службой вручную по любой причине</td>
+                <td>До решения HRD</td>
+                <td>— (только вручную)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Процесс проверки при получении задания</h4>
+          <table>
+            <thead><tr><th>Шаг</th><th>Кто</th><th>Действие</th><th>Результат</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Исполнитель</td><td>Нажимает «Взять задание» в мобильном приложении</td><td>Запрос в API</td></tr>
+              <tr><td>2</td><td>Система (API)</td><td>Проверяет ИНН исполнителя по стоп-листу: <code>SELECT WHERE inn = ? AND is_active = true AND (blocked_until IS NULL OR blocked_until &gt; today)</code></td><td>Найден / не найден в стоп-листе</td></tr>
+              <tr><td>3a</td><td>Система</td><td><strong>Если НЕ в стоп-листе:</strong> продолжает обычную выдачу задания</td><td>Задание выдано</td></tr>
+              <tr><td>3b</td><td>Система</td><td><strong>Если В стоп-листе:</strong> возвращает HTTP 403 с кодом <code>STOP_LIST_BLOCKED</code> и причиной</td><td>Задание заблокировано</td></tr>
+              <tr><td>4</td><td>Система</td><td>Отправляет push-уведомление с причиной блокировки</td><td>Уведомление на телефон</td></tr>
+              <tr><td>5</td><td>Мобильное приложение</td><td>Открывает экран StopListBlocked с двумя альтернативами</td><td>Пользователь видит причину и варианты</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Что видит заблокированный исполнитель</h4>
+          <ul class="styled">
+            <li><strong>Push-уведомление:</strong> «⛔ Задания временно недоступны» с краткой причиной</li>
+            <li><strong>Экран StopListBlocked</strong> с детальным объяснением и датой окончания (если есть)</li>
+            <li><strong>Альтернатива 1:</strong> Оформиться в штат KARI — 4-шаговая инструкция + контакты HR (тел. 8-800-200-52-56, email hr@kari.ru)</li>
+            <li><strong>Альтернатива 2:</strong> Принять заказы от внешних партнёров — переход на биржу с фильтром «только партнёры»</li>
+          </ul>
+
+          <h4>Способы наполнения стоп-листа</h4>
+          <ul class="styled">
+            <li><strong>Excel-импорт (массовый):</strong> HRD загружает файл с колонками «ИНН», «ФИО», «Дата увольнения» — система автоматически считает <em>blocked_until = дата увольнения + 2 года</em></li>
+            <li><strong>Ручное добавление:</strong> HRD вводит ИНН, ФИО, причину и (для бывшего сотрудника) дату увольнения через форму в кабинете</li>
+            <li><strong>Интеграция с 1С (перспектива):</strong> автоматическая синхронизация при увольнении сотрудника через HR-систему KARI</li>
+          </ul>
+
+          <h4>Автоматизация через Celery Beat</h4>
+          <ul class="styled">
+            <li><strong>Ежедневно в 01:00 МСК:</strong> задача <code>expire_stop_list</code> снимает все блокировки, у которых <code>blocked_until &lt; сегодня</code></li>
+            <li>Освобождённые исполнители автоматически получают доступ к заданиям без вмешательства HR</li>
+            <li>Операция атомарна: если задача упала — повтор через 5 минут (max 2 попытки)</li>
+          </ul>
+
+          <h4>Структура таблицы stop_list в БД</h4>
+          <table>
+            <thead><tr><th>Поле</th><th>Тип</th><th>Описание</th></tr></thead>
+            <tbody>
+              <tr><td>id</td><td>UUID</td><td>Первичный ключ</td></tr>
+              <tr><td>inn</td><td>VARCHAR(12)</td><td>ИНН физлица, индексирован для быстрой проверки</td></tr>
+              <tr><td>full_name</td><td>VARCHAR(255)</td><td>ФИО для справки (необязательно)</td></tr>
+              <tr><td>reason</td><td>ENUM</td><td>former_employee / fns_fine / manual / <strong>fiscal_risk</strong> <span style="color:#A01F72">(v2)</span></td></tr>
+              <tr><td>reason_details</td><td>TEXT</td><td>Подробности: номер приказа, дата штрафа, комментарий</td></tr>
+              <tr><td>employment_end_date</td><td>DATE</td><td>Дата увольнения (для former_employee)</td></tr>
+              <tr><td>blocked_until</td><td>DATE</td><td>Дата окончания блокировки (NULL = бессрочно)</td></tr>
+              <tr><td>is_active</td><td>BOOLEAN</td><td>Активна ли блокировка (индекс: inn + is_active)</td></tr>
+              <tr><td>created_by_id</td><td>UUID</td><td>Кто добавил (NULL = авто-импорт)</td></tr>
+              <tr><td>deactivated_at</td><td>TIMESTAMP</td><td>Дата досрочного снятия блокировки</td></tr>
+              <tr style="background:#fff7ed"><td>fiscal_check_year</td><td>INTEGER</td><td><span style="color:#A01F72"><strong>(v2)</strong></span> Год, за который обнаружен фискальный риск. Только для reason=fiscal_risk.</td></tr>
+              <tr style="background:#fff7ed"><td>fiscal_risk_level</td><td>VARCHAR(20)</td><td><span style="color:#A01F72"><strong>(v2)</strong></span> Уровень риска: medium / high / critical</td></tr>
+              <tr style="background:#fff7ed"><td>fiscal_criteria_flags</td><td>JSONB</td><td><span style="color:#A01F72"><strong>(v2)</strong></span> Какие критерии сработали: {"c1_income": true, "c2_months": true, "c3_share": false}</td></tr>
+            </tbody>
+          </table>
+
+          <h4 style="margin-top:20px">🏪 Дополнительно: ЧС магазина (store_blacklists) <span style="color:#A01F72;font-size:12px">(новое в v2)</span></h4>
+          <p>Помимо глобального стоп-листа, директор магазина может заблокировать исполнителя только в своём магазине — не затрагивая другие. Таблица <code>store_blacklists</code> (миграция 0004).</p>
+          <table>
+            <thead><tr><th>Поле</th><th>Тип</th><th>Описание</th></tr></thead>
+            <tbody>
+              <tr><td>id</td><td>UUID</td><td>Первичный ключ</td></tr>
+              <tr><td>store_id</td><td>UUID</td><td>Магазин, в котором заблокирован исполнитель</td></tr>
+              <tr><td>executor_id</td><td>UUID</td><td>Заблокированный исполнитель</td></tr>
+              <tr><td>created_by_id</td><td>UUID</td><td>Директор магазина, добавивший в ЧС</td></tr>
+              <tr><td>reason</td><td>TEXT</td><td>Причина блокировки (произвольный текст)</td></tr>
+              <tr><td>is_active</td><td>BOOLEAN</td><td>Активна ли блокировка</td></tr>
+              <tr><td>expires_at</td><td>TIMESTAMP</td><td>Дата истечения (NULL = бессрочно)</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:12px;color:#666;margin-top:8px">Уникальный constraint: один исполнитель — одна запись на магазин. Индекс <code>ix_blacklist_check</code> ускоряет проверку при выдаче заданий.</p>
+
+          <div class="alert alert-info">
+            <div class="alert-icon">✅</div>
+            <div>
+              <strong>Статус реализации:</strong> Модуль 3.13 полностью реализован. В v2 расширен:
+              добавлена причина <code>fiscal_risk</code> (автоматическая блокировка при критическом фискальном риске),
+              новые поля в таблице (<code>fiscal_check_year</code>, <code>fiscal_risk_level</code>, <code>fiscal_criteria_flags</code>),
+              локальный ЧС магазина (<code>store_blacklists</code>).
+              Миграции: 0003 (базовый стоп-лист), 0004 (store_blacklists), 0005 (fiscal_risk в stop_list).
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 4 -->
+  <div class="section" id="section4">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Технический стек (рекомендации)</div>
+    </div>
+    <div class="section-body">
+      <div class="alert alert-info">
+        <div class="alert-icon">🤖</div>
+        <div>
+          <strong>Модель разработки v3.0:</strong> Платформа создаётся
+          <strong>Директором региона (Юрий) совместно с AI-ассистентом (Claude)</strong>.
+          Внешние IT-подрядчики не привлекаются. IT поддержка KARI в штате
+          обеспечивает инфраструктуру и деплой. Подробнее — раздел 11.
+        </div>
+      </div>
+      <p>Технический стек платформы:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Компонент</th>
+            <th>Технология</th>
+            <th>Обоснование</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Бэкенд</strong></td>
+            <td><span class="tag tag-blue">Python (FastAPI)</span> или <span class="tag tag-blue">Node.js</span></td>
+            <td>FastAPI — высокая производительность + автодокументация API. Claude пишет код на Python/FastAPI.</td>
+          </tr>
+          <tr>
+            <td><strong>База данных</strong></td>
+            <td><span class="tag tag-green">PostgreSQL</span> + <span class="tag tag-orange">Redis</span></td>
+            <td>PostgreSQL — основные данные; Redis — кэш, сессии, очереди задач</td>
+          </tr>
+          <tr>
+            <td><strong>Очередь задач</strong></td>
+            <td><span class="tag tag-blue">Celery</span> + <span class="tag tag-gray">RabbitMQ</span></td>
+            <td>Для массовых выплат и отправки уведомлений без блокировки основного потока</td>
+          </tr>
+          <tr>
+            <td><strong>Мобильное приложение</strong></td>
+            <td><span class="tag tag-blue">React Native</span></td>
+            <td>Одна кодовая база для iOS и Android — экономия времени и бюджета в 2 раза</td>
+          </tr>
+          <tr>
+            <td><strong>Веб-фронтенд</strong></td>
+            <td><span class="tag tag-blue">React.js</span></td>
+            <td>Единая технология с мобильным приложением, большое сообщество</td>
+          </tr>
+          <tr>
+            <td><strong>Сервер</strong></td>
+            <td><span class="tag tag-red">On-premise в РФ</span></td>
+            <td>Собственные серверы на территории РФ — требование 152-ФЗ</td>
+          </tr>
+          <tr>
+            <td><strong>Хранение файлов</strong></td>
+            <td><span class="tag tag-gray">MinIO</span></td>
+            <td>Self-hosted S3-совместимое хранилище — документы, фото, паспорта</td>
+          </tr>
+          <tr>
+            <td><strong>Push-уведомления</strong></td>
+            <td><span class="tag tag-orange">Firebase Cloud Messaging</span></td>
+            <td>Стандарт отрасли для iOS и Android push-уведомлений</td>
+          </tr>
+          <tr>
+            <td><strong>SMS</strong></td>
+            <td><span class="tag tag-gray">СМSC.ru</span> или <span class="tag tag-gray">СМСЦентр</span></td>
+            <td>Российские провайдеры с гарантированной доставкой</td>
+          </tr>
+          <tr>
+            <td><strong>OCR (паспорт)</strong></td>
+            <td><span class="tag tag-blue">Tesseract</span> или <span class="tag tag-blue">Яндекс Vision API</span></td>
+            <td>Автораспознавание данных паспорта при загрузке фото</td>
+          </tr>
+          <tr>
+            <td><strong>Мониторинг</strong></td>
+            <td><span class="tag tag-green">Grafana</span> + <span class="tag tag-orange">Prometheus</span></td>
+            <td>Визуализация метрик, оповещения при сбоях в реальном времени</td>
+          </tr>
+          <tr>
+            <td><strong>CI/CD</strong></td>
+            <td><span class="tag tag-gray">GitLab CI</span> или <span class="tag tag-gray">Jenkins</span></td>
+            <td>Автоматическая сборка и деплой — на выбор команды</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 5 -->
+  <div class="section" id="section5">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Интеграции</div>
+    </div>
+    <div class="section-body">
+
+      <div class="integration-card">
+        <div class="integration-header">
+          <h4>1. API ФНС «Мой налог»</h4>
+          <span class="tag tag-red">Критичная интеграция</span>
+        </div>
+        <div class="integration-body">
+          <div class="integration-row"><label>Назначение</label><span>Работа с самозанятыми: проверка статуса, передача доходов, получение чеков</span></div>
+          <div class="integration-row"><label>Документация</label><span>npd.nalog.ru/aggregators/</span></div>
+          <div class="integration-row"><label>Методы API</label><span>Проверка статуса самозанятого по ИНН &bull; Регистрация дохода &bull; Передача данных о выплате &bull; Получение чека</span></div>
+          <div class="integration-row"><label>Среда</label><span>Sandbox (тест) → Production</span></div>
+          <div class="integration-row"><label>Статус</label><span><span class="tag tag-orange">В процессе подключения</span></span></div>
+        </div>
+      </div>
+
+      <div class="integration-card">
+        <div class="integration-header">
+          <h4>2. Совкомбанк API (выплаты)</h4>
+          <span class="tag tag-red">Критичная интеграция</span>
+        </div>
+        <div class="integration-body">
+          <div class="integration-row"><label>Назначение</label><span>Переводы денег самозанятым исполнителям на карты любых банков РФ</span></div>
+          <div class="integration-row"><label>Методы API</label><span>Единичный перевод &bull; Массовый перевод (реестр) &bull; Проверка карты &bull; Статус транзакции</span></div>
+          <div class="integration-row"><label>Договор</label><span>Действующий. Необходимо запросить API-документацию у Совкомбанка</span></div>
+          <div class="integration-row"><label>Статус</label><span><span class="tag tag-orange">Нужно запросить документацию</span></span></div>
+        </div>
+      </div>
+
+      <div class="integration-card">
+        <div class="integration-header">
+          <h4>3. 1С Бухгалтерия</h4>
+          <span class="tag tag-blue">Важная интеграция</span>
+        </div>
+        <div class="integration-body">
+          <div class="integration-row"><label>Назначение</label><span>Передача реестров выплат в бухгалтерскую систему KARI</span></div>
+          <div class="integration-row"><label>Формат</label><span>Выгрузка реестров в XML и Excel в формате, совместимом с 1С</span></div>
+          <div class="integration-row"><label>Периодичность</label><span>По запросу бухгалтерии (ручной запуск или автоматически по расписанию)</span></div>
+          <div class="integration-row"><label>Статус</label><span><span class="tag tag-gray">Разработка при создании модуля выплат</span></span></div>
+        </div>
+      </div>
+
+      <div class="integration-card">
+        <div class="integration-header">
+          <h4>4. ФССП (проверка долгов)</h4>
+          <span class="tag tag-green">Вспомогательная</span>
+        </div>
+        <div class="integration-body">
+          <div class="integration-row"><label>Назначение</label><span>Проверка исполнителей на наличие долгов и ограничений при регистрации</span></div>
+          <div class="integration-row"><label>Метод</label><span>Запрос по ФИО + дата рождения</span></div>
+          <div class="integration-row"><label>URL</label><span>fssp.gov.ru/iss/ip</span></div>
+          <div class="integration-row"><label>Статус</label><span><span class="tag tag-gray">Подключить в спринте 2</span></span></div>
+        </div>
+      </div>
+
+      <div class="integration-card">
+        <div class="integration-header">
+          <h4>5. Firebase Cloud Messaging</h4>
+          <span class="tag tag-green">Вспомогательная</span>
+        </div>
+        <div class="integration-body">
+          <div class="integration-row"><label>Назначение</label><span>Push-уведомления для мобильного приложения на iOS и Android</span></div>
+          <div class="integration-row"><label>События</label><span>Новое задание &bull; Результат приёмки &bull; Выплата &bull; Системные уведомления</span></div>
+          <div class="integration-row"><label>Статус</label><span><span class="tag tag-gray">Настроить в спринте 5</span></span></div>
+        </div>
+      </div>
+
+      <div class="integration-card" style="border-left:4px solid #A01F72">
+        <div class="integration-header">
+          <h4>6. API ФНС — мониторинг доходов (расширение) <span style="color:#A01F72;font-size:11px">Новое v2.0</span></h4>
+          <span class="tag tag-red">Критичная интеграция</span>
+        </div>
+        <div class="integration-body">
+          <div class="integration-row"><label>Назначение</label><span>Ежедневный мониторинг доли дохода от KARI в общем доходе самозанятого для контроля риска 80%</span></div>
+          <div class="integration-row"><label>Метод</label><span>GET /taxpayer/income-summary — сводка по доходам самозанятого за период</span></div>
+          <div class="integration-row"><label>Вызов</label><span>Ежедневно в 06:00 по всем активным исполнителям (очередь Celery)</span></div>
+          <div class="integration-row"><label>Данные</label><span>Суммарный доход НПД за 12 месяцев &bull; Доход от KARI &bull; Доход от других источников</span></div>
+          <div class="integration-row"><label>Хранение</label><span>История за 12 скользящих месяцев в PostgreSQL, таблица income_monitoring</span></div>
+          <div class="integration-row"><label>Статус</label><span><span class="tag tag-orange">Уточнить в документации ФНС для операторов</span></span></div>
+        </div>
+      </div>
+
+      <div class="integration-card" style="border-left:4px solid #A01F72">
+        <div class="integration-header">
+          <h4>7. API Планировщика смен KARI <span style="color:#A01F72;font-size:11px">Новое v2.0</span></h4>
+          <span class="tag tag-blue">Внутренняя интеграция</span>
+        </div>
+        <div class="integration-body">
+          <div class="integration-row"><label>Назначение</label><span>Получение «дефицитных часов» из планировщика смен и автоматическое создание подсказок для заданий самозанятым</span></div>
+          <div class="integration-row"><label>Направление</label><span>Планировщик → Платформа самозанятых (входящий webhook)</span></div>
+          <div class="integration-row"><label>Эндпоинт</label><span>POST /api/v1/shift-planner/deficit-hint</span></div>
+          <div class="integration-row"><label>Аутентификация</label><span>API-ключ в заголовке X-API-Key, внутренняя сеть KARI</span></div>
+          <div class="integration-row"><label>Частота</label><span>По событию в планировщике (при появлении нового дефицита) + ежедневный батч на неделю вперёд</span></div>
+          <div class="integration-row"><label>Статус</label><span><span class="tag tag-gray">Разработать при запуске планировщика смен</span></span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 6 -->
+  <div class="section" id="section6">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-title">Нефункциональные требования</div>
+    </div>
+    <div class="section-body">
+      <div class="nfr-grid">
+        <div class="nfr-item">
+          <h4>Доступность системы</h4>
+          <div class="nfr-value">99.9%</div>
+          <div class="nfr-desc">Не более 8 часов простоя в год (SLA)</div>
+        </div>
+        <div class="nfr-item">
+          <h4>Время отклика API</h4>
+          <div class="nfr-value">&lt; 500 мс</div>
+          <div class="nfr-desc">Для 95% запросов к системе</div>
+        </div>
+        <div class="nfr-item">
+          <h4>Пиковая нагрузка</h4>
+          <div class="nfr-value">10 000</div>
+          <div class="nfr-desc">Одновременных пользователей</div>
+        </div>
+        <div class="nfr-item">
+          <h4>Хранение данных</h4>
+          <div class="nfr-value">РФ</div>
+          <div class="nfr-desc">Только серверы на территории России (152-ФЗ)</div>
+        </div>
+        <div class="nfr-item">
+          <h4>Резервные копии</h4>
+          <div class="nfr-value">Ежедневно</div>
+          <div class="nfr-desc">Хранение копий — 30 дней</div>
+        </div>
+        <div class="nfr-item">
+          <h4>Мониторинг</h4>
+          <div class="nfr-value">24/7</div>
+          <div class="nfr-desc">Grafana + Prometheus, оповещения при сбоях</div>
+        </div>
+        <div class="nfr-item">
+          <h4>Логирование</h4>
+          <div class="nfr-value">100%</div>
+          <div class="nfr-desc">Все действия пользователей и системные события</div>
+        </div>
+        <div class="nfr-item">
+          <h4>Шифрование</h4>
+          <div class="nfr-value">TLS 1.3</div>
+          <div class="nfr-desc">При передаче данных + AES-256 в хранилище</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 7 -->
+  <div class="section" id="section7">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <div class="section-title">План разработки (спринты)</div>
+    </div>
+    <div class="section-body">
+      <p>Разработка разбита на 6 двухнедельных спринтов. Общий срок до запуска пилота — <strong>12 недель (3 месяца)</strong>.
+      Разработку ведёт <strong>Юрий (Product Owner) + Claude AI (код)</strong>, деплой — IT-поддержка KARI (штат).
+      Статус на март 2026: Спринты 1–2 завершены ✅, Спринты 3–4 в работе 🔄, Спринты 5–6 планируются ⬜.
+      Запуск пилота — <strong>апрель 2026</strong>.</p>
+
+      <div class="sprint-grid">
+        <div class="sprint-card">
+          <div class="sprint-header">
+            <h4>Спринт 1. Архитектура и инфраструктура <span class="tag tag-green" style="font-size:11px;margin-left:6px">✅ Выполнено</span></h4>
+            <span class="sprint-weeks">3–14 марта 2026</span>
+          </div>
+          <div class="sprint-body">
+            <ul class="styled">
+              <li>Настройка серверной инфраструктуры</li>
+              <li>Настройка CI/CD pipeline</li>
+              <li>Проектирование базы данных (схема)</li>
+              <li>Настройка тестовой среды (staging)</li>
+              <li>Начало интеграции API ФНС (sandbox)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="sprint-card">
+          <div class="sprint-header">
+            <h4>Спринт 2. Бэкенд — ядро системы <span class="tag tag-green" style="font-size:11px;margin-left:6px">✅ Выполнено</span></h4>
+            <span class="sprint-weeks">17–28 марта 2026</span>
+          </div>
+          <div class="sprint-body">
+            <ul class="styled">
+              <li>Аутентификация и управление пользователями</li>
+              <li>Модуль регистрации исполнителей</li>
+              <li>Интеграция API ФНС (проверка статуса)</li>
+              <li>Интеграция Совкомбанк API (тестовые выплаты)</li>
+              <li>Модуль хранения документов (MinIO)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="sprint-card">
+          <div class="sprint-header">
+            <h4>Спринт 3. Биржа заданий и ЭДО <span class="tag tag-yellow" style="font-size:11px;margin-left:6px">🔄 В работе</span></h4>
+            <span class="sprint-weeks">31 марта – 11 апреля 2026</span>
+          </div>
+          <div class="sprint-body">
+            <ul class="styled">
+              <li>API биржи заданий (CRUD заданий)</li>
+              <li>Статусная модель заданий</li>
+              <li>Генерация договоров ГПХ и актов (PDF)</li>
+              <li>Модуль ПЭП (SMS-подпись документов)</li>
+              <li>API выплат с расчётом налога 6%</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="sprint-card">
+          <div class="sprint-header">
+            <h4>Спринт 4. Веб-кабинеты <span class="tag tag-yellow" style="font-size:11px;margin-left:6px">🔄 В работе</span></h4>
+            <span class="sprint-weeks">14–25 апреля 2026</span>
+          </div>
+          <div class="sprint-body">
+            <ul class="styled">
+              <li>Кабинет директора магазина</li>
+              <li>Кабинет директора подразделения <span class="tag tag-red" style="font-size:10px">v2.0</span></li>
+              <li>Кабинет директора региона + делегирование прав <span class="tag tag-red" style="font-size:10px">v2.0</span></li>
+              <li>Кабинет HRD / бухгалтерии</li>
+              <li>Система бюджетных лимитов + запросы на увеличение <span class="tag tag-red" style="font-size:10px">v2.0</span></li>
+              <li>Дашборды и аналитика</li>
+              <li>Excel-выгрузка всех таблиц с форматированием (SheetJS) <span class="tag tag-red" style="font-size:10px">v2.0</span></li>
+              <li>Интеграция с 1С (выгрузка реестров)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="sprint-card">
+          <div class="sprint-header">
+            <h4>Спринт 5. Мобильное приложение <span class="tag tag-blue" style="font-size:11px;margin-left:6px;background:#e8f4fd;color:#1e6fa5;border:1px solid #bee3f8;border-radius:4px;padding:1px 6px">⬜ Планируется</span></h4>
+            <span class="sprint-weeks">28 апреля – 9 мая 2026</span>
+          </div>
+          <div class="sprint-body">
+            <ul class="styled">
+              <li>Экраны регистрации и онбординга</li>
+              <li>Биржа заданий (список + карта)</li>
+              <li>Карточка задания — взятие в работу</li>
+              <li>Сдача задания (фото + геометка)</li>
+              <li>Кошелёк, история выплат, чат и уведомления</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="sprint-card">
+          <div class="sprint-header">
+            <h4>Спринт 5b. Контроль риска 80% <span class="tag tag-red" style="font-size:10px">v2.0</span> <span class="tag tag-blue" style="font-size:11px;margin-left:4px;background:#e8f4fd;color:#1e6fa5;border:1px solid #bee3f8;border-radius:4px;padding:1px 6px">⬜ Планируется</span></h4>
+            <span class="sprint-weeks">Параллельно со Спринтом 5</span>
+          </div>
+          <div class="sprint-body">
+            <ul class="styled">
+              <li>Модуль мониторинга доходов (API ФНС ежедневный опрос)</li>
+              <li>Реестр исполнителей с риском 80% в кабинете директора региона</li>
+              <li>Индикатор доли дохода в ЛК исполнителя (мобильное приложение)</li>
+              <li>Форма загрузки внешних чеков в ЛК исполнителя</li>
+              <li>Push/SMS уведомления при достижении порогов 70% и 80%</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="sprint-card">
+          <div class="sprint-header">
+            <h4>Спринт 6. Тестирование и пилот <span class="tag tag-blue" style="font-size:11px;margin-left:6px;background:#e8f4fd;color:#1e6fa5;border:1px solid #bee3f8;border-radius:4px;padding:1px 6px">⬜ Планируется</span></h4>
+            <span class="sprint-weeks">12–30 мая 2026</span>
+          </div>
+          <div class="sprint-body">
+            <ul class="styled">
+              <li>Нагрузочное тестирование (10 000 пользователей)</li>
+              <li>Тестирование безопасности (pentest)</li>
+              <li>Тест делегирования прав + журнал делегатов</li>
+              <li>Тест системы лимитов (все уровни иерархии)</li>
+              <li>Тест контроля риска 80% + уведомлений</li>
+              <li>Импорт базы исполнителей из Наймикс</li>
+              <li>Обучение директоров магазинов, подразделений, регионов</li>
+              <li>Запуск пилота: Иркутский + Южный регион</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Таймлайн -->
+      <h3>Общий таймлайн (актуальный, Март 2026)</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Спринт</th>
+            <th>Даты</th>
+            <th>Фокус</th>
+            <th>Результат / Статус</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:#f0fdf4">
+            <td><strong>Спринт 1</strong></td>
+            <td>3–14 марта 2026</td>
+            <td>Архитектура + БД</td>
+            <td>✅ Схема БД, миграции Alembic, архитектура FastAPI — <strong>Готово</strong></td>
+          </tr>
+          <tr style="background:#f0fdf4">
+            <td><strong>Спринт 2</strong></td>
+            <td>17–28 марта 2026</td>
+            <td>Бэкенд — ядро</td>
+            <td>✅ 28 файлов, 7 255 строк кода. API: ФНС, выплаты, исполнители — <strong>Готово</strong></td>
+          </tr>
+          <tr style="background:#fffbeb">
+            <td><strong>Спринт 3</strong></td>
+            <td>31 марта – 11 апр 2026</td>
+            <td>Биржа + ЭДО</td>
+            <td>🔄 API заданий готов. PDF-договоры и ПЭП-подпись — <strong>в работе</strong></td>
+          </tr>
+          <tr style="background:#fffbeb">
+            <td><strong>Спринт 4</strong></td>
+            <td>14–25 апр 2026</td>
+            <td>Веб-кабинеты</td>
+            <td>🔄 Кабинет директора региона готов. Остальные кабинеты — <strong>в работе</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Спринт 5</strong></td>
+            <td>28 апр – 9 мая 2026</td>
+            <td>Мобайл + Риск 80%</td>
+            <td>⬜ Мобильное приложение (React Native) — <strong>планируется</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Спринт 6</strong></td>
+            <td>12–30 мая 2026</td>
+            <td>Тест + Пилот</td>
+            <td>⬜ Нагрузочное тестирование, обучение, <span class="tag tag-green">Запуск пилота Апрель 2026</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 8 -->
+  <div class="section" id="section8">
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <div class="section-title">Критерии приёмки MVP</div>
+    </div>
+    <div class="section-body">
+      <p>MVP считается готовым к запуску пилота при выполнении всех нижеперечисленных критериев.</p>
+
+      <ul class="criteria-list">
+        <li class="criteria-item">
+          <div class="criteria-check">&#10003;</div>
+          <div class="criteria-text">
+            Исполнитель может самостоятельно зарегистрироваться за
+            <span class="criteria-kpi">15 минут</span> — от ввода телефона до подписания договора
+          </div>
+        </li>
+        <li class="criteria-item">
+          <div class="criteria-check">&#10003;</div>
+          <div class="criteria-text">
+            Статус самозанятого проверяется <span class="criteria-kpi">автоматически</span> через API ФНС
+            при регистрации и перед каждой выплатой
+          </div>
+        </li>
+        <li class="criteria-item">
+          <div class="criteria-check">&#10003;</div>
+          <div class="criteria-text">
+            Директор может создать задание за <span class="criteria-kpi">3 минуты</span>
+            в веб-кабинете
+          </div>
+        </li>
+        <li class="criteria-item">
+          <div class="criteria-check">&#10003;</div>
+          <div class="criteria-text">
+            Исполнитель может взять задание и сдать его с <span class="criteria-kpi">фотоотчётом и геометкой</span>
+            через мобильное приложение
+          </div>
+        </li>
+        <li class="criteria-item">
+          <div class="criteria-check">&#10003;</div>
+          <div class="criteria-text">
+            Выплата проходит на карту исполнителя за <span class="criteria-kpi">1 рабочий день</span>
+            с момента приёмки задания
+          </div>
+        </li>
+        <li class="criteria-item">
+          <div class="criteria-check">&#10003;</div>
+          <div class="criteria-text">
+            Чек от ФНС формируется <span class="criteria-kpi">автоматически</span> после каждой выплаты
+          </div>
+        </li>
+        <li class="criteria-item">
+          <div class="criteria-check">&#10003;</div>
+          <div class="criteria-text">
+            Все документы (договор ГПХ, акт) подписываются <span class="criteria-kpi">электронно</span>
+            через ПЭП (SMS-код) без бумажного документооборота
+          </div>
+        </li>
+        <li class="criteria-item">
+          <div class="criteria-check">&#10003;</div>
+          <div class="criteria-text">
+            Система выдерживает <span class="criteria-kpi">1 000 одновременных пользователей</span>
+            без деградации производительности (MVP-порог)
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 9 -->
+  <div class="section" id="section9">
+    <div class="section-header">
+      <div class="section-num">9</div>
+      <div class="section-title">Миграция с Наймикс</div>
+    </div>
+    <div class="section-body">
+      <div class="alert alert-warn">
+        <div class="alert-icon">!</div>
+        <div>
+          <strong>Переходный период — 1 месяц параллельной работы</strong> с Наймикс.
+          Полное отключение только после успешного завершения пилота.
+        </div>
+      </div>
+
+      <div class="migration-steps">
+        <div class="migration-step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Запросить выгрузку базы исполнителей из Наймикс</h4>
+            <p>Необходимые поля: ФИО, ИНН, номер телефона, реквизиты банковской карты, история заданий</p>
+          </div>
+        </div>
+        <div class="migration-step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Импортировать базу в новую систему KARI</h4>
+            <p>Технический импорт данных — создание профилей исполнителей с предзаполненными данными</p>
+          </div>
+        </div>
+        <div class="migration-step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Отправить SMS исполнителям с приглашением</h4>
+            <p>Пригласить зарегистрироваться в новом приложении KARI — с ссылкой на App Store / Google Play</p>
+          </div>
+        </div>
+        <div class="migration-step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Параллельная работа с Наймикс — 1 месяц</h4>
+            <p>Переходный период для постепенного перевода исполнителей. Новые задания — только через KARI</p>
+          </div>
+        </div>
+        <div class="migration-step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h4>Полное отключение Наймикс</h4>
+            <p>После подтверждения успешной работы пилота и перевода всех активных исполнителей</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 10 -->
+  <div class="section" id="section10">
+    <div class="section-header">
+      <div class="section-num">10</div>
+      <div class="section-title">Команда проекта</div>
+    </div>
+    <div class="section-body">
+
+      <div class="alert alert-info" style="margin-bottom:20px">
+        <div class="alert-icon">🤖</div>
+        <div>
+          <strong>v3.0 — модель разработки:</strong> Код пишется
+          <strong>Директором региона (Юрий) совместно с AI-ассистентом (Claude)</strong>.
+          IT поддержка KARI (штат) отвечает за инфраструктуру и деплой.
+          Внешние подрядчики не привлекаются.
+        </div>
+      </div>
+
+      <h3>Команда со стороны KARI (заказчик)</h3>
+      <table class="contacts-table">
+        <thead>
+          <tr>
+            <th>Роль в проекте</th>
+            <th>Ответственный</th>
+            <th>Зона ответственности</th>
+            <th>Статус</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Руководитель проекта / Куратор</td>
+            <td>Директор региона (Юрий)</td>
+            <td>Приёмка результатов спринтов, согласование требований, приоритеты, ключевые решения по функционалу</td>
+            <td><span class="tag tag-green">Назначен</span></td>
+          </tr>
+          <tr>
+            <td>Владелец продукта (Product Owner)</td>
+            <td>HRD KARI</td>
+            <td>Утверждение требований, финальная приёмка MVP, бюджет проекта</td>
+            <td><span class="tag tag-green">Назначен</span></td>
+          </tr>
+          <tr>
+            <td>Юридическое сопровождение</td>
+            <td>Юрист KARI</td>
+            <td>Шаблоны договоров ГПХ и актов, соответствие 152-ФЗ, регистрация в реестре ФНС</td>
+            <td><span class="tag tag-green">Назначен</span></td>
+          </tr>
+          <tr>
+            <td>Бухгалтерия и финансы</td>
+            <td>Бухгалтерия KARI</td>
+            <td>Участие в тестировании модулей выплат и реестров, приёмка интеграции с 1С, работа с чеками ФНС</td>
+            <td><span class="tag tag-green">Назначен</span></td>
+          </tr>
+          <tr>
+            <td>Пилотные пользователи</td>
+            <td>Директора 5–10 магазинов пилота</td>
+            <td>Тестирование веб-кабинетов на этапе UAT, обратная связь по удобству интерфейса</td>
+            <td><span class="tag tag-orange">Отобрать перед пилотом</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top:24px">Команда разработки</h3>
+      <table class="contacts-table">
+        <thead>
+          <tr>
+            <th>Участник</th>
+            <th>Роль</th>
+            <th>Что делает</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Юрий (Директор региона)</strong></td>
+            <td>Владелец продукта</td>
+            <td>Формулирует требования, расставляет приоритеты, тестирует результат, принимает решения по продукту</td>
+          </tr>
+          <tr>
+            <td><strong>Claude (AI-ассистент)</strong></td>
+            <td>Разработчик + архитектор</td>
+            <td>Пишет весь программный код: бэкенд, веб-кабинеты, мобильное приложение, интеграции с ФНС/банком</td>
+          </tr>
+          <tr>
+            <td><strong>IT поддержка KARI (штат)</strong></td>
+            <td>Инфраструктура + деплой</td>
+            <td>Настройка серверов РФ, CI/CD, мониторинг во время пилота, резервные копии, устранение инцидентов</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 11 — МОДЕЛЬ РАЗРАБОТКИ -->
+  <div class="section" id="section11">
+    <div class="section-header">
+      <div class="section-num" style="background:#A01F72;font-size:11px">11</div>
+      <div class="section-title">Модель разработки: KARI + AI-ассистент <span style="font-size:13px;font-weight:400;opacity:0.7">(новое в v3.0)</span></div>
+    </div>
+    <div class="section-body">
+
+      <div class="alert alert-info" style="margin-bottom:24px">
+        <div class="alert-icon">🤖</div>
+        <div>
+          <strong>Ключевой принцип:</strong> Весь программный код платформы пишется силами
+          <strong>Директора региона (Юрий) совместно с AI-ассистентом (Claude)</strong>.
+          Внешние подрядчики не привлекаются. IT поддержки KARI в штате достаточно
+          для инфраструктуры и сопровождения пилота.
+        </div>
+      </div>
+
+      <h3>Как устроена разработка</h3>
+      <table>
+        <thead><tr><th>Участник</th><th>Роль</th><th>Что делает</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Юрий (Директор региона)</strong></td>
+            <td>Владелец продукта + постановщик задач</td>
+            <td>Формулирует требования к каждому экрану и функции, принимает результат, тестирует на реальных сценариях, расставляет приоритеты</td>
+          </tr>
+          <tr>
+            <td><strong>Claude (AI-ассистент)</strong></td>
+            <td>Разработчик + архитектор</td>
+            <td>Пишет весь программный код: бэкенд, веб-кабинеты, мобильное приложение, интеграции. Объясняет каждый шаг простым языком</td>
+          </tr>
+          <tr>
+            <td><strong>IT поддержка KARI (штат)</strong></td>
+            <td>Инфраструктура + пилот</td>
+            <td>Настройка и обслуживание серверов, деплой готового кода, мониторинг во время пилота, устранение технических инцидентов</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Порядок работы по спринтам</h3>
+      <table>
+        <thead><tr><th>Шаг</th><th>Действие Юрия</th><th>Действие Claude</th><th>Итог</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>1. Постановка задачи</strong></td>
+            <td>Описывает словами, что должно работать в этом спринте. Уточняет детали по вопросам</td>
+            <td>Уточняет требования, предлагает структуру решения</td>
+            <td>Чёткое понимание задачи с обеих сторон</td>
+          </tr>
+          <tr>
+            <td><strong>2. Разработка</strong></td>
+            <td>Наблюдает за процессом, отвечает на уточняющие вопросы</td>
+            <td>Пишет код блоками, объясняет что делает каждый блок</td>
+            <td>Готовые файлы кода в папке <code>04_Разработка/</code></td>
+          </tr>
+          <tr>
+            <td><strong>3. Проверка</strong></td>
+            <td>Открывает результат в браузере / на телефоне, проверяет по сценарию из ТЗ</td>
+            <td>Исправляет замечания, объясняет изменения</td>
+            <td>Проверенный рабочий блок</td>
+          </tr>
+          <tr>
+            <td><strong>4. Деплой</strong></td>
+            <td>Передаёт готовый код IT поддержке KARI</td>
+            <td>Пишет инструкцию по развёртыванию для IT</td>
+            <td>Функционал доступен на сервере</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Порядок хранения кода</h3>
+      <ul class="styled">
+        <li>Весь код сохраняется в папке <strong>04_Разработка/</strong> текущего проекта</li>
+        <li>Структура папок повторяет архитектуру: <code>backend/</code>, <code>frontend/</code>, <code>mobile/</code>, <code>integrations/</code></li>
+        <li>Каждый модуль — отдельный файл с комментариями на русском языке</li>
+        <li>Рядом с кодом — инструкция по запуску в <code>README.md</code></li>
+      </ul>
+
+      <h3>Что IT поддержка KARI делает на этапе пилота</h3>
+      <ul class="styled">
+        <li>Настраивает серверную инфраструктуру (Linux-сервер в РФ) по инструкции из проекта</li>
+        <li>Разворачивает (деплоит) готовый код на сервер</li>
+        <li>Следит за мониторингом (Grafana) во время пилота</li>
+        <li>При технических инцидентах — устраняет по инструкции или эскалирует</li>
+        <li>Создаёт резервные копии ежедневно</li>
+      </ul>
+
+      <div class="alert alert-info" style="margin-top:20px">
+        <div class="alert-icon">💡</div>
+        <div>
+          <strong>Преимущества модели:</strong> Нет затрат на внешних подрядчиков.
+          Весь контроль над продуктом — у KARI. Код понятен и документирован.
+          Любое изменение — в любой момент, без ожидания подрядчика.
+          Скорость: один спринт занимает дни, а не недели переговоров.
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- РАЗДЕЛ 12 — USER STORIES МОБИЛЬНОГО ПРИЛОЖЕНИЯ -->
+  <div class="section" id="section12">
+    <div class="section-header">
+      <div class="section-num" style="background:var(--red);font-size:11px">12</div>
+      <div class="section-title">User Stories — мобильное приложение <span style="font-size:13px;font-weight:400;opacity:0.7">(Screen 4 &amp; Screen 8)</span></div>
+    </div>
+    <div class="section-body">
+
+      <div class="alert alert-info">
+        <div class="alert-icon">📋</div>
+        <div>
+          Детальная PM-спецификация с Acceptance Criteria, архитектурой Edge Cases, API Design и UI/UX-рекомендациями вынесена в отдельный документ:
+          <strong><a href="KARI_mobile_spec.html" style="color:var(--red);">02_ТЗ_и_схемы / KARI_mobile_spec.html</a></strong><br>
+          Ниже — сводная таблица User Stories для быстрой навигации.
+        </div>
+      </div>
+
+      <h3>Screen 8 — Сдача задания</h3>
+      <table>
+        <thead>
+          <tr><th>ID</th><th>User Story (кратко)</th><th>Ключевые AC</th><th>Приоритет</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag" style="background:#fdf0f8;color:var(--red);border:1px solid #f0abcf;">US-801</span></td>
+            <td>Подтверждение GPS-местоположения</td>
+            <td>Радиус 200м, accuracy ≤ 50м, каскадный fallback (GPS → Wi-Fi → manual)</td>
+            <td><span class="tag tag-red" style="background:#fee2e2;color:#dc2626;">Критичный</span></td>
+          </tr>
+          <tr>
+            <td><span class="tag" style="background:#fdf0f8;color:var(--red);border:1px solid #f0abcf;">US-802</span></td>
+            <td>Загрузка 3–10 фото через камеру</td>
+            <td>Только камера, EXIF ≤ 30 мин, phash уникальность &gt; 10, MinIO хранение</td>
+            <td><span class="tag tag-red" style="background:#fee2e2;color:#dc2626;">Критичный</span></td>
+          </tr>
+          <tr>
+            <td><span class="tag" style="background:#fdf0f8;color:var(--red);border:1px solid #f0abcf;">US-803</span></td>
+            <td>Текстовый комментарий к отчёту</td>
+            <td>Опционально, макс. 500 символов, счётчик в реальном времени</td>
+            <td><span class="tag" style="background:#fef9c3;color:#854d0e;">Средний</span></td>
+          </tr>
+          <tr>
+            <td><span class="tag" style="background:#fdf0f8;color:var(--red);border:1px solid #f0abcf;">US-804</span></td>
+            <td>Success screen + push-уведомление</td>
+            <td>≤ 3 сек, сумма к начислению, статус pending_review, push в Firebase</td>
+            <td><span class="tag tag-red" style="background:#fee2e2;color:#dc2626;">Критичный</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top:24px;">Screen 4 — Регистрация</h3>
+      <table>
+        <thead>
+          <tr><th>ID</th><th>User Story (кратко)</th><th>Ключевые AC</th><th>Приоритет</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag" style="background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe;">US-401</span></td>
+            <td>SMS-верификация (OTP)</td>
+            <td>6 цифр, 5 мин, 3 попытки → блокировка 15 мин, auto-read Android</td>
+            <td><span class="tag tag-red" style="background:#fee2e2;color:#dc2626;">Критичный</span></td>
+          </tr>
+          <tr>
+            <td><span class="tag" style="background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe;">US-402</span></td>
+            <td>OCR паспорта</td>
+            <td>≥ 90% распознавание, фото НЕ хранится, AES-256-GCM шифрование данных</td>
+            <td><span class="tag tag-red" style="background:#fee2e2;color:#dc2626;">Критичный</span></td>
+          </tr>
+          <tr>
+            <td><span class="tag" style="background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe;">US-403</span></td>
+            <td>Проверка статуса ФНС</td>
+            <td>≤ 5 сек, fallback fns_pending, блокировка бывших сотрудников (&lt; 2 лет)</td>
+            <td><span class="tag tag-red" style="background:#fee2e2;color:#dc2626;">Критичный</span></td>
+          </tr>
+          <tr>
+            <td><span class="tag" style="background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe;">US-404</span></td>
+            <td>Подписание договора ГПХ (ПЭП)</td>
+            <td>PDF из шаблона, SMS-подпись, доступен в «Документах», уведомление HR</td>
+            <td><span class="tag tag-red" style="background:#fee2e2;color:#dc2626;">Критичный</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="alert alert-warn" style="margin-top:20px;">
+        <div class="alert-icon">⚠️</div>
+        <div>
+          <strong>Edge Cases (обработка ошибок) — 3 ключевых сценария:</strong><br>
+          1. <strong>GPS в ТЦ</strong>: каскадная верификация GPS → Wi-Fi BSSID → ручное фото вывески<br>
+          2. <strong>Anti-fraud фото</strong>: 8 уровней защиты (EXIF timestamp, perceptual hash, GPS из EXIF, cross-task check)<br>
+          3. <strong>Offline upload</strong>: chunked upload с resumable-сессией, AsyncStorage-черновик, idempotency key<br>
+          Подробно: <a href="KARI_mobile_spec.html#s3" style="color:var(--red);">KARI_mobile_spec.html → разделы 3–5</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<!-- ===== ФУТЕР ===== -->
+<footer>
+  <div>
+    <strong>KARI.Самозанятые — Техническое задание</strong> &nbsp;&bull;&nbsp;
+    Версия 3.0 &nbsp;&bull;&nbsp; Актуализировано: Март 2026 &nbsp;&bull;&nbsp;
+    Статус: Разработка идёт &nbsp;&bull;&nbsp; ООО KARI
+  </div>
+  <button class="btn-print" onclick="window.print()">Распечатать документ</button>
+</footer>
+
+<script>
+  // === АКТИВНАЯ ССЫЛКА В НАВИГАЦИИ ===
+  const sections = document.querySelectorAll('[id]');
+  const navLinks = document.querySelectorAll('.sidebar a');
+
+  function setActive() {
+    let current = '';
+    sections.forEach(section => {
+      const top = section.getBoundingClientRect().top;
+      if (top <= 120) {
+        current = section.id;
+      }
+    });
+
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+      const href = link.getAttribute('href').replace('#', '');
+      if (href === current) {
+        link.classList.add('active');
+      }
+    });
+  }
+
+  window.addEventListener('scroll', setActive);
+  setActive();
+</script>
+
+</body>
+</html>

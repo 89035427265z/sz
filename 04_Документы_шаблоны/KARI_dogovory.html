@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KARI Самозанятые — Шаблоны договора ГПХ и акта</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --kari: #A01F72;
+  --kari-dark: #7a1750;
+  --navy: #242D4A;
+  --gray: #f5f5f5;
+  --mid: #e0e0e0;
+  --text: #333333;
+  --white: #ffffff;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--gray);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ===== ШАПКА ===== */
+.page-header {
+  background: var(--white);
+  border-bottom: 3px solid var(--kari);
+  padding: 16px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.logo-wrap { display: flex; align-items: center; gap: 12px; }
+.logo-text { font-size: 22px; font-weight: 900; color: var(--kari); font-style: italic; }
+.logo-sub { font-size: 11px; font-weight: 700; color: #888; letter-spacing: 2px; text-transform: uppercase; }
+.header-title { font-size: 15px; font-weight: 700; color: var(--navy); }
+.header-actions { display: flex; gap: 10px; }
+.btn { padding: 8px 20px; border-radius: 8px; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; border: none; transition: all 0.15s; }
+.btn-primary { background: var(--kari); color: white; }
+.btn-primary:hover { background: var(--kari-dark); }
+.btn-outline { background: white; border: 1.5px solid var(--kari); color: var(--kari); }
+.btn-outline:hover { background: var(--kari); color: white; }
+.btn-green { background: white; border: 1.5px solid #217346; color: #217346; }
+.btn-green:hover { background: #217346; color: white; }
+
+/* ===== ПЕРЕКЛЮЧАТЕЛЬ ===== */
+.switcher {
+  display: flex;
+  background: white;
+  border-radius: 12px;
+  padding: 8px;
+  gap: 8px;
+  max-width: 600px;
+  margin: 24px auto 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.switcher-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  transition: all 0.2s;
+  background: transparent;
+  color: #888;
+}
+.switcher-btn.active {
+  background: var(--kari);
+  color: white;
+  box-shadow: 0 2px 8px rgba(160,31,114,0.3);
+}
+
+/* ===== КОНТЕНТ ===== */
+.page-wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 24px 60px;
+}
+
+/* ===== ДОКУМЕНТ ===== */
+.doc-view {
+  display: none;
+}
+.doc-view.active { display: block; }
+
+.doc-info-bar {
+  background: white;
+  border-radius: 12px;
+  padding: 20px 28px;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+.doc-info-item label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: 4px;
+}
+.doc-info-item span {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+/* ===== ТЕЛО ДОКУМЕНТА ===== */
+.document-body {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+.doc-header-strip {
+  background: linear-gradient(135deg, var(--navy) 0%, #2d3560 100%);
+  padding: 32px 40px;
+  color: white;
+  text-align: center;
+}
+.doc-header-strip .doc-type-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--kari);
+  margin-bottom: 8px;
+  /* light version */
+  color: #e8a4cc;
+}
+.doc-header-strip h1 {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+.doc-header-strip .doc-subtitle {
+  font-size: 13px;
+  opacity: 0.6;
+}
+
+.doc-content {
+  padding: 40px;
+}
+
+/* ===== СЕКЦИИ ДОКУМЕНТА ===== */
+.doc-section {
+  margin-bottom: 32px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--mid);
+}
+.doc-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.doc-section-num {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.doc-section-num .num {
+  background: var(--kari);
+  color: white;
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.doc-section-num h2 {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--navy);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.doc-text {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #333;
+}
+.doc-text p { margin-bottom: 10px; }
+.doc-text p:last-child { margin-bottom: 0; }
+
+/* ===== ПОЛЯ ДЛЯ ЗАПОЛНЕНИЯ ===== */
+.fill-field {
+  display: inline-block;
+  border-bottom: 1.5px dashed var(--kari);
+  min-width: 160px;
+  padding: 1px 4px;
+  color: var(--kari);
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background 0.15s;
+}
+.fill-field:hover { background: rgba(160,31,114,0.06); }
+.fill-field.filled {
+  border-bottom-style: solid;
+  border-bottom-color: #4CAF50;
+  color: #1a6634;
+}
+
+.fill-note {
+  background: rgba(160,31,114,0.05);
+  border-left: 3px solid var(--kari);
+  padding: 10px 16px;
+  border-radius: 0 8px 8px 0;
+  font-size: 12px;
+  color: #666;
+  margin: 12px 0;
+}
+
+/* ===== ТАБЛИЦА УСЛУГ ===== */
+.services-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 13px;
+}
+.services-table th {
+  background: var(--navy);
+  color: white;
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 12px;
+}
+.services-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--mid);
+  vertical-align: top;
+}
+.services-table tr:last-child td { border-bottom: none; }
+.services-table tr:nth-child(even) td { background: #fafafa; }
+
+/* ===== ПОДПИСИ ===== */
+.signature-block {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--mid);
+}
+.sig-side h4 {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--navy);
+  margin-bottom: 16px;
+}
+.sig-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+.sig-row label {
+  font-weight: 700;
+  color: #666;
+  white-space: nowrap;
+  min-width: 90px;
+}
+.sig-line {
+  flex: 1;
+  border-bottom: 1px solid #bbb;
+  min-width: 100px;
+  height: 20px;
+}
+
+/* ===== ЭП БЛОК ===== */
+.ep-block {
+  background: #f0fff4;
+  border: 1.5px solid #4CAF50;
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-top: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.ep-icon {
+  width: 40px; height: 40px;
+  background: #4CAF50;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: white;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.ep-text h4 { font-size: 13px; font-weight: 800; color: #1a6634; margin-bottom: 4px; }
+.ep-text p { font-size: 12px; color: #2e7d32; line-height: 1.5; }
+
+/* ===== НОТИС ===== */
+.notice-box {
+  background: #fff8e1;
+  border-left: 4px solid #FF9800;
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin: 16px 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.notice-box strong { color: #e65100; }
+
+.info-box {
+  background: #e3f2fd;
+  border-left: 4px solid #1976D2;
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin: 16px 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.info-box strong { color: #0d47a1; }
+
+/* ===== ПЕЧАТЬ ===== */
+@media print {
+  .page-header, .switcher, .doc-info-bar, .btn { display: none !important; }
+  body { background: white; }
+  .document-body { box-shadow: none; }
+  .doc-header-strip { background: #242D4A !important; -webkit-print-color-adjust: exact; }
+}
+
+/* ===== АДАПТИВ ===== */
+@media (max-width: 680px) {
+  .signature-block { grid-template-columns: 1fr; }
+  .doc-content { padding: 24px 20px; }
+  .page-header { padding: 12px 16px; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   МОБИЛЬНАЯ АДАПТАЦИЯ — добавлено 11.03.2026
+   Адаптировано для экранов смартфонов (< 768px)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Таблицы — горизонтальный скролл на всех устройствах */
+table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+/* Изображения — масштабирование */
+img { max-width: 100% !important; height: auto !important; }
+@media (max-width: 768px) {
+  /* Боковое меню — скрываем, убираем отступ */
+  .sidebar { display: none !important; }
+  .main-content { margin-left: 0 !important; padding: 16px !important; }
+  .site-header { position: relative !important; }
+
+  /* Отступы шапки */
+  .header, .page-header { padding: 20px 16px !important; }
+  .header-top { flex-wrap: wrap !important; gap: 8px !important; }
+  .header-meta, .header-actions, .header-badges { flex-wrap: wrap !important; gap: 8px !important; }
+
+  /* Основной контент */
+  .main, .content, .container { padding: 16px !important; }
+
+  /* Типографика */
+  h1 { font-size: 22px !important; }
+  h2 { font-size: 18px !important; }
+  h3 { font-size: 15px !important; }
+
+  /* Горизонтальные ряды — перенос */
+  .header-pills, .filter-tabs, .nav-tabs, .tabs-row,
+  .section-tabs, .tab-bar { flex-wrap: wrap !important; }
+  .step { flex-direction: column !important; }
+
+  /* Кодовые блоки */
+  pre, code {
+    overflow-x: auto !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 13px !important; }
+  .badge, .tag, .pill, .status-badge { font-size: 11px !important; padding: 3px 8px !important; }
+  h1, .header h1, .logo-area h1 { font-size: 19px !important; }
+  .btn-print, .btn-export { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ШАПКА -->
+<header class="page-header">
+  <div class="logo-wrap">
+    <svg xmlns="http://www.w3.org/2000/svg" height="56" viewBox="0 0 728.5 221.5" style="display:block"><g transform="translate(-56.5 -186.5)"><path transform="matrix(1,0,0,-1,167.381,186.9256)" d="M0 0V0C-60.585 0-109.775-48.659-110.678-109.017-101.105-89.662-88.255-77.239-76.191-67.482-58.14-52.881-36.41-45.828-16.28-44.574 5.777-43.201 23.053-47.846 37.189-59.05 42.293-63.095 46.38-67.877 49.613-73.02 55.602-82.543 58.375-93.663 57.368-105.985 55.198-132.527 33.39-153.87 6.804-155.519-24.699-157.473-50.859-132.506-50.859-101.431-50.859-87.238-45.395-74.325-36.465-64.663-46.559-67.782-56.643-72.841-65.837-80.278-74.971-87.666-85.145-97.851-93.512-111.315-102.647-126.015-106.433-143.045-106.537-160.35V-221.399H0C61.15-221.399 110.721-171.838 110.721-110.7V-110.699C110.721-49.561 61.15 0 0 0" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,484.762,262.1775)" d="M0 0H-51.44L-106.801-52.162V41.158H-144.053V-144.054H-106.801V-91.887L-51.433-144.054H3.854L-76.443-72.024Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,0,595.276)" d="M744.002 189.045H781.255V314.95503H744.002Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,550.4052,371.5924)" d="M0 0C-20.818 0-37.694 16.739-37.694 37.388-37.694 58.037-20.818 74.776 0 74.776 20.818 74.776 37.694 58.037 37.694 37.388 37.694 16.739 20.818 0 0 0M37.738 101.384C26.659 107.826 13.769 111.534 0 111.534-41.285 111.534-74.753 78.338-74.753 37.388-74.753-3.562-41.285-36.758 0-36.758 13.769-36.758 26.659-33.05 37.738-26.609V-34.639H74.99V109.415H37.738Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,762.6282,267.7195)" d="M0 0C12.459 0 22.559 10.1 22.559 22.559 22.559 28.064 20.582 33.104 17.306 37.02 15.132 39.862 12.219 42.197 8.653 43.858-2.579 49.086-18.377 47.019-33.605 38.323-49.001 29.531-61.329 13.083-68.67-6.989V5.542H-105.923V-138.512H-68.67V-37.268C-65.411-6.761-50.524 20.852-30.241 32.433-25.463 35.163-20.667 37.153-16.051 38.402-20.072 34.327-22.559 28.736-22.559 22.559-22.559 10.1-12.459 0 0 0" fill="#a91d7a"/></g></svg>
+    <div class="logo-sub">самозанятые</div>
+  </div>
+  <div class="header-title">Шаблоны документов</div>
+  <div class="header-actions">
+    <button class="btn btn-green" onclick="window.print()">🖨 Печать</button>
+    <button class="btn btn-outline" onclick="showTab('gph')">Договор ГПХ</button>
+    <button class="btn btn-outline" onclick="showTab('act')">Акт</button>
+  </div>
+</header>
+
+<!-- ПЕРЕКЛЮЧАТЕЛЬ -->
+<div class="page-wrap">
+
+  <div class="switcher">
+    <button class="switcher-btn active" id="btn-gph" onclick="showTab('gph')">
+      📄 Договор ГПХ
+    </button>
+    <button class="switcher-btn" id="btn-act" onclick="showTab('act')">
+      ✅ Акт выполненных работ
+    </button>
+  </div>
+
+  <!-- =============================== -->
+  <!-- ДОГОВОР ГПХ -->
+  <!-- =============================== -->
+  <div class="doc-view active" id="view-gph">
+
+    <div class="doc-info-bar">
+      <div class="doc-info-item">
+        <label>Тип документа</label>
+        <span>Договор гражданско-правового характера</span>
+      </div>
+      <div class="doc-info-item">
+        <label>Стороны</label>
+        <span>ООО KARI + Самозанятый исполнитель</span>
+      </div>
+      <div class="doc-info-item">
+        <label>Подпись</label>
+        <span>ПЭП (SMS-код) через платформу</span>
+      </div>
+      <div class="doc-info-item">
+        <label>Правовая база</label>
+        <span>ГК РФ гл. 37, 63-ФЗ об ЭП</span>
+      </div>
+    </div>
+
+    <div class="document-body">
+      <div class="doc-header-strip">
+        <div class="doc-type-label">Гражданско-правовой договор</div>
+        <h1>ДОГОВОР ОКАЗАНИЯ УСЛУГ № <span class="fill-field" contenteditable>_____</span></h1>
+        <div class="doc-subtitle">Платформа KARI.Самозанятые — Рамочный договор</div>
+      </div>
+
+      <div class="doc-content">
+
+        <div class="info-box">
+          <strong>Как заполнять:</strong> Поля, <span style="border-bottom:1.5px dashed #A01F72;color:#A01F72;font-weight:700">выделенные пурпурным</span>, заполняются автоматически платформой из профиля исполнителя.
+          Постоянные условия (сроки, ставки) прописываются в шаблоне администратором один раз.
+        </div>
+
+        <!-- ПРЕАМБУЛА -->
+        <div class="doc-section">
+          <div class="doc-section-num">
+            <div class="num">П</div>
+            <h2>Стороны договора</h2>
+          </div>
+          <div class="doc-text">
+            <p>
+              <strong>ООО «KARI»</strong>, именуемое в дальнейшем <strong>«Заказчик»</strong>,
+              в лице <span class="fill-field" contenteditable>Директора / уполномоченного лица ФИО</span>,
+              действующего на основании <span class="fill-field" contenteditable>Устава / Доверенности №___</span>,
+              с одной стороны,
+            </p>
+            <p>И</p>
+            <p>
+              Гражданин(ка) Российской Федерации
+              <span class="fill-field" contenteditable>Фамилия Имя Отчество исполнителя</span>,
+              ИНН <span class="fill-field" contenteditable">____________</span>,
+              являющийся(аяся) плательщиком налога на профессиональный доход (НПД) в соответствии
+              с Федеральным законом № 422-ФЗ от 27.11.2018, именуемый(ая) в дальнейшем
+              <strong>«Исполнитель»</strong>, с другой стороны,
+            </p>
+            <p>
+              совместно именуемые <strong>«Стороны»</strong>,
+              заключили настоящий Договор (далее — «Договор») о нижеследующем.
+            </p>
+          </div>
+
+          <div class="fill-note">
+            ⚡ Платформа автоматически подставляет: ФИО, ИНН из профиля исполнителя; подпись Заказчика — из настроек системы
+          </div>
+        </div>
+
+        <!-- 1. ПРЕДМЕТ -->
+        <div class="doc-section">
+          <div class="doc-section-num">
+            <div class="num">1</div>
+            <h2>Предмет договора</h2>
+          </div>
+          <div class="doc-text">
+            <p>
+              <strong>1.1.</strong> Исполнитель обязуется оказывать услуги по заданиям Заказчика,
+              размещённым на платформе KARI.Самозанятые (далее — «Платформа»), в порядке,
+              предусмотренном настоящим Договором.
+            </p>
+            <p>
+              <strong>1.2.</strong> Конкретный перечень, объём, стоимость и сроки каждого отдельного
+              задания определяются в Заявках (Заданиях), публикуемых Заказчиком на Платформе и
+              принятых Исполнителем. Каждое принятое Задание является неотъемлемой частью настоящего Договора.
+            </p>
+            <p>
+              <strong>1.3.</strong> Виды услуг, оказываемых по настоящему Договору:
+              мерчандайзинг, промо-акции, курьерские услуги, уборка торгового зала,
+              подсобные работы, а также иные виды услуг, указанные в Заданиях.
+            </p>
+            <p>
+              <strong>1.4.</strong> Исполнитель оказывает услуги лично, без привлечения
+              субподрядчиков, если иное прямо не согласовано с Заказчиком.
+            </p>
+            <p>
+              <strong>1.5.</strong> Настоящий Договор является рамочным. Обязательства Сторон
+              возникают в момент принятия Исполнителем конкретного Задания на Платформе.
+            </p>
+          </div>
+        </div>
+
+        <!-- 2. ПРАВА И ОБЯЗАННОСТИ -->
+        <div class="doc-section">
+          <div class="doc-section-num">
+            <div class="num">2</div>
+            <h2>Права и обязанности сторон</h2>
+          </div>
+          <div class="doc-text">
+            <p><strong>2.1. Исполнитель обязан:</strong></p>
+            <p>
+              2.1.1. Оказывать услуги качественно, в сроки, указанные в Задании.<br>
+              2.1.2. Иметь и поддерживать действующий статус плательщика НПД в ФНС России
+              на протяжении всего срока действия Договора.<br>
+              2.1.3. Немедленно уведомить Заказчика через Платформу об утрате статуса самозанятого.<br>
+              2.1.4. По завершении каждого Задания своевременно формировать чек через приложение
+              «Мой налог» ФНС России.<br>
+              2.1.5. Сдавать выполненные Задания с фотоотчётом и геометкой через Платформу.<br>
+              2.1.6. Поддерживать актуальность личных данных и банковских реквизитов в Платформе.
+            </p>
+            <p><strong>2.2. Исполнитель вправе:</strong></p>
+            <p>
+              2.2.1. Самостоятельно организовывать свой рабочий процесс и время выполнения Задания
+              в установленных Заданием временны́х рамках.<br>
+              2.2.2. Отказаться от Задания до его взятия в работу без каких-либо санкций.<br>
+              2.2.3. Оказывать аналогичные услуги третьим лицам — настоящий Договор не является
+              договором о найме и не запрещает иную деятельность Исполнителя.
+            </p>
+            <p><strong>2.3. Заказчик обязан:</strong></p>
+            <p>
+              2.3.1. Принять оказанные услуги и подписать Акт приёмки при их надлежащем исполнении.<br>
+              2.3.2. Оплатить услуги в срок, установленный настоящим Договором.<br>
+              2.3.3. Предоставить Исполнителю всю необходимую информацию для выполнения Задания.
+            </p>
+            <p><strong>2.4. Заказчик вправе:</strong></p>
+            <p>
+              2.4.1. Проверить статус Исполнителя как плательщика НПД через API ФНС в любое время.<br>
+              2.4.2. Отклонить результаты Задания при несоответствии требованиям с обоснованием в Платформе.<br>
+              2.4.3. Расторгнуть Договор в одностороннем порядке в случае утраты Исполнителем
+              статуса самозанятого.
+            </p>
+          </div>
+        </div>
+
+        <!-- 3. СТОИМОСТЬ И ОПЛАТА -->
+        <div class="doc-section">
+          <div class="doc-section-num">
+            <div class="num">3</div>
+            <h2>Стоимость услуг и порядок оплаты</h2>
+          </div>
+          <div class="doc-text">
+            <p>
+              <strong>3.1.</strong> Стоимость каждого отдельного Задания указывается в тексте
+              Задания на Платформе и является фиксированной.
+            </p>
+            <p>
+              <strong>3.2.</strong> Заказчик перечисляет вознаграждение Исполнителю в течение
+              <span class="fill-field" contenteditable>1 (одного)</span> рабочего дня с момента
+              подписания Акта выполненных работ.
+            </p>
+            <p>
+              <strong>3.3.</strong> Оплата производится путём перевода денежных средств на банковскую
+              карту Исполнителя, реквизиты которой указаны в профиле Платформы.
+            </p>
+            <p>
+              <strong>3.4.</strong> В целях компенсации налоговой нагрузки Исполнителя,
+              Заказчик дополнительно начисляет к стоимости услуг сумму в размере <strong>6%</strong>
+              (налог на профессиональный доход по ставке для юридических лиц), которая включается
+              в итоговую выплату Исполнителю.
+            </p>
+            <p>
+              <strong>3.5.</strong> Исполнитель самостоятельно исчисляет и уплачивает НПД в ФНС России
+              в порядке, установленном законодательством. Заказчик не является налоговым агентом
+              по НДФЛ в отношении Исполнителя.
+            </p>
+            <p>
+              <strong>3.6.</strong> Максимальная сумма вознаграждений по настоящему Договору
+              не может превышать 2 400 000 (Двух миллионов четырёхсот тысяч) рублей в течение
+              одного календарного года — в соответствии с ограничениями режима НПД.
+              Платформа автоматически блокирует задания при приближении к указанному лимиту.
+            </p>
+          </div>
+        </div>
+
+        <!-- 4. ПОРЯДОК СДАЧИ И ПРИЁМКИ -->
+        <div class="doc-section">
+          <div class="doc-section-num">
+            <div class="num">4</div>
+            <h2>Порядок сдачи и приёмки услуг</h2>
+          </div>
+          <div class="doc-text">
+            <p>
+              <strong>4.1.</strong> По завершении Задания Исполнитель фиксирует результат
+              на Платформе: загружает фотоотчёт и геометку места выполнения.
+            </p>
+            <p>
+              <strong>4.2.</strong> Директор магазина (уполномоченный представитель Заказчика)
+              принимает или отклоняет Задание в течение <span class="fill-field" contenteditable>24 часов</span>
+              с момента его сдачи.
+            </p>
+            <p>
+              <strong>4.3.</strong> При принятии Задания на Платформе автоматически формируется
+              Акт выполненных работ, который Стороны подписывают электронной подписью (ПЭП).
+            </p>
+            <p>
+              <strong>4.4.</strong> Если в течение указанного в п. 4.2 срока Заказчик не отклонил
+              Задание — оно считается принятым автоматически.
+            </p>
+            <p>
+              <strong>4.5.</strong> При отклонении Задания Заказчик обязан указать причину.
+              Исполнитель вправе устранить замечания и повторно сдать Задание.
+            </p>
+          </div>
+        </div>
+
+        <!-- 5. ЭП -->
+        <div class="doc-section">
+          <div class="doc-section-num">
+            <div class="num">5</div>
+            <h2>Электронный документооборот и ЭП</h2>
+          </div>
+          <div class="doc-text">
+            <p>
+              <strong>5.1.</strong> Стороны договорились о применении Простой электронной подписи
+              (ПЭП) в соответствии с Федеральным законом № 63-ФЗ «Об электронной подписи».
+            </p>
+            <p>
+              <strong>5.2.</strong> ПЭП Исполнителя — одноразовый SMS-код, направляемый на
+              номер телефона, указанный при регистрации на Платформе.
+            </p>
+            <p>
+              <strong>5.3.</strong> Документы, подписанные ПЭП через Платформу, имеют
+              юридическую силу бумажных документов, подписанных собственноручно, при наличии
+              настоящего Соглашения о применении ПЭП (п. 2 ст. 6 63-ФЗ).
+            </p>
+            <p>
+              <strong>5.4.</strong> Все документы (Договор, Акты, дополнительные соглашения)
+              хранятся в электронном архиве Платформы в течение 5 лет.
+            </p>
+          </div>
+
+          <div class="ep-block">
+            <div class="ep-icon">✍️</div>
+            <div class="ep-text">
+              <h4>Подписание через Платформу</h4>
+              <p>
+                Исполнитель получает SMS с кодом → вводит код в приложении → документ подписан.
+                Копия документа доступна в разделе «Мои документы» в приложении.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. НАЛОГИ И СТАТУС -->
+        <div class="doc-section">
+          <div class="doc-section-num">
+            <div class="num">6</div>
+            <h2>Налоговый статус исполнителя</h2>
+          </div>
+          <div class="doc-text">
+            <p>
+              <strong>6.1.</strong> Исполнитель подтверждает, что на дату подписания настоящего
+              Договора является зарегистрированным плательщиком налога на профессиональный доход
+              в ФНС России.
+            </p>
+            <p>
+              <strong>6.2.</strong> В случае утраты статуса плательщика НПД Исполнитель обязан
+              незамедлительно (не позднее 1 рабочего дня) уведомить Заказчика. До получения
+              уведомления Заказчик не несёт ответственности за выплаты, произведённые в добросовестном
+              расчёте на наличие у Исполнителя статуса самозанятого.
+            </p>
+            <p>
+              <strong>6.3.</strong> Заказчик вправе проверить статус Исполнителя через официальный
+              API ФНС «Мой налог» в любой момент. Такая проверка производится платформой автоматически
+              перед каждой выплатой.
+            </p>
+          </div>
+
+          <div class="notice-box">
+            <strong>Важно:</strong> Настоящий Договор не является трудовым. Исполнитель выполняет
+            работу самостоятельно, без подчинения внутреннему распорядку Заказчика,
+            нормам рабочего времени и без социальных гарантий, предусмотренных ТК РФ.
+          </div>
+        </div>
+
+        <!-- 7. ОТВЕТСТВЕННОСТЬ -->
+        <div class="doc-section">
+          <div class="doc-section-num">
+            <div class="num">7</div>
+            <h2>Ответственность сторон</h2>
+          </div>
+          <div class="doc-text">
+            <p>
+              <strong>7.1.</strong> За ненадлежащее исполнение Задания Исполнитель несёт
+              ответственность в виде отклонения результата без оплаты.
+            </p>
+            <p>
+              <strong>7.2.</strong> В случае если Исполнитель утратил статус самозанятого
+              и не уведомил об этом Заказчика — Исполнитель несёт ответственность за все
+              налоговые последствия, включая начисление НДФЛ и страховых взносов.
+            </p>
+            <p>
+              <strong>7.3.</strong> Заказчик не несёт ответственности за задержки выплат,
+              вызванные техническими сбоями в банковской системе или системе ФНС.
+            </p>
+          </div>
+        </div>
+
+        <!-- 8. СРОК И РАСТОРЖЕНИЕ -->
+        <div class="doc-section">
+          <div class="doc-section-num">
+            <div class="num">8</div>
+            <h2>Срок действия и расторжение</h2>
+          </div>
+          <div class="doc-text">
+            <p>
+              <strong>8.1.</strong> Договор вступает в силу с момента его подписания Сторонами
+              посредством ПЭП и действует в течение <span class="fill-field" contenteditable>1 (одного) года</span>.
+            </p>
+            <p>
+              <strong>8.2.</strong> Договор считается автоматически пролонгированным на аналогичный
+              срок, если ни одна из Сторон не направила уведомление о прекращении за 30 дней
+              до истечения срока.
+            </p>
+            <p>
+              <strong>8.3.</strong> Каждая из Сторон вправе расторгнуть Договор в одностороннем
+              порядке, направив уведомление через Платформу, при условии полного завершения
+              всех принятых Заданий.
+            </p>
+            <p>
+              <strong>8.4.</strong> Заказчик вправе немедленно расторгнуть Договор при утрате
+              Исполнителем статуса плательщика НПД.
+            </p>
+          </div>
+        </div>
+
+        <!-- 9. ПЕРСОНАЛЬНЫЕ ДАННЫЕ -->
+        <div class="doc-section">
+          <div class="doc-section-num">
+            <div class="num">9</div>
+            <h2>Персональные данные (152-ФЗ)</h2>
+          </div>
+          <div class="doc-text">
+            <p>
+              <strong>9.1.</strong> Подписывая настоящий Договор, Исполнитель даёт согласие
+              на обработку его персональных данных ООО «KARI» в целях, необходимых для
+              исполнения настоящего Договора: передача данных о доходах в ФНС России,
+              осуществление банковских переводов, внутренний учёт.
+            </p>
+            <p>
+              <strong>9.2.</strong> Обработка персональных данных осуществляется в соответствии
+              с Федеральным законом № 152-ФЗ «О персональных данных». Данные хранятся
+              на серверах, расположенных на территории РФ.
+            </p>
+          </div>
+        </div>
+
+        <!-- 10. РЕКВИЗИТЫ -->
+        <div class="doc-section">
+          <div class="doc-section-num">
+            <div class="num">10</div>
+            <h2>Реквизиты и подписи сторон</h2>
+          </div>
+
+          <div class="signature-block">
+            <div class="sig-side">
+              <h4>Заказчик</h4>
+              <div class="sig-row"><label>Организация:</label><div class="sig-line">ООО «KARI»</div></div>
+              <div class="sig-row"><label>ИНН:</label><div class="sig-line"><span class="fill-field" contenteditable>ИНН ООО KARI</span></div></div>
+              <div class="sig-row"><label>Адрес:</label><div class="sig-line"><span class="fill-field" contenteditable>Юридический адрес</span></div></div>
+              <div class="sig-row"><label>Банк:</label><div class="sig-line">Совкомбанк</div></div>
+              <div class="sig-row"><label>р/с:</label><div class="sig-line"><span class="fill-field" contenteditable>Расчётный счёт</span></div></div>
+              <div class="sig-row"><label>ЭП Заказчика:</label><div class="sig-line"></div></div>
+            </div>
+            <div class="sig-side">
+              <h4>Исполнитель</h4>
+              <div class="sig-row"><label>ФИО:</label><div class="sig-line"><span class="fill-field" contenteditable>ФИО</span></div></div>
+              <div class="sig-row"><label>ИНН:</label><div class="sig-line"><span class="fill-field" contenteditable>ИНН</span></div></div>
+              <div class="sig-row"><label>Телефон:</label><div class="sig-line"><span class="fill-field" contenteditable>+7 (___) ___-__-__</span></div></div>
+              <div class="sig-row"><label>Карта:</label><div class="sig-line"><span class="fill-field" contenteditable>**** **** **** ____</span></div></div>
+              <div class="sig-row"><label>ЭП (SMS-код):</label><div class="sig-line"></div></div>
+              <div class="sig-row"><label>Дата подписания:</label><div class="sig-line"><span class="fill-field" contenteditable>__.__.20__</span></div></div>
+            </div>
+          </div>
+
+          <div class="ep-block">
+            <div class="ep-icon">🔐</div>
+            <div class="ep-text">
+              <h4>Подписание через SMS-код (ПЭП)</h4>
+              <p>
+                В системе: исполнитель нажимает «Подписать договор» → получает SMS-код → вводит код.
+                Документ автоматически заверяется датой и временем. Хранится в архиве 5 лет.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================== -->
+  <!-- АКТ ВЫПОЛНЕННЫХ РАБОТ -->
+  <!-- =============================== -->
+  <div class="doc-view" id="view-act">
+
+    <div class="doc-info-bar">
+      <div class="doc-info-item">
+        <label>Тип документа</label>
+        <span>Акт о приёмке оказанных услуг</span>
+      </div>
+      <div class="doc-info-item">
+        <label>Формируется</label>
+        <span>Автоматически после приёмки задания</span>
+      </div>
+      <div class="doc-info-item">
+        <label>Подпись</label>
+        <span>ПЭП (SMS-код) — оба участника</span>
+      </div>
+      <div class="doc-info-item">
+        <label>Основание</label>
+        <span>Договор ГПХ № ___</span>
+      </div>
+    </div>
+
+    <div class="document-body">
+      <div class="doc-header-strip">
+        <div class="doc-type-label">Первичный учётный документ</div>
+        <h1>АКТ ВЫПОЛНЕННЫХ РАБОТ № <span class="fill-field" contenteditable>_____</span></h1>
+        <div class="doc-subtitle">к Договору оказания услуг № <span class="fill-field" contenteditable>_____</span> от <span class="fill-field" contenteditable>__.__.20__</span></div>
+      </div>
+
+      <div class="doc-content">
+
+        <div class="info-box">
+          <strong>Автозаполнение:</strong> Все поля заполняются платформой автоматически из данных задания.
+          Исполнителю и Заказчику остаётся только подписать акт через ПЭП.
+        </div>
+
+        <!-- РЕКВИЗИТЫ АКТА -->
+        <div class="doc-section">
+          <div class="doc-section-num">
+            <div class="num">П</div>
+            <h2>Реквизиты акта</h2>
+          </div>
+          <table class="services-table">
+            <tbody>
+              <tr>
+                <td style="font-weight:700;width:40%">Место составления</td>
+                <td><span class="fill-field" contenteditable>г. Москва</span></td>
+              </tr>
+              <tr>
+                <td style="font-weight:700">Дата составления</td>
+                <td><span class="fill-field" contenteditable>«__» ____________ 20__ г.</span></td>
+              </tr>
+              <tr>
+                <td style="font-weight:700">Номер задания в системе</td>
+                <td><span class="fill-field" contenteditable>TASK-2026-XXXXX</span></td>
+              </tr>
+              <tr>
+                <td style="font-weight:700">Магазин</td>
+                <td><span class="fill-field" contenteditable>KARI [Название магазина], [Адрес]</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- СТОРОНЫ -->
+        <div class="doc-section">
+          <div class="doc-section-num">
+            <div class="num">1</div>
+            <h2>Стороны</h2>
+          </div>
+          <div class="doc-text">
+            <p>
+              <strong>Заказчик:</strong> ООО «KARI», ИНН <span class="fill-field" contenteditable>____________</span>,
+              в лице <span class="fill-field" contenteditable>должность, ФИО</span>,
+              действующего на основании <span class="fill-field" contenteditable>Устава / Доверенности</span>
+            </p>
+            <p>
+              <strong>Исполнитель:</strong> <span class="fill-field" contenteditable>ФИО</span>,
+              ИНН <span class="fill-field" contenteditable>____________</span>,
+              самозанятый (плательщик НПД, статус подтверждён ФНС от <span class="fill-field" contenteditable>__.__.20__</span>)
+            </p>
+          </div>
+        </div>
+
+        <!-- ПЕРЕЧЕНЬ УСЛУГ -->
+        <div class="doc-section">
+          <div class="doc-section-num">
+            <div class="num">2</div>
+            <h2>Перечень оказанных услуг</h2>
+          </div>
+
+          <table class="services-table">
+            <thead>
+              <tr>
+                <th>№</th>
+                <th>Наименование услуги</th>
+                <th>Единица</th>
+                <th>Количество</th>
+                <th>Стоимость, ₽</th>
+                <th>Итого, ₽</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td><span class="fill-field" contenteditable>Мерчандайзинг торгового зала (расстановка товара новой коллекции)</span></td>
+                <td>час</td>
+                <td><span class="fill-field" contenteditable>8</span></td>
+                <td><span class="fill-field" contenteditable>500,00</span></td>
+                <td><span class="fill-field" contenteditable>4 000,00</span></td>
+              </tr>
+              <tr>
+                <td colspan="5" style="text-align:right;font-weight:700">Вознаграждение за услуги:</td>
+                <td><span class="fill-field" contenteditable>4 000,00 ₽</span></td>
+              </tr>
+              <tr>
+                <td colspan="5" style="text-align:right;font-weight:700;color:#A01F72">Компенсация НПД 6% (за счёт Заказчика):</td>
+                <td><span class="fill-field" contenteditable>240,00 ₽</span></td>
+              </tr>
+              <tr>
+                <td colspan="5" style="text-align:right;font-weight:800;font-size:15px">ИТОГО к выплате:</td>
+                <td style="font-weight:800;font-size:15px;color:#1a6634"><span class="fill-field" contenteditable>4 240,00 ₽</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="fill-note">
+            ✅ Статус НПД исполнителя проверен через API ФНС <span class="fill-field" contenteditable>__.__.20__</span> — действителен.
+            Чек ФНС № <span class="fill-field" contenteditable>______________</span> получен.
+          </div>
+        </div>
+
+        <!-- РЕЗУЛЬТАТ И КАЧЕСТВО -->
+        <div class="doc-section">
+          <div class="doc-section-num">
+            <div class="num">3</div>
+            <h2>Результат и качество</h2>
+          </div>
+          <div class="doc-text">
+            <p>
+              <strong>3.1.</strong> Услуги оказаны Исполнителем в полном объёме, в срок, надлежащего качества.
+            </p>
+            <p>
+              <strong>3.2.</strong> Заказчик принял оказанные услуги без замечаний.
+            </p>
+            <p>
+              <strong>3.3.</strong> Фотоотчёт о выполнении задания (количество фото: <span class="fill-field" contenteditable>___</span>) сохранён в системе.
+              Геометка подтверждена.
+            </p>
+            <p>
+              <strong>3.4.</strong> Претензий по объёму, качеству и срокам оказания услуг Стороны не имеют.
+            </p>
+          </div>
+        </div>
+
+        <!-- ОПЛАТА -->
+        <div class="doc-section">
+          <div class="doc-section-num">
+            <div class="num">4</div>
+            <h2>Порядок оплаты</h2>
+          </div>
+          <div class="doc-text">
+            <p>
+              Заказчик перечисляет Исполнителю вознаграждение в размере
+              <strong><span class="fill-field" contenteditable>4 240,00 (Четыре тысячи двести сорок)</span> рублей 00 копеек</strong>
+              на банковскую карту Исполнителя: <span class="fill-field" contenteditable>**** **** **** ____</span>
+              в срок до <span class="fill-field" contenteditable>«__» __________ 20__ г.</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- ПОДПИСИ -->
+        <div class="doc-section">
+          <div class="doc-section-num">
+            <div class="num">5</div>
+            <h2>Подписи сторон</h2>
+          </div>
+
+          <div class="signature-block">
+            <div class="sig-side">
+              <h4>Заказчик</h4>
+              <div class="sig-row"><label>ООО «KARI»</label></div>
+              <div class="sig-row"><label>ИНН:</label><div class="sig-line"><span class="fill-field" contenteditable>ИНН KARI</span></div></div>
+              <div class="sig-row"><label>Подписал:</label><div class="sig-line"><span class="fill-field" contenteditable>Должность, ФИО</span></div></div>
+              <div class="sig-row"><label>ЭП (автоматически):</label><div class="sig-line"></div></div>
+              <div class="sig-row"><label>Дата:</label><div class="sig-line"><span class="fill-field" contenteditable>__.__.20__</span></div></div>
+            </div>
+            <div class="sig-side">
+              <h4>Исполнитель</h4>
+              <div class="sig-row"><label>ФИО:</label><div class="sig-line"><span class="fill-field" contenteditable>ФИО</span></div></div>
+              <div class="sig-row"><label>ИНН:</label><div class="sig-line"><span class="fill-field" contenteditable>ИНН</span></div></div>
+              <div class="sig-row"><label>ЭП (SMS-код):</label><div class="sig-line"></div></div>
+              <div class="sig-row"><label>Дата:</label><div class="sig-line"><span class="fill-field" contenteditable>__.__.20__</span></div></div>
+            </div>
+          </div>
+
+          <div class="ep-block" style="margin-top:24px">
+            <div class="ep-icon">✅</div>
+            <div class="ep-text">
+              <h4>Автоформирование акта</h4>
+              <p>
+                После нажатия «Принять» директором магазина — акт генерируется автоматически.
+                Исполнитель получает Push: «Ваш акт готов к подписанию» → вводит SMS-код → акт подписан.
+                Чек ФНС запрашивается автоматически. Деньги поступают в течение 1 рабочего дня.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page-wrap -->
+
+<script>
+function showTab(tab) {
+  // Скрываем все
+  document.querySelectorAll('.doc-view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.switcher-btn').forEach(b => b.classList.remove('active'));
+
+  // Показываем нужный
+  document.getElementById('view-' + tab).classList.add('active');
+  document.getElementById('btn-' + tab).classList.add('active');
+}
+
+// Подсветка заполненных полей
+document.querySelectorAll('.fill-field[contenteditable]').forEach(field => {
+  field.addEventListener('blur', function() {
+    const val = this.textContent.trim();
+    const hasPlaceholder = val.startsWith('_') || val === '' || val.match(/^[_\s.]+$/);
+    this.classList.toggle('filled', !hasPlaceholder);
+  });
+});
+</script>
+</body>
+</html>

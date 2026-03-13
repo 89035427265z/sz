@@ -1,0 +1,44 @@
+{
+  "expo": {
+    "name": "KARI Самозанятые",
+    "slug": "kari-samozanyatye",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#A01F72"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "ru.kari.samozanyatye",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Необходимо для фотоотчёта при сдаче задания",
+        "NSPhotoLibraryUsageDescription": "Необходимо для выбора фото при сдаче задания",
+        "NSLocationWhenInUseUsageDescription": "Геометка подтверждает, что задание выполнено в магазине"
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#A01F72"
+      },
+      "package": "ru.kari.samozanyatye",
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ]
+    },
+    "plugins": [
+      "expo-camera",
+      "expo-location",
+      "expo-image-picker",
+      "expo-secure-store"
+    ]
+  }
+}

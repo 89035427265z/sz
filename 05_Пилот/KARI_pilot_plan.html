@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KARI Самозанятые — План пилотного запуска</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --kari: #A01F72; --kari-dark: #7a1750; --navy: #242D4A;
+  --gray: #f5f5f5; --mid: #e0e0e0; --text: #333; --white: #fff;
+  --green: #4CAF50; --orange: #FF9800; --red: #e53935; --blue: #1976D2;
+}
+body { font-family: 'Nunito', sans-serif; background: var(--gray); color: var(--text); font-size: 14px; }
+
+/* ШАПКА */
+.header {
+  background: white; border-bottom: 3px solid var(--kari);
+  padding: 14px 40px; display: flex; align-items: center;
+  justify-content: space-between; position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-text { font-size: 20px; font-weight: 900; color: var(--kari); font-style: italic; }
+.logo-sub { font-size: 10px; font-weight: 700; color: #999; letter-spacing: 2px; text-transform: uppercase; }
+.btn { padding: 8px 18px; border-radius: 8px; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; border: none; }
+.btn-outline { border: 1.5px solid var(--kari); color: var(--kari); background: white; }
+.btn-outline:hover { background: var(--kari); color: white; }
+
+/* ОСНОВНОЕ */
+.wrap { max-width: 1060px; margin: 0 auto; padding: 32px 24px 60px; }
+
+/* KPI КАРТОЧКИ */
+.kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 28px; }
+.kpi-card {
+  background: white; border-radius: 12px; padding: 18px 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08); text-align: center;
+  border-top: 4px solid var(--kari);
+}
+.kpi-val { font-size: 28px; font-weight: 900; color: var(--navy); line-height: 1; margin-bottom: 4px; }
+.kpi-label { font-size: 11px; font-weight: 700; color: #888; letter-spacing: 0.5px; }
+.kpi-sub { font-size: 10px; color: #bbb; margin-top: 2px; }
+
+/* БЛОК */
+.block {
+  background: white; border-radius: 12px; margin-bottom: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08); overflow: hidden;
+}
+.block-header {
+  background: var(--navy); padding: 16px 24px;
+  display: flex; align-items: center; gap: 14px;
+}
+.block-num {
+  background: var(--kari); color: white; width: 32px; height: 32px;
+  border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 800; flex-shrink: 0;
+}
+.block-title { color: white; font-size: 16px; font-weight: 800; }
+.block-sub { color: rgba(255,255,255,0.55); font-size: 12px; margin-top: 2px; }
+.block-body { padding: 24px 28px; }
+
+/* ТАЙМЛАЙН */
+.timeline { position: relative; }
+.timeline::before {
+  content: ''; position: absolute; left: 20px; top: 0; bottom: 0;
+  width: 2px; background: var(--mid);
+}
+.tl-item { position: relative; padding-left: 56px; margin-bottom: 24px; }
+.tl-item:last-child { margin-bottom: 0; }
+.tl-dot {
+  position: absolute; left: 10px; top: 8px;
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid var(--mid);
+  background: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 800;
+  z-index: 1;
+}
+.tl-dot.green { background: var(--green); border-color: var(--green); color: white; }
+.tl-dot.kari { background: var(--kari); border-color: var(--kari); color: white; }
+.tl-dot.orange { background: var(--orange); border-color: var(--orange); color: white; }
+.tl-dot.blue { background: var(--blue); border-color: var(--blue); color: white; }
+.tl-title { font-size: 14px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+.tl-date { font-size: 11px; font-weight: 700; color: var(--kari); margin-bottom: 6px; letter-spacing: 0.5px; }
+.tl-desc { font-size: 13px; color: #555; line-height: 1.6; }
+
+/* ЧЕКЛИСТ */
+.checklist { list-style: none; }
+.checklist li {
+  padding: 10px 0; border-bottom: 1px solid var(--mid);
+  display: flex; align-items: flex-start; gap: 12px; font-size: 13px;
+}
+.checklist li:last-child { border-bottom: none; }
+.check-icon {
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; flex-shrink: 0; margin-top: 1px;
+}
+.check-icon.done { background: var(--green); color: white; }
+.check-icon.active { background: var(--orange); color: white; }
+.check-icon.todo { background: var(--mid); color: #999; }
+.check-icon.critical { background: var(--red); color: white; }
+
+/* МАГАЗИНЫ ТАБЛИЦА */
+table.ptable { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.ptable th {
+  background: var(--navy); color: white; padding: 10px 14px;
+  text-align: left; font-weight: 700; font-size: 11px; letter-spacing: 0.3px;
+}
+table.ptable td { padding: 9px 14px; border-bottom: 1px solid var(--mid); }
+table.ptable tr:last-child td { border-bottom: none; }
+table.ptable tr:nth-child(even) td { background: #fafafa; }
+
+/* ТЕГИ */
+.tag {
+  display: inline-block; padding: 3px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 700; margin: 2px;
+}
+.tag-green { background: #e8f5e9; color: #1b5e20; }
+.tag-orange { background: #fff8e1; color: #e65100; }
+.tag-red { background: #ffebee; color: #b71c1c; }
+.tag-blue { background: #e3f2fd; color: #0d47a1; }
+.tag-kari { background: rgba(160,31,114,0.1); color: var(--kari); }
+
+/* ИНФОБОКСЫ */
+.info-box {
+  border-left: 4px solid var(--blue); background: #e3f2fd;
+  padding: 12px 16px; border-radius: 0 8px 8px 0; font-size: 13px; margin: 12px 0;
+  line-height: 1.6;
+}
+.warn-box {
+  border-left: 4px solid var(--orange); background: #fff8e1;
+  padding: 12px 16px; border-radius: 0 8px 8px 0; font-size: 13px; margin: 12px 0;
+  line-height: 1.6;
+}
+.success-box {
+  border-left: 4px solid var(--green); background: #e8f5e9;
+  padding: 12px 16px; border-radius: 0 8px 8px 0; font-size: 13px; margin: 12px 0;
+  line-height: 1.6;
+}
+
+/* РИСКИ */
+.risk-row {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 3fr;
+  gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--mid);
+  align-items: start; font-size: 13px;
+}
+.risk-row:last-child { border-bottom: none; }
+.risk-row-head {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 3fr;
+  gap: 12px; padding: 8px 0 8px;
+  font-size: 10px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: #999; border-bottom: 2px solid var(--mid);
+}
+
+/* МЕТРИКИ УСПЕХА */
+.metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.metric-card {
+  background: var(--gray); border-radius: 10px; padding: 16px;
+  border-left: 4px solid var(--kari);
+}
+.metric-name { font-size: 12px; font-weight: 700; color: #888; margin-bottom: 6px; }
+.metric-target { font-size: 18px; font-weight: 900; color: var(--navy); }
+.metric-desc { font-size: 11px; color: #999; margin-top: 4px; }
+
+@media print {
+  .header .btn { display: none; }
+  body { background: white; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   МОБИЛЬНАЯ АДАПТАЦИЯ — добавлено 11.03.2026
+   Адаптировано для экранов смартфонов (< 768px)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Таблицы — горизонтальный скролл на всех устройствах */
+table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+/* Изображения — масштабирование */
+img { max-width: 100% !important; height: auto !important; }
+@media (max-width: 900px) {
+  /* Сетки 4-5 колонок → 2 колонки */
+  .kpi-row { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 768px) {
+  /* Все многоколоночные сетки → 1 колонка */
+  .kpi-row { grid-template-columns: 1fr !important; }
+
+  /* Боковое меню — скрываем, убираем отступ */
+  .sidebar { display: none !important; }
+  .main-content { margin-left: 0 !important; padding: 16px !important; }
+  .site-header { position: relative !important; }
+
+  /* Отступы шапки */
+  .header, .page-header { padding: 20px 16px !important; }
+  .header-top { flex-wrap: wrap !important; gap: 8px !important; }
+  .header-meta, .header-actions, .header-badges { flex-wrap: wrap !important; gap: 8px !important; }
+
+  /* Основной контент */
+  .main, .content, .container { padding: 16px !important; }
+
+  /* Типографика */
+  h1 { font-size: 22px !important; }
+  h2 { font-size: 18px !important; }
+  h3 { font-size: 15px !important; }
+
+  /* Горизонтальные ряды — перенос */
+  .header-pills, .filter-tabs, .nav-tabs, .tabs-row,
+  .section-tabs, .tab-bar { flex-wrap: wrap !important; }
+  .step { flex-direction: column !important; }
+
+  /* Кодовые блоки */
+  pre, code {
+    overflow-x: auto !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 13px !important; }
+  .badge, .tag, .pill, .status-badge { font-size: 11px !important; padding: 3px 8px !important; }
+  h1, .header h1, .logo-area h1 { font-size: 19px !important; }
+  .btn-print, .btn-export { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">
+    <svg xmlns="http://www.w3.org/2000/svg" height="56" viewBox="0 0 728.5 221.5" style="display:block"><g transform="translate(-56.5 -186.5)"><path transform="matrix(1,0,0,-1,167.381,186.9256)" d="M0 0V0C-60.585 0-109.775-48.659-110.678-109.017-101.105-89.662-88.255-77.239-76.191-67.482-58.14-52.881-36.41-45.828-16.28-44.574 5.777-43.201 23.053-47.846 37.189-59.05 42.293-63.095 46.38-67.877 49.613-73.02 55.602-82.543 58.375-93.663 57.368-105.985 55.198-132.527 33.39-153.87 6.804-155.519-24.699-157.473-50.859-132.506-50.859-101.431-50.859-87.238-45.395-74.325-36.465-64.663-46.559-67.782-56.643-72.841-65.837-80.278-74.971-87.666-85.145-97.851-93.512-111.315-102.647-126.015-106.433-143.045-106.537-160.35V-221.399H0C61.15-221.399 110.721-171.838 110.721-110.7V-110.699C110.721-49.561 61.15 0 0 0" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,484.762,262.1775)" d="M0 0H-51.44L-106.801-52.162V41.158H-144.053V-144.054H-106.801V-91.887L-51.433-144.054H3.854L-76.443-72.024Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,0,595.276)" d="M744.002 189.045H781.255V314.95503H744.002Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,550.4052,371.5924)" d="M0 0C-20.818 0-37.694 16.739-37.694 37.388-37.694 58.037-20.818 74.776 0 74.776 20.818 74.776 37.694 58.037 37.694 37.388 37.694 16.739 20.818 0 0 0M37.738 101.384C26.659 107.826 13.769 111.534 0 111.534-41.285 111.534-74.753 78.338-74.753 37.388-74.753-3.562-41.285-36.758 0-36.758 13.769-36.758 26.659-33.05 37.738-26.609V-34.639H74.99V109.415H37.738Z" fill="#a91d7a"/><path transform="matrix(1,0,0,-1,762.6282,267.7195)" d="M0 0C12.459 0 22.559 10.1 22.559 22.559 22.559 28.064 20.582 33.104 17.306 37.02 15.132 39.862 12.219 42.197 8.653 43.858-2.579 49.086-18.377 47.019-33.605 38.323-49.001 29.531-61.329 13.083-68.67-6.989V5.542H-105.923V-138.512H-68.67V-37.268C-65.411-6.761-50.524 20.852-30.241 32.433-25.463 35.163-20.667 37.153-16.051 38.402-20.072 34.327-22.559 28.736-22.559 22.559-22.559 10.1-12.459 0 0 0" fill="#a91d7a"/></g></svg>
+    <div class="logo-sub">самозанятые</div>
+  </div>
+  <div style="font-size:15px;font-weight:800;color:var(--navy)">📋 План пилотного запуска</div>
+  <button class="btn btn-outline" onclick="window.print()">🖨 Печать</button>
+</header>
+
+<div class="wrap">
+
+  <!-- KPI ПИЛОТА -->
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-val">100</div>
+      <div class="kpi-label">Магазинов</div>
+      <div class="kpi-sub">Москва + Юг</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">2</div>
+      <div class="kpi-label">Региона</div>
+      <div class="kpi-sub">Москва & Южный</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">300</div>
+      <div class="kpi-label">Исполнителей</div>
+      <div class="kpi-sub">старт пилота</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">12</div>
+      <div class="kpi-label">Недель</div>
+      <div class="kpi-sub">разработка MVP</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">1 мес</div>
+      <div class="kpi-label">Пилот</div>
+      <div class="kpi-sub">параллельно с Наймикс</div>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 1 — ЦЕЛИ ПИЛОТА -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-num">1</div>
+      <div>
+        <div class="block-title">Цели пилотного запуска</div>
+        <div class="block-sub">Что нужно доказать за месяц пилота</div>
+      </div>
+    </div>
+    <div class="block-body">
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-name">Регистрация исполнителей</div>
+          <div class="metric-target">≥ 80% от приглашённых</div>
+          <div class="metric-desc">Переходят из Наймикс в новую платформу самостоятельно за 15 минут</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-name">Время до первой выплаты</div>
+          <div class="metric-target">≤ 1 рабочий день</div>
+          <div class="metric-desc">С момента приёмки задания до поступления денег на карту</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-name">Успешность выплат</div>
+          <div class="metric-target">≥ 99%</div>
+          <div class="metric-desc">Выплаты прошли без технических ошибок</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-name">Активность исполнителей</div>
+          <div class="metric-target">≥ 70%</div>
+          <div class="metric-desc">Взяли хотя бы 1 задание за месяц пилота</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-name">Чеки ФНС</div>
+          <div class="metric-target">100%</div>
+          <div class="metric-desc">По каждой выплате автоматически сформирован чек</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-name">Удовлетворённость директоров</div>
+          <div class="metric-target">≥ 4.0 / 5.0</div>
+          <div class="metric-desc">Оценка по итогам анкетирования директоров магазинов</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-name">Время создания задания</div>
+          <div class="metric-target">≤ 3 минуты</div>
+          <div class="metric-desc">От входа в кабинет до публикации задания в бирже</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-name">Экономия vs Наймикс</div>
+          <div class="metric-target">≥ 5%</div>
+          <div class="metric-desc">Снижение комиссионных расходов по сравнению с Наймикс</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 2 — СОСТАВ ПИЛОТА -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-num">2</div>
+      <div>
+        <div class="block-title">Состав пилота — 100 магазинов</div>
+        <div class="block-sub">Москва (60 магазинов) + Южный регион (40 магазинов)</div>
+      </div>
+    </div>
+    <div class="block-body">
+
+      <div class="info-box">
+        <strong>Критерий выбора магазинов для пилота:</strong> Магазины с наибольшим историческим
+        объёмом заданий через Наймикс — для максимальной нагрузки на систему и быстрой проверки гипотез.
+      </div>
+
+      <table class="ptable" style="margin-top:16px">
+        <thead>
+          <tr>
+            <th>Регион / Город</th>
+            <th>Магазинов</th>
+            <th>Исполнителей (старт)</th>
+            <th>Директор региона</th>
+            <th>Виды заданий</th>
+            <th>Приоритет</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Москва — ТЦ (крупные)</strong></td>
+            <td>25</td>
+            <td>100</td>
+            <td rowspan="3" style="vertical-align:middle">Директор Московского региона</td>
+            <td>Мерч, промо, уборка</td>
+            <td><span class="tag tag-red">Первый запуск</span></td>
+          </tr>
+          <tr>
+            <td><strong>Москва — ТЦ (средние)</strong></td>
+            <td>20</td>
+            <td>60</td>
+            <td>Мерч, грузчик</td>
+            <td><span class="tag tag-orange">2-я волна</span></td>
+          </tr>
+          <tr>
+            <td><strong>Москва — стрит-ритейл</strong></td>
+            <td>15</td>
+            <td>30</td>
+            <td>Промо, мерч</td>
+            <td><span class="tag tag-orange">2-я волна</span></td>
+          </tr>
+          <tr>
+            <td><strong>Краснодар</strong></td>
+            <td>15</td>
+            <td>45</td>
+            <td rowspan="3" style="vertical-align:middle">Директор Южного региона</td>
+            <td>Мерч, промо, уборка</td>
+            <td><span class="tag tag-kari">Параллельно с Москвой</span></td>
+          </tr>
+          <tr>
+            <td><strong>Ростов-на-Дону</strong></td>
+            <td>15</td>
+            <td>40</td>
+            <td>Мерч, грузчик, промо</td>
+            <td><span class="tag tag-kari">Параллельно</span></td>
+          </tr>
+          <tr>
+            <td><strong>Сочи / другие города Юга</strong></td>
+            <td>10</td>
+            <td>25</td>
+            <td>Промо, мерч</td>
+            <td><span class="tag tag-green">3-я волна</span></td>
+          </tr>
+          <tr style="background:#f5e6f0">
+            <td><strong>ИТОГО</strong></td>
+            <td><strong>100</strong></td>
+            <td><strong>300</strong></td>
+            <td><strong>2 директора региона</strong></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 3 — ТАЙМЛАЙН -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-num">3</div>
+      <div>
+        <div class="block-title">Таймлайн запуска</div>
+        <div class="block-sub">12 недель разработки + 4 недели пилота</div>
+      </div>
+    </div>
+    <div class="block-body">
+
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot green">✓</div>
+          <div class="tl-date">Неделя 1–2</div>
+          <div class="tl-title">Спринт 1: Архитектура и инфраструктура</div>
+          <div class="tl-desc">
+            Настройка серверов, CI/CD, схема БД. Подключение к API ФНС (sandbox). Создание dev/staging окружений.
+            <br><span class="tag tag-green">Результат: Готовая инфраструктура</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot green">✓</div>
+          <div class="tl-date">Неделя 3–4</div>
+          <div class="tl-title">Спринт 2: Бэкенд — ядро системы</div>
+          <div class="tl-desc">
+            Аутентификация. Регистрация исполнителей. Интеграция ФНС (проверка статуса). Тестовые выплаты Совкомбанк. Хранилище документов (MinIO).
+            <br><span class="tag tag-green">Результат: API работает, первый исполнитель зарегистрирован</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot kari">3</div>
+          <div class="tl-date">Неделя 5–6</div>
+          <div class="tl-title">Спринт 3: Биржа заданий + ЭДО + Фотоотчёт</div>
+          <div class="tl-desc">
+            Задания (CRUD), статусная модель. Генерация договоров ГПХ и актов (PDF). Модуль ПЭП (SMS-подпись). API выплат + налог 6%.
+            <strong>Новое (v3.0):</strong> Загрузка фото при сдаче задания + геометка + хранение в MinIO. Шаблоны заданий (Выкладка, Уборка, Промо и др.).
+            <br><span class="tag tag-kari">Результат: Сквозной процесс задание → фотоотчёт → оплата работает</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot kari">4</div>
+          <div class="tl-date">Неделя 7–8</div>
+          <div class="tl-title">Спринт 4: Веб-кабинеты + Реестровые выплаты + Контроль чеков</div>
+          <div class="tl-desc">
+            Кабинет директора магазина (с просмотром фотоотчёта). Директор подразделения. Директор региона + делегирование прав с ЭП. HRD. Бухгалтерия. Система бюджетных лимитов. Excel-выгрузка.
+            <strong>Новое (v3.0):</strong> Загрузка Excel-реестра → массовая выплата → отчёт. Реестр аннулированных чеков с уведомлениями бухгалтерии.
+            <br><span class="tag tag-kari">Результат: Готовые кабинеты всех уровней + реестровые выплаты</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot orange">5</div>
+          <div class="tl-date">Неделя 9–10</div>
+          <div class="tl-title">Спринт 5: Мобильное приложение + Контроль 80%</div>
+          <div class="tl-desc">
+            Приложение iOS + Android: регистрация, биржа, задание, кошелёк, ЛК. Индикатор риска 80%, форма внешних чеков, Push-уведомления. Модуль мониторинга ФНС.
+            <strong>Новое (v3.0):</strong> Экран сдачи задания с обязательной загрузкой фото. Онбординг «как стать самозанятым».
+            <br><span class="tag tag-orange">Результат: Приложение в TestFlight/Google Play (бета)</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot orange">6</div>
+          <div class="tl-date">Неделя 11–12</div>
+          <div class="tl-title">Спринт 6: Тестирование и готовность к пилоту</div>
+          <div class="tl-desc">
+            Нагрузочное тестирование (1 000 пользователей). Pentest. Импорт базы из Наймикс. Обучение директоров 100 магазинов. Bug fixing.
+            <br><span class="tag tag-orange">Результат: MVP готов к пилоту, команда обучена</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot blue">П</div>
+          <div class="tl-date">Неделя 13 — СТАРТ ПИЛОТА</div>
+          <div class="tl-title">🚀 Запуск пилота: Москва + Южный регион</div>
+          <div class="tl-desc">
+            Первые 50 магазинов первой волны. Параллельная работа с Наймикс. Оперативный мониторинг всех показателей. Горячая линия поддержки для директоров.
+            <br><span class="tag tag-blue">Результат: Первые 100 исполнителей работают в системе</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot blue">+2</div>
+          <div class="tl-date">Неделя 14–15</div>
+          <div class="tl-title">2-я волна + остальные 50 магазинов</div>
+          <div class="tl-desc">
+            Подключение второй волны магазинов. Все 300 исполнителей активны. Сбор обратной связи. Оперативные исправления по результатам пилота.
+            <br><span class="tag tag-blue">Результат: Все 100 магазинов в системе</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot blue">↗</div>
+          <div class="tl-date">Неделя 16 — ИТОГИ ПИЛОТА</div>
+          <div class="tl-title">Оценка результатов и решение о масштабировании</div>
+          <div class="tl-desc">
+            Анализ KPI vs целевые показатели. Отчёт HRD. Решение: масштабировать на всю сеть / доработать / продолжить пилот.
+            <br><span class="tag tag-kari">Результат: Решение о полном запуске + дата отключения Наймикс</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 4 — ЧЕКЛИСТ ГОТОВНОСТИ -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-num">4</div>
+      <div>
+        <div class="block-title">Чеклист готовности к пилоту</div>
+        <div class="block-sub">Всё должно быть выполнено до «Недели 13»</div>
+      </div>
+    </div>
+    <div class="block-body">
+
+      <p style="font-size:13px;font-weight:700;color:#999;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px">Технические требования</p>
+      <ul class="checklist">
+        <li>
+          <div class="check-icon critical">!</div>
+          <div><strong>API ФНС подключён</strong> — проверка статуса самозанятого работает. Чеки формируются автоматически. <span class="tag tag-red">Критично</span></div>
+        </li>
+        <li>
+          <div class="check-icon critical">!</div>
+          <div><strong>Совкомбанк API</strong> — тестовые выплаты прошли успешно. <strong>Массовые выплаты по Excel-реестру протестированы</strong> (не менее 50 строк). <span class="tag tag-red">Критично</span></div>
+        </li>
+        <li>
+          <div class="check-icon critical">!</div>
+          <div><strong>Фотоотчёт при сдаче задания</strong> — загрузка фото в приложении работает, фото появляется у директора магазина до кнопок «Принять/Отклонить», прикрепляется к акту. <span class="tag tag-red">Критично</span></div>
+        </li>
+        <li>
+          <div class="check-icon critical">!</div>
+          <div><strong>Контроль аннулирования чеков</strong> — ежедневная проверка работает, уведомление бухгалтерии отправляется в течение 1 часа. <span class="tag tag-red">Критично</span></div>
+        </li>
+        <li>
+          <div class="check-icon todo">○</div>
+          <div><strong>Мобильное приложение</strong> — опубликовано в App Store и Google Play (публичная бета или TestFlight)</div>
+        </li>
+        <li>
+          <div class="check-icon todo">○</div>
+          <div><strong>Веб-кабинеты</strong> — все роли (директор магазина, подразделения, региона, HRD, бухгалтерия) проверены на реальных сценариях</div>
+        </li>
+        <li>
+          <div class="check-icon todo">○</div>
+          <div><strong>Система лимитов</strong> — установка, изменение, цветовые статусы, запросы на увеличение — всё работает</div>
+        </li>
+        <li>
+          <div class="check-icon todo">○</div>
+          <div><strong>Делегирование прав</strong> — директор региона создал делегата, все действия логируются, уведомления работают</div>
+        </li>
+        <li>
+          <div class="check-icon todo">○</div>
+          <div><strong>Excel-выгрузка</strong> — все таблицы в кабинетах выгружаются с цветовым форматированием</div>
+        </li>
+        <li>
+          <div class="check-icon todo">○</div>
+          <div><strong>ПЭП</strong> — договор ГПХ и акт подписываются через SMS-код, документы хранятся в архиве</div>
+        </li>
+        <li>
+          <div class="check-icon todo">○</div>
+          <div><strong>Нагрузка 1 000 пользователей</strong> — нагрузочный тест пройден без деградации</div>
+        </li>
+      </ul>
+
+      <p style="font-size:13px;font-weight:700;color:#999;letter-spacing:1px;text-transform:uppercase;margin:20px 0 12px">Юридические требования</p>
+      <ul class="checklist">
+        <li>
+          <div class="check-icon critical">!</div>
+          <div><strong>Регистрация в ФНС</strong> как Оператор электронной площадки завершена <span class="tag tag-red">Критично</span></div>
+        </li>
+        <li>
+          <div class="check-icon critical">!</div>
+          <div><strong>Уведомление РКН</strong> (Роскомнадзор) об обработке персональных данных подано <span class="tag tag-red">Критично</span></div>
+        </li>
+        <li>
+          <div class="check-icon todo">○</div>
+          <div><strong>Договор с Совкомбанком</strong> на API-доступ к массовым выплатам подписан</div>
+        </li>
+        <li>
+          <div class="check-icon todo">○</div>
+          <div><strong>Шаблоны договора ГПХ и акта</strong> согласованы с юристами KARI</div>
+        </li>
+        <li>
+          <div class="check-icon todo">○</div>
+          <div><strong>Политика обработки персональных данных</strong> опубликована на сайте и в приложении</div>
+        </li>
+        <li>
+          <div class="check-icon todo">○</div>
+          <div><strong>Соглашение о ПЭП</strong> включено в договор ГПХ и принято исполнителями при регистрации</div>
+        </li>
+      </ul>
+
+      <p style="font-size:13px;font-weight:700;color:#999;letter-spacing:1px;text-transform:uppercase;margin:20px 0 12px">Организационные требования</p>
+      <ul class="checklist">
+        <li>
+          <div class="check-icon todo">○</div>
+          <div><strong>Обучение 100 директоров магазинов</strong> — онлайн-инструкция + демо-сессия (1 час) для каждого</div>
+        </li>
+        <li>
+          <div class="check-icon todo">○</div>
+          <div><strong>Обучение 2 директоров регионов</strong> и их делегатов — работа с лимитами, делегирование, реестры</div>
+        </li>
+        <li>
+          <div class="check-icon todo">○</div>
+          <div><strong>Импорт базы исполнителей</strong> из Наймикс (ФИО, ИНН, телефон, карта) в систему</div>
+        </li>
+        <li>
+          <div class="check-icon todo">○</div>
+          <div><strong>SMS-рассылка исполнителям</strong> с приглашением скачать приложение и зарегистрироваться</div>
+        </li>
+        <li>
+          <div class="check-icon todo">○</div>
+          <div><strong>Горячая линия поддержки</strong> — телефон / чат для директоров во время пилота (рабочие часы)</div>
+        </li>
+        <li>
+          <div class="check-icon todo">○</div>
+          <div><strong>Дежурный IT-специалист</strong> на первые 2 недели пилота — оперативное устранение инцидентов</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 5 — МИГРАЦИЯ С НАЙМИКС -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-num">5</div>
+      <div>
+        <div class="block-title">Бесшовная миграция с Наймикс</div>
+        <div class="block-sub">Параллельная работа 4 недели → полное отключение</div>
+      </div>
+    </div>
+    <div class="block-body">
+
+      <div class="warn-box">
+        <strong>Ключевой принцип:</strong> Не отключаем Наймикс до тех пор, пока не убедимся, что все исполнители
+        зарегистрировались в новой системе и прошла хотя бы одна успешная выплата каждому из них.
+      </div>
+
+      <table class="ptable" style="margin-top:16px">
+        <thead>
+          <tr><th>Этап</th><th>Период</th><th>Действие</th><th>Результат</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Подготовка</strong></td>
+            <td>Нед. 10–11</td>
+            <td>Запросить у Наймикс выгрузку базы: ФИО, ИНН, телефон, история, карта</td>
+            <td>CSV/Excel с данными</td>
+          </tr>
+          <tr>
+            <td><strong>Импорт</strong></td>
+            <td>Нед. 12</td>
+            <td>Загрузить базу в новую систему, создать профили исполнителей (предзаполненные)</td>
+            <td>~300 профилей в системе</td>
+          </tr>
+          <tr>
+            <td><strong>Приглашение</strong></td>
+            <td>Нед. 12</td>
+            <td>SMS-рассылка: «KARI запускает собственное приложение. Скачай и зарегистрируйся — ссылка»</td>
+            <td>Онбординг исполнителей</td>
+          </tr>
+          <tr>
+            <td><strong>Параллель</strong></td>
+            <td>Нед. 13–16</td>
+            <td>Новые задания публикуются в KARI. Старые (уже принятые) дорабатываются в Наймикс</td>
+            <td>Плавный переход</td>
+          </tr>
+          <tr>
+            <td><strong>Контроль</strong></td>
+            <td>Нед. 13–16</td>
+            <td>Ежедневный мониторинг: сколько % исполнителей перешли, есть ли жалобы, выплаты проходят?</td>
+            <td>Дашборд миграции</td>
+          </tr>
+          <tr>
+            <td><strong>Отключение</strong></td>
+            <td>После нед. 16</td>
+            <td>При достижении 95% перехода и успешных выплатах — уведомить Наймикс о расторжении договора</td>
+            <td>Полный переход</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="success-box" style="margin-top:16px">
+        <strong>Триггер отключения Наймикс:</strong> ≥95% исполнителей активны в KARI + ≥100% выплат прошли успешно
+        за 2 последовательные недели + директора магазинов подтвердили готовность работать без Наймикс.
+      </div>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 6 — РИСКИ -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-num">6</div>
+      <div>
+        <div class="block-title">Риски и митигация</div>
+        <div class="block-sub">Что может пойти не так и как с этим работать</div>
+      </div>
+    </div>
+    <div class="block-body">
+      <div class="risk-row-head">
+        <div>Риск</div>
+        <div>Вероятность</div>
+        <div>Влияние</div>
+        <div>Митигация</div>
+      </div>
+
+      <div class="risk-row">
+        <div><strong>Задержка регистрации в ФНС</strong> как оператора площадки</div>
+        <div><span class="tag tag-orange">Средняя</span></div>
+        <div><span class="tag tag-red">Высокое</span></div>
+        <div>Заранее подать документы; временный вариант — работа через банк-агент. Держать юриста в теме</div>
+      </div>
+      <div class="risk-row">
+        <div><strong>Исполнители не регистрируются</strong> в новом приложении</div>
+        <div><span class="tag tag-orange">Средняя</span></div>
+        <div><span class="tag tag-orange">Среднее</span></div>
+        <div>Персональный звонок активным исполнителям; бонус за первую регистрацию; помощь HR в магазинах</div>
+      </div>
+      <div class="risk-row">
+        <div><strong>Сбои в API ФНС</strong> — чеки не формируются</div>
+        <div><span class="tag tag-green">Низкая</span></div>
+        <div><span class="tag tag-red">Высокое</span></div>
+        <div>Очередь на повторную отправку (Celery retry). Ручное создание чека через приложение «Мой налог». Уведомление бухгалтерии</div>
+      </div>
+      <div class="risk-row">
+        <div><strong>Задержки выплат</strong> через Совкомбанк</div>
+        <div><span class="tag tag-green">Низкая</span></div>
+        <div><span class="tag tag-red">Высокое</span></div>
+        <div>Мониторинг каждой транзакции; автоуведомление бухгалтерии при задержке &gt;2 часов; резервный канал выплат</div>
+      </div>
+      <div class="risk-row">
+        <div><strong>Директора не принимают задания</strong> вовремя (задержка &gt;24 ч)</div>
+        <div><span class="tag tag-orange">Средняя</span></div>
+        <div><span class="tag tag-orange">Среднее</span></div>
+        <div>Автоприёмка по истечении 24 часов; Push-напоминания директору; эскалация на директора подразделения</div>
+      </div>
+      <div class="risk-row">
+        <div><strong>Технические баги</strong> в мобильном приложении</div>
+        <div><span class="tag tag-orange">Средняя</span></div>
+        <div><span class="tag tag-orange">Среднее</span></div>
+        <div>Дежурный разработчик 24/7 первые 2 недели; горячее обновление через CodePush (React Native)</div>
+      </div>
+      <div class="risk-row">
+        <div><strong>Утечка персональных данных</strong></div>
+        <div><span class="tag tag-green">Низкая</span></div>
+        <div><span class="tag tag-red">Критичное</span></div>
+        <div>Penetration test до запуска; шифрование AES-256; ограниченный доступ к продакшн-базе; мониторинг аномалий</div>
+      </div>
+      <div class="risk-row">
+        <div><strong>Исполнители теряют статус самозанятого</strong> во время пилота</div>
+        <div><span class="tag tag-green">Низкая</span></div>
+        <div><span class="tag tag-orange">Среднее</span></div>
+        <div>Ежедневная проверка статуса через API ФНС; автоблокировка при потере статуса; уведомление исполнителю и HRD</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 7 — КОМАНДА -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-num">7</div>
+      <div>
+        <div class="block-title">Команда пилота</div>
+        <div class="block-sub">Роли и ответственность</div>
+      </div>
+    </div>
+    <div class="block-body">
+      <table class="ptable">
+        <thead>
+          <tr><th>Роль</th><th>Ответственный</th><th>Задачи в пилоте</th><th>Контакт</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Куратор пилота</strong></td>
+            <td>HRD KARI</td>
+            <td>Принятие решений, эскалации, итоговый отчёт</td>
+            <td><span class="tag tag-kari">Назначен</span></td>
+          </tr>
+          <tr>
+            <td><strong>Менеджер пилота</strong></td>
+            <td>Директор региона МСК</td>
+            <td>Ежедневный мониторинг KPI Москвы, сбор обратной связи</td>
+            <td><span class="tag tag-kari">Назначен</span></td>
+          </tr>
+          <tr>
+            <td><strong>Менеджер пилота</strong></td>
+            <td>Директор Южного региона</td>
+            <td>Ежедневный мониторинг KPI Юга, обучение директоров</td>
+            <td><span class="tag tag-kari">Назначен</span></td>
+          </tr>
+          <tr>
+            <td><strong>Техлид / DevOps</strong></td>
+            <td>IT поддержка KARI (штат)</td>
+            <td>Дежурство во время пилота, инциденты, хотфиксы, мониторинг Grafana</td>
+            <td><span class="tag tag-blue">Назначить</span></td>
+          </tr>
+          <tr>
+            <td><strong>Бухгалтер-контролёр</strong></td>
+            <td>Бухгалтерия KARI</td>
+            <td>Проверка выплат, чеки ФНС, реестры, 1С</td>
+            <td><span class="tag tag-blue">Назначить</span></td>
+          </tr>
+          <tr>
+            <td><strong>Поддержка директоров</strong></td>
+            <td>HR-менеджер</td>
+            <td>Горячая линия, обучение, ответы на вопросы директоров магазинов</td>
+            <td><span class="tag tag-blue">Назначить</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 8 — КРИТЕРИЙ УСПЕХА -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-num">8</div>
+      <div>
+        <div class="block-title">Критерии успешного завершения пилота</div>
+        <div class="block-sub">Необходимые условия для масштабирования на всю сеть</div>
+      </div>
+    </div>
+    <div class="block-body">
+
+      <div class="success-box">
+        <strong>Пилот считается успешным</strong>, если через 4 недели работы все критерии ниже выполнены:
+      </div>
+
+      <table class="ptable" style="margin-top:16px">
+        <thead>
+          <tr><th>#</th><th>Критерий</th><th>Целевое значение</th><th>Метод проверки</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Регистрация исполнителей из базы Наймикс</td>
+            <td><strong>≥ 80%</strong></td>
+            <td>Дашборд: зарегистрировались / всего приглашённых</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Выплаты без технических ошибок</td>
+            <td><strong>≥ 99%</strong></td>
+            <td>Реестр транзакций: успешные / всего</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Среднее время выплаты</td>
+            <td><strong>≤ 1 рабочий день</strong></td>
+            <td>Логи: timestamp приёмки → timestamp выплаты</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Чеки ФНС сформированы</td>
+            <td><strong>100%</strong></td>
+            <td>Реестр чеков в модуле ФНС</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Оценка директоров магазинов (анкета)</td>
+            <td><strong>≥ 4.0 / 5.0</strong></td>
+            <td>Гугл-форма анкетирования по итогам месяца</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Критичных инцидентов (данные, выплаты)</td>
+            <td><strong>0</strong></td>
+            <td>Журнал инцидентов</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Экономия vs Наймикс</td>
+            <td><strong>Подтверждена</strong></td>
+            <td>Сравнение затрат за аналогичный период</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Фотоотчёты приложены к заданиям</td>
+            <td><strong>≥ 95%</strong> заданий</td>
+            <td>Реестр заданий: с фото / без фото</td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>Аннулированные чеки обнаружены и обработаны</td>
+            <td><strong>100%</strong> случаев выявлено</td>
+            <td>Реестр аннулирований: выявлено / урегулировано</td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>Массовые реестровые выплаты проведены без ошибок</td>
+            <td><strong>≥ 99%</strong> строк реестра</td>
+            <td>Итоговые отчёты по реестровым выплатам</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="info-box" style="margin-top:16px">
+        <strong>Следующий шаг:</strong> При успешном пилоте — через 4 недели принять решение
+        о масштабировании на все регионы сети KARI (500+ магазинов, 5 000 исполнителей к концу года).
+        Параллельно — начать переговоры о B2B монетизации платформы для других ритейлеров.
+      </div>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+</body>
+</html>

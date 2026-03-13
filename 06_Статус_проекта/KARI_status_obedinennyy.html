@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KARI.Самозанятые v2 — Статус объединённого проекта</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink: #A01F72;
+    --dark: #242D4A;
+    --green: #16a34a;
+    --yellow: #ca8a04;
+    --red: #dc2626;
+    --blue: #0891b2;
+    --gray: #6b7280;
+    --light: #f8fafc;
+    --border: #e5e7eb;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Nunito', sans-serif; background: var(--light); color: var(--dark); }
+
+  /* ===== ШАПКА ===== */
+  .header {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a2340 100%);
+    color: white;
+    padding: 40px 48px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    right: -60px; top: -60px;
+    width: 300px; height: 300px;
+    background: var(--pink);
+    border-radius: 50%;
+    opacity: 0.08;
+  }
+  .header-top { display: flex; align-items: flex-start; justify-content: space-between; }
+  .logo-area h1 { font-size: 28px; font-weight: 900; letter-spacing: -0.5px; }
+  .logo-area h1 span { color: var(--pink); }
+  .logo-area p { font-size: 14px; color: #a0aec0; margin-top: 4px; }
+  .badge {
+    background: var(--pink);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .header-stats {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    margin-top: 32px;
+  }
+  .h-stat {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 14px 18px;
+  }
+  .h-stat .val { font-size: 26px; font-weight: 800; color: white; }
+  .h-stat .lbl { font-size: 11px; color: #90a0b7; margin-top: 2px; }
+  .h-stat .sub { font-size: 11px; color: var(--pink); font-weight: 600; margin-top: 2px; }
+
+  /* ===== MAIN ===== */
+  .main { max-width: 1200px; margin: 0 auto; padding: 32px 32px 64px; }
+
+  /* ===== СЕКЦИИ ===== */
+  .section { margin-bottom: 36px; }
+  .section-title {
+    font-size: 18px; font-weight: 800;
+    color: var(--dark); margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border);
+  }
+
+  /* ===== КАРТОЧКИ ===== */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    border-left: 4px solid var(--border);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+  .card.done  { border-left-color: var(--green); }
+  .card.wip   { border-left-color: var(--yellow); }
+  .card.plan  { border-left-color: var(--blue); }
+  .card.block { border-left-color: var(--red); }
+  .card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .card-title { font-size: 15px; font-weight: 700; }
+  .tag {
+    font-size: 11px; font-weight: 700;
+    padding: 3px 10px; border-radius: 20px;
+    white-space: nowrap;
+  }
+  .tag.done  { background: #dcfce7; color: var(--green); }
+  .tag.wip   { background: #fef9c3; color: var(--yellow); }
+  .tag.plan  { background: #e0f2fe; color: var(--blue); }
+  .tag.block { background: #fee2e2; color: var(--red); }
+  .card p { font-size: 13px; color: var(--gray); line-height: 1.6; }
+  .card ul { font-size: 12px; color: var(--gray); margin-top: 8px; padding-left: 16px; }
+  .card ul li { margin-bottom: 3px; }
+
+  /* ===== ПРОГРЕСС ===== */
+  .progress-bar-wrap { background: #f1f5f9; border-radius: 8px; height: 10px; margin-top: 10px; overflow: hidden; }
+  .progress-bar { height: 10px; border-radius: 8px; background: linear-gradient(90deg, var(--pink), #c0356a); }
+
+  /* ===== СПРИНТ-ТАБЛИЦА ===== */
+  .sprint-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .sprint-table th {
+    background: var(--dark); color: white;
+    padding: 10px 14px; text-align: left; font-weight: 700;
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .sprint-table th:first-child { border-radius: 8px 0 0 0; }
+  .sprint-table th:last-child { border-radius: 0 8px 0 0; }
+  .sprint-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); }
+  .sprint-table tr:last-child td { border-bottom: none; }
+  .sprint-table tr:nth-child(even) td { background: #fafafa; }
+  .sprint-table tr:hover td { background: #f0f4ff; }
+  .sprint-num { font-weight: 800; color: var(--pink); }
+  .s-done  { color: var(--green); font-weight: 700; }
+  .s-wip   { color: var(--yellow); font-weight: 700; }
+  .s-plan  { color: var(--blue); font-weight: 700; }
+  .s-dot   { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+  .dot-g { background: var(--green); }
+  .dot-y { background: var(--yellow); }
+  .dot-b { background: var(--blue); }
+
+  /* ===== СРАВНЕНИЕ ПРОЕКТОВ ===== */
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .compare-card {
+    background: white; border-radius: 12px;
+    padding: 20px; box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  }
+  .compare-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 2px solid; }
+  .compare-card.our h4  { color: var(--pink); border-color: var(--pink); }
+  .compare-card.col h4  { color: var(--blue); border-color: var(--blue); }
+  .compare-card.best h4 { color: var(--green); border-color: var(--green); }
+  .compare-item { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--gray); margin-bottom: 7px; }
+  .compare-item .ico { font-size: 14px; flex-shrink: 0; }
+
+  /* ===== ДОРОЖНАЯ КАРТА ===== */
+  .roadmap { position: relative; }
+  .roadmap::before {
+    content: ''; position: absolute;
+    left: 20px; top: 8px; bottom: 8px;
+    width: 2px; background: var(--border);
+  }
+  .rm-item { display: flex; gap: 20px; margin-bottom: 20px; position: relative; }
+  .rm-dot {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0; position: relative; z-index: 1;
+    border: 3px solid;
+  }
+  .rm-dot.done  { background: #dcfce7; border-color: var(--green); }
+  .rm-dot.wip   { background: #fef9c3; border-color: var(--yellow); }
+  .rm-dot.plan  { background: #e0f2fe; border-color: var(--blue); }
+  .rm-dot.pilot { background: var(--pink); border-color: var(--pink); color: white; }
+  .rm-content { padding-top: 6px; }
+  .rm-content strong { font-size: 14px; font-weight: 700; }
+  .rm-content .rm-date { font-size: 12px; color: var(--gray); margin-top: 2px; }
+  .rm-content .rm-desc { font-size: 12px; color: var(--gray); margin-top: 4px; line-height: 1.5; }
+
+  /* ===== ФАЙЛОВЫЙ УКАЗАТЕЛЬ ===== */
+  .filemap { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .folder-card {
+    background: white; border-radius: 10px;
+    padding: 16px 18px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .folder-card h5 { font-size: 13px; font-weight: 700; color: var(--dark); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px; }
+  .file-item { font-size: 12px; color: var(--gray); margin-bottom: 5px;
+    display: flex; align-items: center; gap: 6px; }
+  .file-item::before { content: '📄'; font-size: 12px; }
+
+  /* ===== КОМАНДА ===== */
+  .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .team-card {
+    background: white; border-radius: 12px;
+    padding: 20px; box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    text-align: center;
+  }
+  .team-avatar { font-size: 36px; margin-bottom: 10px; }
+  .team-name { font-size: 15px; font-weight: 700; color: var(--dark); }
+  .team-role { font-size: 12px; color: var(--pink); font-weight: 600; margin-top: 3px; }
+  .team-desc { font-size: 12px; color: var(--gray); margin-top: 8px; line-height: 1.5; }
+
+  /* ===== РИСКИ ===== */
+  .risk-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .risk-table th { background: #f1f5f9; padding: 10px 14px; text-align: left; font-size: 12px; font-weight: 700; color: var(--gray); text-transform: uppercase; }
+  .risk-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .risk-hi  { color: var(--red); font-weight: 700; }
+  .risk-mid { color: var(--yellow); font-weight: 700; }
+  .risk-lo  { color: var(--green); font-weight: 700; }
+
+  /* ===== СЛЕДУЮЩИЕ ШАГИ ===== */
+  .next-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .next-card {
+    background: var(--dark); color: white;
+    border-radius: 12px; padding: 20px;
+  }
+  .next-card .n-num { font-size: 32px; font-weight: 900; color: var(--pink); opacity: 0.5; }
+  .next-card .n-title { font-size: 14px; font-weight: 700; margin-top: -8px; }
+  .next-card .n-desc { font-size: 12px; color: #90a0b7; margin-top: 8px; line-height: 1.6; }
+  .next-card .n-who { font-size: 11px; color: var(--pink); font-weight: 700; margin-top: 10px; }
+
+  /* ===== ФУТЕР ===== */
+  .footer {
+    background: var(--dark); color: #90a0b7;
+    text-align: center; padding: 24px;
+    font-size: 12px; margin-top: 48px;
+  }
+  .footer strong { color: white; }
+
+/* ═══════════════════════════════════════════════════════════
+   МОБИЛЬНАЯ АДАПТАЦИЯ — добавлено 11.03.2026
+   Адаптировано для экранов смартфонов (< 768px)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Таблицы — горизонтальный скролл на всех устройствах */
+table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+/* Изображения — масштабирование */
+img { max-width: 100% !important; height: auto !important; }
+@media (max-width: 900px) {
+  /* Сетки 4-5 колонок → 2 колонки */
+  .header-stats { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 768px) {
+  /* Все многоколоночные сетки → 1 колонка */
+  .header-stats { grid-template-columns: 1fr !important; }
+  .team-grid { grid-template-columns: 1fr !important; }
+  .next-grid { grid-template-columns: 1fr !important; }
+
+  /* Боковое меню — скрываем, убираем отступ */
+  .sidebar { display: none !important; }
+  .main-content { margin-left: 0 !important; padding: 16px !important; }
+  .site-header { position: relative !important; }
+
+  /* Отступы шапки */
+  .header, .page-header { padding: 20px 16px !important; }
+  .header-top { flex-wrap: wrap !important; gap: 8px !important; }
+  .header-meta, .header-actions, .header-badges { flex-wrap: wrap !important; gap: 8px !important; }
+
+  /* Основной контент */
+  .main, .content, .container { padding: 16px !important; }
+
+  /* Типографика */
+  h1 { font-size: 22px !important; }
+  h2 { font-size: 18px !important; }
+  h3 { font-size: 15px !important; }
+
+  /* Горизонтальные ряды — перенос */
+  .header-pills, .filter-tabs, .nav-tabs, .tabs-row,
+  .section-tabs, .tab-bar { flex-wrap: wrap !important; }
+  .step { flex-direction: column !important; }
+
+  /* Кодовые блоки */
+  pre, code {
+    overflow-x: auto !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 13px !important; }
+  .badge, .tag, .pill, .status-badge { font-size: 11px !important; padding: 3px 8px !important; }
+  h1, .header h1, .logo-area h1 { font-size: 19px !important; }
+  .btn-print, .btn-export { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== ШАПКА ===== -->
+<div class="header">
+  <div class="header-top">
+    <div class="logo-area">
+      <h1>KARI<span>.</span>Самозанятые <span style="font-weight:400;font-size:20px">v2.0</span></h1>
+      <p>Объединённый проект · Март 2026 · Иркутский + Южный регион</p>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <span class="badge">🔄 Синхронизация документов</span>
+      <span class="badge" style="background:#16a34a">Пилот: Апрель 2026</span>
+    </div>
+  </div>
+  <div class="header-stats">
+    <div class="h-stat">
+      <div class="val">36</div>
+      <div class="lbl">Файлов backend</div>
+      <div class="sub">Python / FastAPI</div>
+    </div>
+    <div class="h-stat">
+      <div class="val">16</div>
+      <div class="lbl">Новых файлов v2</div>
+      <div class="sub">Объединённый проект</div>
+    </div>
+    <div class="h-stat">
+      <div class="val">100</div>
+      <div class="lbl">Магазинов в пилоте</div>
+      <div class="sub">2 региона</div>
+    </div>
+    <div class="h-stat">
+      <div class="val">500</div>
+      <div class="lbl">Самозанятых</div>
+      <div class="sub">В пилоте</div>
+    </div>
+    <div class="h-stat">
+      <div class="val">40%</div>
+      <div class="lbl">Экономия затрат</div>
+      <div class="sub">После масштабирования</div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- ===== ЧТО ТАКОЕ ОБЪЕДИНЁННЫЙ ПРОЕКТ ===== -->
+  <div class="section">
+    <div class="section-title">🤝 Что такое объединённый проект</div>
+    <div class="compare-grid">
+      <div class="compare-card our">
+        <h4>📱 Наш проект (v1)</h4>
+        <div class="compare-item"><span class="ico">✅</span> Python/FastAPI бэкенд (36 файлов)</div>
+        <div class="compare-item"><span class="ico">✅</span> React Native / Expo мобильное приложение</div>
+        <div class="compare-item"><span class="ico">✅</span> Все 4 веб-кабинета (React.js)</div>
+        <div class="compare-item"><span class="ico">✅</span> Интеграция ФНС «Мой налог»</div>
+        <div class="compare-item"><span class="ico">✅</span> Выплаты Совкомбанк + массовые реестры</div>
+        <div class="compare-item"><span class="ico">✅</span> ЭДО (ПЭП через SMS)</div>
+        <div class="compare-item"><span class="ico">✅</span> Фотоотчёт + MinIO хранение</div>
+        <div class="compare-item"><span class="ico">✅</span> Стоп-лист (422-ФЗ)</div>
+        <div class="compare-item"><span class="ico">✅</span> Нагрузочный тест Locust</div>
+        <div class="compare-item"><span class="ico">❌</span> Нет рейтингов исполнителей</div>
+        <div class="compare-item"><span class="ico">❌</span> Нет чата в заданиях</div>
+        <div class="compare-item"><span class="ico">❌</span> Нет ФССП проверки</div>
+      </div>
+      <div class="compare-card col">
+        <h4>🖥️ Проект коллеги (Node.js)</h4>
+        <div class="compare-item"><span class="ico">✅</span> Рейтинги исполнителей (1–5 звёзд)</div>
+        <div class="compare-item"><span class="ico">✅</span> Чат внутри заданий</div>
+        <div class="compare-item"><span class="ico">✅</span> Аналитика и дашборды</div>
+        <div class="compare-item"><span class="ico">✅</span> Штрафы за нарушения</div>
+        <div class="compare-item"><span class="ico">✅</span> ЧС конкретного магазина</div>
+        <div class="compare-item"><span class="ico">✅</span> ФССП — проверка долгов</div>
+        <div class="compare-item"><span class="ico">✅</span> Шифрование персональных данных</div>
+        <div class="compare-item"><span class="ico">✅</span> Журнал аудита всех действий</div>
+        <div class="compare-item"><span class="ico">✅</span> TypeScript монорепо + CI/CD</div>
+        <div class="compare-item"><span class="ico">❌</span> Нет мобильного приложения</div>
+        <div class="compare-item"><span class="ico">❌</span> Нет интеграции ФНС</div>
+        <div class="compare-item"><span class="ico">❌</span> Нет нагрузочных тестов</div>
+      </div>
+      <div class="compare-card best">
+        <h4>🏆 Объединённый v2 — лучшее</h4>
+        <div class="compare-item"><span class="ico">⭐</span> Python/FastAPI (надёжный стек)</div>
+        <div class="compare-item"><span class="ico">⭐</span> Мобильное приложение Expo (уникально)</div>
+        <div class="compare-item"><span class="ico">⭐</span> Рейтинги исполнителей</div>
+        <div class="compare-item"><span class="ico">⭐</span> Чат внутри задания + Push</div>
+        <div class="compare-item"><span class="ico">⭐</span> Система штрафов + автоблокировка</div>
+        <div class="compare-item"><span class="ico">⭐</span> Аналитический дашборд</div>
+        <div class="compare-item"><span class="ico">⭐</span> ФССП проверка долгов</div>
+        <div class="compare-item"><span class="ico">⭐</span> AES-256 шифрование персданных</div>
+        <div class="compare-item"><span class="ico">⭐</span> ЧС магазина + глобальный стоп-лист</div>
+        <div class="compare-item"><span class="ico">⭐</span> Журнал аудита (5 лет хранения)</div>
+        <div class="compare-item"><span class="ico">⭐</span> ФНС + ЭДО + MinIO + Celery</div>
+        <div class="compare-item"><span class="ico">⭐</span> Locust нагрузочное тестирование</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== СТАТУС МОДУЛЕЙ ===== -->
+  <div class="section">
+    <div class="section-title">📦 Статус модулей разработки</div>
+    <div class="cards">
+
+      <div class="card done">
+        <div class="card-head">
+          <span class="card-title">🔐 Авторизация</span>
+          <span class="tag done">✅ Готово</span>
+        </div>
+        <p>SMS-код, JWT токены, роли пользователей, refresh tokens.</p>
+        <ul><li>auth.py, security.py</li><li>4 роли + исполнитель</li></ul>
+        <div class="progress-bar-wrap"><div class="progress-bar" style="width:100%"></div></div>
+      </div>
+
+      <div class="card done">
+        <div class="card-head">
+          <span class="card-title">👥 Пользователи</span>
+          <span class="tag done">✅ Готово</span>
+        </div>
+        <p>Регистрация, профили, делегирование прав, бюджетные лимиты.</p>
+        <ul><li>users.py, schemas/user.py</li><li>Регион → Подразд. → Магазин</li></ul>
+        <div class="progress-bar-wrap"><div class="progress-bar" style="width:100%"></div></div>
+      </div>
+
+      <div class="card done">
+        <div class="card-head">
+          <span class="card-title">📋 Задания (биржа)</span>
+          <span class="tag done">✅ Готово</span>
+        </div>
+        <p>Создание, публикация, взятие в работу, сдача с фотоотчётом, шаблоны.</p>
+        <ul><li>tasks.py — 23 эндпоинта</li><li>Фото 1280×720 + GPS + MinIO</li></ul>
+        <div class="progress-bar-wrap"><div class="progress-bar" style="width:100%"></div></div>
+      </div>
+
+      <div class="card done">
+        <div class="card-head">
+          <span class="card-title">💰 Выплаты</span>
+          <span class="tag done">✅ Готово</span>
+        </div>
+        <p>Одиночные и массовые выплаты через Совкомбанк. Excel-реестр до 1000 строк.</p>
+        <ul><li>payments.py, payment_tasks.py</li><li>Retry ×3, Celery Beat 03:00</li></ul>
+        <div class="progress-bar-wrap"><div class="progress-bar" style="width:100%"></div></div>
+      </div>
+
+      <div class="card done">
+        <div class="card-head">
+          <span class="card-title">🏛️ ФНС «Мой налог»</span>
+          <span class="tag done">✅ Готово</span>
+        </div>
+        <p>Проверка статуса, формирование чеков, контроль аннулирования ежедневно в 07:00.</p>
+        <ul><li>fns.py, fns_service.py</li><li>Лимит 2,4 млн руб/год</li></ul>
+        <div class="progress-bar-wrap"><div class="progress-bar" style="width:100%"></div></div>
+      </div>
+
+      <div class="card done">
+        <div class="card-head">
+          <span class="card-title">📝 ЭДО</span>
+          <span class="tag done">✅ Готово</span>
+        </div>
+        <p>Договоры ГПХ, акты выполненных работ. Подписание ПЭП через SMS-код.</p>
+        <ul><li>documents.py, pdf_service.py</li><li>reportlab → PDF</li></ul>
+        <div class="progress-bar-wrap"><div class="progress-bar" style="width:100%"></div></div>
+      </div>
+
+      <div class="card done">
+        <div class="card-head">
+          <span class="card-title">🚫 Стоп-лист (422-ФЗ)</span>
+          <span class="tag done">✅ Готово</span>
+        </div>
+        <p>Глобальная блокировка по ИНН. Бывшие сотрудники, штрафы ФНС, Excel-импорт.</p>
+        <ul><li>stop_list.py + миграция 0003</li><li>Push при блокировке</li></ul>
+        <div class="progress-bar-wrap"><div class="progress-bar" style="width:100%"></div></div>
+      </div>
+
+      <div class="card done">
+        <div class="card-head">
+          <span class="card-title">📱 Мобильное приложение</span>
+          <span class="tag done">✅ Готово</span>
+        </div>
+        <p>React Native / Expo SDK 54. Биржа заданий, фотоотчёт, кошелёк, документы.</p>
+        <ul><li>13 экранов, 4 вкладки</li><li>Уникальное преимущество перед конкурентами</li></ul>
+        <div class="progress-bar-wrap"><div class="progress-bar" style="width:100%"></div></div>
+      </div>
+
+      <div class="card done">
+        <div class="card-head">
+          <span class="card-title">⭐ Рейтинги</span>
+          <span class="tag done">✅ Готово (v2)</span>
+        </div>
+        <p>Оценки 1–5 звёзд от директора после приёмки. Сводный рейтинг, метка «низкий».</p>
+        <ul><li>models/rating.py, api/ratings.py</li><li>Миграция 0004</li></ul>
+        <div class="progress-bar-wrap"><div class="progress-bar" style="width:100%"></div></div>
+      </div>
+
+      <div class="card done">
+        <div class="card-head">
+          <span class="card-title">💬 Чат</span>
+          <span class="tag done">✅ Готово (v2)</span>
+        </div>
+        <p>Переписка внутри задания. Push-уведомления. Статус прочтения. ChatDrawer.jsx.</p>
+        <ul><li>models/chat.py, api/chat.py</li><li>ChatDrawer.jsx для веб</li></ul>
+        <div class="progress-bar-wrap"><div class="progress-bar" style="width:100%"></div></div>
+      </div>
+
+      <div class="card done">
+        <div class="card-head">
+          <span class="card-title">⚠️ Штрафы</span>
+          <span class="tag done">✅ Готово (v2)</span>
+        </div>
+        <p>5 типов нарушений. Автоблокировка при 5+ штрафах. HR-проверка при 3+.</p>
+        <ul><li>models/penalty.py, api/penalties.py</li><li>Celery задача эскалации</li></ul>
+        <div class="progress-bar-wrap"><div class="progress-bar" style="width:100%"></div></div>
+      </div>
+
+      <div class="card done">
+        <div class="card-head">
+          <span class="card-title">📊 Аналитика</span>
+          <span class="tag done">✅ Готово (v2)</span>
+        </div>
+        <p>KPI-дашборд: исполнители, задания, выплаты, рейтинг. AnalyticsPage.jsx.</p>
+        <ul><li>api/analytics.py</li><li>AnalyticsPage.jsx — графики, топ, риски</li></ul>
+        <div class="progress-bar-wrap"><div class="progress-bar" style="width:100%"></div></div>
+      </div>
+
+      <div class="card done">
+        <div class="card-head">
+          <span class="card-title">🏛️ ФССП</span>
+          <span class="tag done">✅ Готово (v2)</span>
+        </div>
+        <p>Проверка долгов у судебных приставов при регистрации. Демо-режим для пилота.</p>
+        <ul><li>services/fssp_service.py</li><li>Риски: low / medium / high</li></ul>
+        <div class="progress-bar-wrap"><div class="progress-bar" style="width:100%"></div></div>
+      </div>
+
+      <div class="card done">
+        <div class="card-head">
+          <span class="card-title">🔐 Шифрование данных</span>
+          <span class="tag done">✅ Готово (v2)</span>
+        </div>
+        <p>AES-256-GCM для паспортов, банковских реквизитов. Маскирование в UI.</p>
+        <ul><li>services/crypto_service.py</li><li>ENCRYPTION_KEY в .env</li></ul>
+        <div class="progress-bar-wrap"><div class="progress-bar" style="width:100%"></div></div>
+      </div>
+
+      <div class="card done">
+        <div class="card-head">
+          <span class="card-title">🏪 ЧС магазина</span>
+          <span class="tag done">✅ Готово (v2)</span>
+        </div>
+        <p>Локальная блокировка исполнителя в конкретном магазине (не глобально).</p>
+        <ul><li>models/store_blacklist.py</li><li>Уникальный per-store constraint</li></ul>
+        <div class="progress-bar-wrap"><div class="progress-bar" style="width:100%"></div></div>
+      </div>
+
+      <div class="card done">
+        <div class="card-head">
+          <span class="card-title">📋 Журнал аудита</span>
+          <span class="tag done">✅ Готово (v2)</span>
+        </div>
+        <p>Неизменяемый лог всех действий. INSERT only. Хранение 5 лет. JSONB детали.</p>
+        <ul><li>models/audit_log.py</li><li>Индексы: user, entity, action+date</li></ul>
+        <div class="progress-bar-wrap"><div class="progress-bar" style="width:100%"></div></div>
+      </div>
+
+      <div class="card wip">
+        <div class="card-head">
+          <span class="card-title">🧪 Тестирование</span>
+          <span class="tag wip">🔄 В работе</span>
+        </div>
+        <p>Locust нагрузочный тест (500 исполнителей + 100 директоров, P95 &lt; 500мс). Unit-тесты.</p>
+        <ul><li>tests/locustfile.py — готов</li><li>Unit-тесты — в процессе</li></ul>
+        <div class="progress-bar-wrap"><div class="progress-bar" style="width:60%"></div></div>
+      </div>
+
+      <div class="card plan">
+        <div class="card-head">
+          <span class="card-title">🚀 Деплой на сервер</span>
+          <span class="tag plan">📅 Апрель 2026</span>
+        </div>
+        <p>IT-служба KARI разворачивает по инструкции. Docker Compose, PostgreSQL, Redis, MinIO.</p>
+        <ul><li>KARI_deploy.html — инструкция готова</li><li>Ответственный: IT поддержка KARI</li></ul>
+        <div class="progress-bar-wrap"><div class="progress-bar" style="width:10%; background: var(--blue)"></div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== СПРИНТ-ПЛАН ===== -->
+  <div class="section">
+    <div class="section-title">🗓️ Дорожная карта — спринты</div>
+    <table class="sprint-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Название спринта</th>
+          <th>Даты</th>
+          <th>Статус</th>
+          <th>Что сделано / план</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="sprint-num">С-1</td>
+          <td>Архитектура</td>
+          <td>3–14 марта 2026</td>
+          <td class="s-done"><span class="s-dot dot-g"></span>Выполнено</td>
+          <td>БД схема, роли, стек, структура проекта, alembic миграции 0001–0002</td>
+        </tr>
+        <tr>
+          <td class="sprint-num">С-2</td>
+          <td>Бэкенд ядро</td>
+          <td>17–28 марта 2026</td>
+          <td class="s-done"><span class="s-dot dot-g"></span>Выполнено</td>
+          <td>Auth, Users, Tasks (23 эндпоинта), Payments, FNS, Documents (ЭДО)</td>
+        </tr>
+        <tr>
+          <td class="sprint-num">С-3</td>
+          <td>Биржа + ЭДО</td>
+          <td>31 марта – 11 апр 2026</td>
+          <td class="s-done"><span class="s-dot dot-g"></span>Выполнено</td>
+          <td>Биржа заданий, фотоотчёт, MinIO, PDF генерация, Celery, стоп-лист</td>
+        </tr>
+        <tr>
+          <td class="sprint-num">С-4</td>
+          <td>Веб-кабинеты</td>
+          <td>14–25 апр 2026</td>
+          <td class="s-done"><span class="s-dot dot-g"></span>Выполнено</td>
+          <td>4 кабинета React.js: Регион, Подразделение, Магазин, HRD</td>
+        </tr>
+        <tr>
+          <td class="sprint-num">С-5</td>
+          <td>Мобильное приложение</td>
+          <td>28 апр – 9 мая 2026</td>
+          <td class="s-done"><span class="s-dot dot-g"></span>Выполнено</td>
+          <td>React Native / Expo: 13 экранов, авторизация, биржа, кошелёк, документы</td>
+        </tr>
+        <tr>
+          <td class="sprint-num">С-6</td>
+          <td>Объединение + Тест + Пилот</td>
+          <td>10–30 марта 2026</td>
+          <td class="s-wip"><span class="s-dot dot-y"></span>В работе</td>
+          <td>Код объединён ✅. Синхронизация документов ✅ (11.03.2026). Нагрузочный тест — в процессе.</td>
+        </tr>
+        <tr style="background:#fff5f5">
+          <td class="sprint-num" style="color:var(--pink)">🚀</td>
+          <td><strong>ЗАПУСК ПИЛОТА</strong></td>
+          <td><strong>Апрель 2026</strong></td>
+          <td style="color:var(--pink);font-weight:700"><span class="s-dot" style="background:var(--pink)"></span>Иркутский + Южный</td>
+          <td>100 магазинов, до 500 самозанятых, Expo Go на устройствах</td>
+        </tr>
+        <tr>
+          <td class="sprint-num">С-7</td>
+          <td>Масштабирование</td>
+          <td>После пилота</td>
+          <td class="s-plan"><span class="s-dot dot-b"></span>Планируется</td>
+          <td>500+ магазинов, 5000+ самозанятых. B2B продажи другим ритейлерам.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== ДОРОЖНАЯ КАРТА (визуальная) ===== -->
+  <div class="section">
+    <div class="section-title">🗺️ Дорожная карта — вехи</div>
+    <div class="roadmap">
+      <div class="rm-item">
+        <div class="rm-dot done">✅</div>
+        <div class="rm-content">
+          <strong>Спринты 1–5: полная разработка платформы</strong>
+          <div class="rm-date">Март – Май 2026 · Выполнено</div>
+          <div class="rm-desc">Backend (Python/FastAPI, 36 файлов) + Frontend (4 кабинета React.js) + Mobile (Expo SDK 54, 13 экранов) + ФНС + ЭДО + Выплаты + Стоп-лист</div>
+        </div>
+      </div>
+      <div class="rm-item">
+        <div class="rm-dot wip">🔄</div>
+        <div class="rm-content">
+          <strong>Спринт 6: объединение проектов (v2)</strong>
+          <div class="rm-date">10–30 марта 2026 · В работе</div>
+          <div class="rm-desc">Добавлены: рейтинги, чат, штрафы, аналитика, ФССП, шифрование AES-256, журнал аудита, ЧС магазина. 16 новых файлов. Миграции 0004 + 0005 (fiscal_risk в стоп-листе). <strong>11.03.2026 — синхронизация документов с кодом завершена</strong>: ТЗ, чеклист, деплой, .env.example, backend stop_list.py, frontend StopListPage.jsx.</div>
+        </div>
+      </div>
+      <div class="rm-item">
+        <div class="rm-dot wip">🔄</div>
+        <div class="rm-content">
+          <strong>Нагрузочное тестирование Locust</strong>
+          <div class="rm-date">Март 2026 · В процессе</div>
+          <div class="rm-desc">500 исполнителей + 100 директоров одновременно. Цель: P95 &lt; 500мс. Запускает IT-служба KARI.</div>
+        </div>
+      </div>
+      <div class="rm-item">
+        <div class="rm-dot pilot">🚀</div>
+        <div class="rm-content">
+          <strong>ЗАПУСК ПИЛОТА — Иркутский + Южный регион</strong>
+          <div class="rm-date">Апрель 2026 · Ключевой момент</div>
+          <div class="rm-desc">100 магазинов, до 500 самозанятых. Expo Go на устройствах исполнителей. Мониторинг Grafana. Директора обучены по инструкции.</div>
+        </div>
+      </div>
+      <div class="rm-item">
+        <div class="rm-dot plan">📅</div>
+        <div class="rm-content">
+          <strong>Анализ результатов пилота и доработки</strong>
+          <div class="rm-date">Май–Июнь 2026</div>
+          <div class="rm-desc">Сбор обратной связи, устранение замечаний, оптимизация по метрикам Grafana.</div>
+        </div>
+      </div>
+      <div class="rm-item">
+        <div class="rm-dot plan">📅</div>
+        <div class="rm-content">
+          <strong>Масштабирование на всю сеть KARI</strong>
+          <div class="rm-date">2-е полугодие 2026</div>
+          <div class="rm-desc">500+ магазинов, 5000+ самозанятых. Экономия 40% затрат по сравнению с Наймикс. Рассмотрение B2B продаж другим ритейлерам.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== СОСТАВ ФАЙЛОВ ===== -->
+  <div class="section">
+    <div class="section-title">📁 Состав объединённого проекта</div>
+    <div class="filemap">
+      <div class="folder-card">
+        <h5>📂 01_Юридика</h5>
+        <div class="file-item">KARI_422fz_analiz.html — анализ закона о самозанятых</div>
+        <div class="file-item">KARI_juridika_checklist.html — чек-лист для юристов</div>
+      </div>
+      <div class="folder-card">
+        <h5>📂 02_ТЗ_и_схемы</h5>
+        <div class="file-item">KARI_TZ_v3.html — техническое задание v3.0</div>
+        <div class="file-item">KARI_scheme.html — блок-схемы, CJM, дорожная карта</div>
+        <div class="file-item">KARI_competitors.html — анализ 7 конкурентов</div>
+      </div>
+      <div class="folder-card">
+        <h5>📂 03_Дизайн</h5>
+        <div class="file-item">KARI_UI_mockups.html — UI макеты мобильного приложения</div>
+        <div class="file-item">KARI_web_cabinets.html — макеты веб-кабинетов</div>
+        <div class="file-item">logo/ — логотип KARI</div>
+      </div>
+      <div class="folder-card">
+        <h5>📂 04_Документы_шаблоны</h5>
+        <div class="file-item">KARI_dogovory.html — договор ГПХ + акт выполненных работ</div>
+      </div>
+      <div class="folder-card">
+        <h5>📂 05_Пилот</h5>
+        <div class="file-item">KARI_pilot_plan.html — план пилота</div>
+        <div class="file-item">KARI_deploy.html — деплой инструкция для IT</div>
+        <div class="file-item">KARI_instrukciya_direktora.html — для директоров</div>
+        <div class="file-item">KARI_instrukciya_ispolnitelya.html — для самозанятых</div>
+        <div class="file-item">KARI_checklist_zapuska.html — интерактивный чек-лист</div>
+      </div>
+      <div class="folder-card">
+        <h5>📂 06_Статус_проекта</h5>
+        <div class="file-item">KARI_status_obedinennyy.html — этот файл</div>
+      </div>
+      <div class="folder-card">
+        <h5>📂 backend/</h5>
+        <div class="file-item">app/main.py — точка входа FastAPI</div>
+        <div class="file-item">app/models/ — 5 новых моделей (v2)</div>
+        <div class="file-item">app/api/ — 4 новых роутера (v2) + fiscal_risk</div>
+        <div class="file-item">app/services/ — ФССП + AES-256 шифрование</div>
+        <div class="file-item">alembic/versions/0004 — рейтинги, чат, штрафы, store_blacklists, аудит</div>
+        <div class="file-item">alembic/versions/0005 — fiscal_risk в стоп-листе</div>
+        <div class="file-item">.env.example — добавлен ENCRYPTION_KEY</div>
+      </div>
+      <div class="folder-card">
+        <h5>📂 frontend/</h5>
+        <div class="file-item">src/pages/AnalyticsPage.jsx — дашборд аналитики</div>
+        <div class="file-item">src/components/ChatDrawer.jsx — чат в заданиях</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== КОМАНДА ===== -->
+  <div class="section">
+    <div class="section-title">👥 Команда проекта</div>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">👔</div>
+        <div class="team-name">Юрий</div>
+        <div class="team-role">Product Owner · Директор региона KARI</div>
+        <div class="team-desc">Ставит задачи, определяет требования, принимает результат, принимает решения по продукту. Финальный арбитр по всем вопросам.</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">🤖</div>
+        <div class="team-name">Claude AI (Anthropic)</div>
+        <div class="team-role">Разработчик · Backend + Frontend + Mobile</div>
+        <div class="team-desc">Пишет весь код: Python/FastAPI, React.js, React Native/Expo. Создаёт документацию, HTML-страницы, миграции БД, тесты.</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">🖥️</div>
+        <div class="team-name">IT поддержка KARI</div>
+        <div class="team-role">DevOps · Деплой + Мониторинг</div>
+        <div class="team-desc">Деплой на сервер по инструкции, настройка Docker, мониторинг Grafana, поддержка во время пилота. Штатные сотрудники KARI.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== РИСКИ ===== -->
+  <div class="section">
+    <div class="section-title">⚠️ Ключевые риски</div>
+    <table class="risk-table">
+      <thead>
+        <tr><th>Риск</th><th>Уровень</th><th>Вероятность</th><th>Митигация</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Исполнитель теряет статус самозанятого (лимит 2,4 млн руб)</td>
+          <td class="risk-hi">🔴 Высокий</td>
+          <td>Средняя</td>
+          <td>Ежедневная проверка ФНС в 07:00, предупреждение при 80% лимита, блокировка при потере статуса</td>
+        </tr>
+        <tr>
+          <td>Аннулирование чека ФНС после выплаты</td>
+          <td class="risk-hi">🔴 Высокий</td>
+          <td>Низкая</td>
+          <td>Celery-задача контроля аннулирований, штраф типа DOCS, удержание суммы</td>
+        </tr>
+        <tr>
+          <td>API ФНС «Мой налог» недоступен</td>
+          <td class="risk-mid">🟡 Средний</td>
+          <td>Средняя</td>
+          <td>Retry ×3 с экспоненциальной задержкой, кэш Redis 24ч, ручная проверка через кабинет ФНС</td>
+        </tr>
+        <tr>
+          <td>Перегрузка при массовых выплатах (1000 строк)</td>
+          <td class="risk-mid">🟡 Средний</td>
+          <td>Низкая</td>
+          <td>Celery очередь, пакетная обработка по 50 записей, P95 &lt; 500мс подтверждено Locust</td>
+        </tr>
+        <tr>
+          <td>Утечка персональных данных исполнителей</td>
+          <td class="risk-hi">🔴 Высокий</td>
+          <td>Очень низкая</td>
+          <td>AES-256-GCM шифрование паспортов и реквизитов, маскирование в UI, ENCRYPTION_KEY в vault</td>
+        </tr>
+        <tr>
+          <td>Самозанятый не является гражданином РФ (налоговый нерезидент)</td>
+          <td class="risk-mid">🟡 Средний</td>
+          <td>Низкая</td>
+          <td>Проверка ИНН через ФНС при регистрации, паспортный контроль (OCR)</td>
+        </tr>
+        <tr>
+          <td>Провал нагрузочного теста перед пилотом</td>
+          <td class="risk-lo">🟢 Низкий</td>
+          <td>Низкая</td>
+          <td>Locust locustfile.py готов, тест запускается IT до деплоя, цель P95 &lt; 500мс</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== СЛЕДУЮЩИЕ ШАГИ ===== -->
+  <div class="section">
+    <div class="section-title">🎯 Следующие шаги</div>
+    <div class="next-grid">
+      <div class="next-card">
+        <div class="n-num">01</div>
+        <div class="n-title">IT: деплой объединённого проекта</div>
+        <div class="n-desc">Перенести новые файлы v2 (backend/) в основной проект. Запустить миграцию 0004. Перестартовать сервисы.</div>
+        <div class="n-who">👤 IT поддержка KARI · Март 2026</div>
+      </div>
+      <div class="next-card">
+        <div class="n-num">02</div>
+        <div class="n-title">Нагрузочный тест Locust</div>
+        <div class="n-desc">Запустить locust -f tests/locustfile.py. Целевые метрики: P95 &lt; 500мс при 600 одновременных пользователях.</div>
+        <div class="n-who">👤 IT поддержка KARI · Март 2026</div>
+      </div>
+      <div class="next-card">
+        <div class="n-num">03</div>
+        <div class="n-title">Настройка ключа шифрования</div>
+        <div class="n-desc">Сгенерировать ENCRYPTION_KEY, добавить в .env на продакшен сервере. Проверить crypto_service.py.</div>
+        <div class="n-who">👤 IT + Юрий · Март 2026</div>
+      </div>
+      <div class="next-card">
+        <div class="n-num">04</div>
+        <div class="n-title">Подключить ФССП API</div>
+        <div class="n-desc">Зарегистрироваться на api.fssp.gov.ru, получить токен. Добавить FSSP_TOKEN в .env. Перевести с DEMO_MODE на боевой.</div>
+        <div class="n-who">👤 Юрий (запрос) + IT (настройка) · Апрель 2026</div>
+      </div>
+      <div class="next-card">
+        <div class="n-num">05</div>
+        <div class="n-title">Обучение директоров магазинов</div>
+        <div class="n-desc">Провести брифинг по инструкции KARI_instrukciya_direktora.html. Показать новые функции: рейтинги, чат, штрафы.</div>
+        <div class="n-who">👤 Юрий · Апрель 2026</div>
+      </div>
+      <div class="next-card">
+        <div class="n-num">06</div>
+        <div class="n-title">Запуск пилота 🚀</div>
+        <div class="n-desc">100 магазинов Иркутского + Южного региона. Expo Go на устройствах. Мониторинг Grafana. Сбор обратной связи.</div>
+        <div class="n-who">👤 Юрий + IT · Апрель 2026</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- ===== ФУТЕР ===== -->
+<div class="footer">
+  <strong>KARI.Самозанятые v2.0</strong> · Объединённый проект · Март 2026<br>
+  Product Owner: Юрий, Директор региона KARI &nbsp;|&nbsp;
+  Разработка: Claude AI (Anthropic) &nbsp;|&nbsp;
+  DevOps: IT поддержка KARI<br>
+  <span style="color:var(--pink)">Пилот: Апрель 2026 · Иркутский + Южный регион · 100 магазинов · 500 самозанятых</span>
+</div>
+
+</body>
+</html>
